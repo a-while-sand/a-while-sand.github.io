@@ -4,22 +4,24 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>一粒白沙</title>
+    <title>out-of-memory | 一粒白沙</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="不合时宜的人">
     
 
     
-    <meta name="description" content="醉心于自己的小天地">
-<meta property="og:type" content="website">
-<meta property="og:title" content="一粒白沙">
-<meta property="og:url" content="http://example.com/index.html">
+    <meta name="description" content="Java 常见的内存溢出  以下测试环境基于mac pro；jdk11；idea2019完成  堆溢出：java.lang.OutOfMemoryError: Java heap space   1234567891011121314151617181920212223242526272829303132333435363738394041import java.util.ArrayList;im">
+<meta property="og:type" content="article">
+<meta property="og:title" content="out-of-memory">
+<meta property="og:url" content="http://example.com/2024/05/28/out-of-memory/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="醉心于自己的小天地">
+<meta property="og:description" content="Java 常见的内存溢出  以下测试环境基于mac pro；jdk11；idea2019完成  堆溢出：java.lang.OutOfMemoryError: Java heap space   1234567891011121314151617181920212223242526272829303132333435363738394041import java.util.ArrayList;im">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-05-28T03:30:57.000Z">
+<meta property="article:modified_time" content="2024-05-28T06:41:07.290Z">
 <meta property="article:author" content="不合时宜的人">
-<meta property="article:tag" content="程序员、跑步、打羽毛球、游泳">
+<meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
 
     
@@ -76,12 +78,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2024/05/28/out-of-memory/" title="out-of-memory" itemprop="url">out-of-memory</a>
@@ -95,9 +95,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <h3 id="Java-常见的内存溢出"><a href="#Java-常见的内存溢出" class="headerlink" title="Java 常见的内存溢出"></a>Java 常见的内存溢出</h3><p>  <em>以下测试环境基于mac pro；jdk11；idea2019完成</em></p>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA"><span class="toc-number">1.</span> <span class="toc-text">Java 常见的内存溢出</span></a></li></ol>
+		
+		</div>
+		
+		<h3 id="Java-常见的内存溢出"><a href="#Java-常见的内存溢出" class="headerlink" title="Java 常见的内存溢出"></a>Java 常见的内存溢出</h3><p>  <em>以下测试环境基于mac pro；jdk11；idea2019完成</em></p>
 <ol>
 <li><p>堆溢出：java.lang.OutOfMemoryError: Java heap space</p>
   <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 设置运行参数：</span></span><br><span class="line"><span class="comment"> * VM Args：-Xms10m -Xmx10m</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HeapOOM</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">OOMObject</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        List&lt;OOMObject&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;OOMObject&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            list.add(<span class="keyword">new</span> <span class="title class_">OOMObject</span>());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     Exception in thread &quot;Monitor Ctrl-Break&quot; java.lang.OutOfMemoryError: Java heap space</span></span><br><span class="line"><span class="comment">     at java.base/java.util.concurrent.ConcurrentHashMap$ValuesView.iterator(ConcurrentHashMap.java:4732)</span></span><br><span class="line"><span class="comment">     at java.base/java.lang.ClassLoader.findNative(ClassLoader.java:2699)</span></span><br><span class="line"><span class="comment">     at jdk.net/jdk.net.MacOSXSocketOptions.keepAliveOptionsSupported0(Native Method)</span></span><br><span class="line"><span class="comment">     at jdk.net/jdk.net.MacOSXSocketOptions.keepAliveOptionsSupported(MacOSXSocketOptions.java:39)</span></span><br><span class="line"><span class="comment">     at jdk.net/jdk.net.ExtendedSocketOptions.&lt;clinit&gt;(ExtendedSocketOptions.java:172)</span></span><br><span class="line"><span class="comment">     at java.base/java.lang.Class.forName0(Native Method)</span></span><br><span class="line"><span class="comment">     at java.base/java.lang.Class.forName(Class.java:315)</span></span><br><span class="line"><span class="comment">     at java.base/sun.net.ext.ExtendedSocketOptions.&lt;clinit&gt;(ExtendedSocketOptions.java:109)</span></span><br><span class="line"><span class="comment">     at java.base/java.net.PlainSocketImpl.&lt;clinit&gt;(PlainSocketImpl.java:59)</span></span><br><span class="line"><span class="comment">     at java.base/java.net.Socket.setImpl(Socket.java:505)</span></span><br><span class="line"><span class="comment">     at java.base/java.net.Socket.&lt;init&gt;(Socket.java:426)</span></span><br><span class="line"><span class="comment">     at java.base/java.net.Socket.&lt;init&gt;(Socket.java:213)</span></span><br><span class="line"><span class="comment">     at com.intellij.rt.execution.application.AppMainV2$1.run(AppMainV2.java:59)</span></span><br><span class="line"><span class="comment">     Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: Java heap space</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">     Process finished with exit code 1</span></span><br><span class="line"><span class="comment"> **/</span></span><br></pre></td></tr></table></figure>
@@ -110,14 +117,9 @@
 <li><p>内存溢出：java.lang.OutOfMemoryError: unable to create native thread: possibly out of memory or process&#x2F;resource limits reached</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 设置运行参数：</span></span><br><span class="line"><span class="comment"> * VM Args: -Xss144k</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadTooManyStackOOM</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            Thread thread= <span class="keyword">new</span> <span class="title class_">Thread</span>( ()-&gt;&#123;</span><br><span class="line">                <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">                        <span class="keyword">try</span>&#123;</span><br><span class="line">                            Thread.sleep(<span class="number">5000</span>);</span><br><span class="line">                        &#125;<span class="keyword">catch</span>(Exception e) &#123;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            thread.start();</span><br><span class="line">            System.out.println(++count);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     [1.759s][warning][os,thread] Failed to start thread - pthread_create failed (EAGAIN) for attributes: stacksize: 512k, guardsize: 4k, detached.</span></span><br><span class="line"><span class="comment">     Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: unable to create native thread: possibly out of memory or process/resource limits reached</span></span><br><span class="line"><span class="comment">     at java.base/java.lang.Thread.start0(Native Method)</span></span><br><span class="line"><span class="comment">     at java.base/java.lang.Thread.start(Thread.java:803)</span></span><br><span class="line"><span class="comment">     at com.scrh.shirodemo.blog.outof.ThreadTooManyStackOOM.main(ThreadTooManyStackOOM.java:20)</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
 </ol>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 
@@ -130,91 +132,45 @@
 
 
 
-
-<div class="comments-count">
+	<div class="article-share" id="share">
 	
-</div>
+	  <div data-url="http://example.com/2024/05/28/out-of-memory/" data-title="out-of-memory | 一粒白沙" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
 
 </footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2024/05/23/hello-world/" title="Hello World" itemprop="url">Hello World</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
-		
-  <p class="article-time">
-    <time datetime="2024-05-23T12:03:35.000Z" itemprop="datePublished"> 发表于 2024-05-23</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/java/">java</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
+   	       
+	</article>
 	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2024/05/23/hello-world/"  title="Hello World">
+ <strong>下一篇：</strong><br/> 
+ <span>Hello World
+</span>
+</a>
 </div>
 
-</footer>
+</nav>
 
-
-    </article>
-
-
+	
 
 
 
-
-
-</div>
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA"><span class="toc-number">1.</span> <span class="toc-text">Java 常见的内存溢出</span></a></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -338,12 +294,89 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
 
 
 
@@ -416,4 +449,4 @@ var _hmt = _hmt || [];
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
