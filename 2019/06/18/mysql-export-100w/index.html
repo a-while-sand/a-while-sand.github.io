@@ -1,0 +1,483 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>一次导出100万条数据 | 一粒白沙</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="不合时宜的人">
+    
+
+    
+    <meta name="description" content="一次导出300万条数据做法通常如下： 12常规查询： 一次性读取 300w 数据到 JVM 内存中，或者分页读取流式查询： 建立长连接，利用服务端游标，每次读取一条加载到 JVM 内存（多次获取，一次一行）  常规查询 默认情况下，完整的检索结果集会将其存储在内存中。在大多数情况下，这是最有效的操作方式，并且由于 MySQL 网络协议的设计，因此更易于实现。 该方式比较简单，如果在不考虑 LIMI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次导出100万条数据">
+<meta property="og:url" content="http://example.com/2019/06/18/mysql-export-100w/index.html">
+<meta property="og:site_name" content="一粒白沙">
+<meta property="og:description" content="一次导出300万条数据做法通常如下： 12常规查询： 一次性读取 300w 数据到 JVM 内存中，或者分页读取流式查询： 建立长连接，利用服务端游标，每次读取一条加载到 JVM 内存（多次获取，一次一行）  常规查询 默认情况下，完整的检索结果集会将其存储在内存中。在大多数情况下，这是最有效的操作方式，并且由于 MySQL 网络协议的设计，因此更易于实现。 该方式比较简单，如果在不考虑 LIMI">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-06-18T04:30:45.000Z">
+<meta property="article:modified_time" content="2024-05-30T11:46:30.069Z">
+<meta property="article:author" content="不合时宜的人">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="mysql">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="一粒白沙" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="一粒白沙" title="一粒白沙"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="一粒白沙">一粒白沙</a></h1>
+				<h2 class="blog-motto">白沙洲中的一粒</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2019/06/18/mysql-export-100w/" title="一次导出100万条数据" itemprop="url">一次导出100万条数据</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
+		
+  <p class="article-time">
+    <time datetime="2019-06-18T04:30:45.000Z" itemprop="datePublished"> 发表于 2019-06-18</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E5%AF%BC%E5%87%BA300%E4%B8%87%E6%9D%A1%E6%95%B0%E6%8D%AE"><span class="toc-number">1.</span> <span class="toc-text">一次导出300万条数据</span></a></li></ol>
+		
+		</div>
+		
+		<h3 id="一次导出300万条数据"><a href="#一次导出300万条数据" class="headerlink" title="一次导出300万条数据"></a>一次导出300万条数据</h3><p>做法通常如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">常规查询： 一次性读取 300w 数据到 JVM 内存中，或者分页读取</span><br><span class="line">流式查询： 建立长连接，利用服务端游标，每次读取一条加载到 JVM 内存（多次获取，一次一行）</span><br></pre></td></tr></table></figure>
+
+<p><strong>常规查询</strong></p>
+<p>默认情况下，完整的检索结果集会将其存储在内存中。在大多数情况下，这是最有效的操作方式，并且由于 MySQL 网络协议的设计，因此更易于实现。</p>
+<p>该方式比较简单，如果在不考虑 LIMIT 深分页优化情况下，估计你的数据库服务器就噶皮了，或者你能等上几十分钟或几小时，甚至几天时间检索数据。</p>
+<p><strong>流式查询</strong></p>
+<p>流式查询指的是查询成功后不是返回一个集合而是返回一个迭代器，应用每次从迭代器取一条查询结果。流式查询的好处是能够降低内存使用。</p>
+<p>非流式查询和流式查询区别：</p>
+<ul>
+<li>非流式查询：内存会随着查询记录的增长而近乎直线增长。</li>
+<li>流式查询：内存会保持稳定，不会随着记录的增长而增长。其内存大小取决于批处理大小BATCH_SIZE的设置，该尺寸越大，内存会越大。所以BATCH_SIZE应该根据业务情况设置合适的大小。</li>
+</ul>
+<p>另外要切记每次处理完一批结果要记得释放存储每批数据的临时容器，即上文中的gxids.clear();</p>
+<p>EasyExcel完成300w数据的导出。技术难点已经知道了，接下来就是针对这一难点提供自己的解决思路即可。</p>
+<p><strong>300w数据的导出解决思路：</strong></p>
+<ul>
+<li>首先在查询数据库层面，需要分批进行查询（我使用的是每次查询20w）</li>
+<li>每查询一次结束，就使用EasyExcel工具将这些数据写入一次；</li>
+<li>当一个Sheet写满了100w条数据，开始将查询的数据写入到另一个Sheet中；</li>
+<li>如此循环直到数据全部导出到Excel完毕。</li>
+</ul>
+<p><strong>300w数据的导出部分代码现实：</strong></p>
+<ul>
+<li><p><strong>EasyExcel + 流式查询</strong></p>
+<p>1、xml</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=<span class="string">&quot;streamAuthor&quot;</span> resultMap=<span class="string">&quot;BaseResultMap&quot;</span> resultSetType=<span class="string">&quot;FORWARD_ONLY&quot;</span> fetchSize=<span class="string">&quot;-2147483648&quot;</span>&gt;</span><br><span class="line">  select</span><br><span class="line">    id, first_name, last_name,email, birthdate,added</span><br><span class="line">  from authors</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​	2、mapper</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void streamAuthor(ResultHandler&lt;Authors&gt; handler); //以stream形式从mysql获取数据</span><br></pre></td></tr></table></figure>
+
+<p>  3、service</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">easyStreamExport</span><span class="params">(HttpServletResponse response)</span>&#123;</span><br><span class="line">    <span class="type">ArrayList</span> <span class="variable">list</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>();</span><br><span class="line">    ExcelWriter excelWriter;</span><br><span class="line">    <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span>String.valueOf(System.currentTimeMillis());</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">OutputStream</span> <span class="variable">outputStream</span> <span class="operator">=</span> response.getOutputStream();</span><br><span class="line">        excelWriter = EasyExcel.write(outputStream).build();</span><br><span class="line">        log.info(<span class="string">&quot;start streamList&quot;</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">NUM_PER_SHEET</span> <span class="operator">=</span> <span class="number">1000000</span>;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span>[] b = &#123;<span class="number">1</span>&#125;;</span><br><span class="line">        authorsMapper.streamAuthor(resultContext -&gt; &#123;</span><br><span class="line">            <span class="type">Authors</span> <span class="variable">resultObject</span> <span class="operator">=</span> (Authors) resultContext.getResultObject();</span><br><span class="line"></span><br><span class="line">            list.add(resultObject);</span><br><span class="line">            <span class="keyword">if</span> (list.size() == NUM_PER_SHEET) &#123;</span><br><span class="line">                <span class="comment">//存储到 excel 中</span></span><br><span class="line">                <span class="type">String</span> <span class="variable">sheetName</span> <span class="operator">=</span> <span class="string">&quot;sheet&quot;</span> + b[<span class="number">0</span>];</span><br><span class="line">                <span class="type">WriteSheet</span> <span class="variable">writeSheet</span> <span class="operator">=</span> EasyExcel.writerSheet(b[<span class="number">0</span>], sheetName).build();</span><br><span class="line">                excelWriter.write(list, writeSheet);</span><br><span class="line">                b[<span class="number">0</span>]++;</span><br><span class="line">                <span class="comment">//清除list</span></span><br><span class="line">                list.clear();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//存储到excel中</span></span><br><span class="line">        <span class="keyword">if</span> (list.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">sheetName</span> <span class="operator">=</span> <span class="string">&quot;sheet&quot;</span> + b[<span class="number">0</span>];</span><br><span class="line">            <span class="type">WriteSheet</span> <span class="variable">writeSheet</span> <span class="operator">=</span> EasyExcel.writerSheet(b[<span class="number">0</span>], sheetName).build();</span><br><span class="line">            excelWriter.write(list, writeSheet);</span><br><span class="line">            b[<span class="number">0</span>]++;</span><br><span class="line">            list.clear();</span><br><span class="line">        &#125;</span><br><span class="line">        response.setContentType(<span class="string">&quot;application/octet-stream&quot;</span>);</span><br><span class="line">        response.setCharacterEncoding(<span class="string">&quot;utf-8&quot;</span>);</span><br><span class="line">        response.setHeader(<span class="string">&quot;Content-disposition&quot;</span>, <span class="string">&quot;attachment;filename*=utf-8&#x27;&#x27;&quot;</span> + fileName + <span class="string">&quot;.xlsx&quot;</span>);</span><br><span class="line">        excelWriter.finish();</span><br><span class="line">        outputStream.flush();</span><br><span class="line">        outputStream.close();</span><br><span class="line">    &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="comment">//最好放在finally中</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4、controller</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;es&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">easyStream</span><span class="params">(HttpServletResponse response)</span></span><br><span class="line">        <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">    <span class="type">StopWatch</span> <span class="variable">stopWatch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StopWatch</span>();</span><br><span class="line">    stopWatch.start();</span><br><span class="line">    log.info(<span class="string">&quot;start es&quot;</span>);</span><br><span class="line">    authorsService.easyStreamExport(response);</span><br><span class="line">    stopWatch.stop();</span><br><span class="line">    System.out.println(stopWatch.prettyPrint());</span><br><span class="line">    log.info(<span class="string">&quot;es 共计耗时=&#123;&#125; S&quot;</span>, stopWatch.getTotalTimeSeconds());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>附：<strong>生成数据的存储过程和函数</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> `rand_string`(n <span class="type">INT</span>) <span class="keyword">RETURNS</span> <span class="type">varchar</span>(<span class="number">255</span>) CHARSET latin1 </span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    #Routine body goes here...</span><br><span class="line"><span class="keyword">DECLARE</span> chars_str <span class="type">varchar</span>(<span class="number">100</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&#x27;</span>; </span><br><span class="line"><span class="keyword">DECLARE</span> return_str <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> ;</span><br><span class="line"><span class="keyword">DECLARE</span> i <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>; </span><br><span class="line">WHILE i <span class="operator">&lt;</span> n DO </span><br><span class="line"><span class="keyword">SET</span> return_str <span class="operator">=</span> concat(return_str,<span class="built_in">substring</span>(chars_str , <span class="built_in">FLOOR</span>(<span class="number">1</span> <span class="operator">+</span> RAND()<span class="operator">*</span><span class="number">62</span> ),<span class="number">1</span>)); </span><br><span class="line"><span class="keyword">SET</span> i <span class="operator">=</span> i <span class="operator">+</span><span class="number">1</span>; </span><br><span class="line"><span class="keyword">END</span> WHILE; </span><br><span class="line"><span class="keyword">RETURN</span> return_str; </span><br><span class="line"> </span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 若报错执行 set global log_bin_trust_function_creators=TRUE;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span>  <span class="keyword">PROCEDURE</span> `add_authors`(<span class="keyword">IN</span> i <span class="type">int</span>, <span class="keyword">IN</span> n <span class="type">int</span>)</span><br><span class="line"><span class="keyword">BEGIN</span>  </span><br><span class="line">    <span class="comment">-- DECLARE i INT DEFAULT s;</span></span><br><span class="line">         <span class="keyword">DECLARE</span> max <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>;</span><br><span class="line">     <span class="keyword">set</span> max <span class="operator">=</span> i <span class="operator">+</span> n;</span><br><span class="line">    WHILE (i <span class="operator">&lt;=</span> max ) DO</span><br><span class="line">      <span class="keyword">INSERT</span> <span class="keyword">into</span> authors(id,first_name,last_name,email, birthdate, added) <span class="keyword">VALUEs</span> (i, rand_string(<span class="number">10</span>), rand_string(<span class="number">10</span>),  rand_string(<span class="number">15</span>), now(), now() );</span><br><span class="line">            <span class="keyword">set</span> i<span class="operator">=</span>i<span class="operator">+</span><span class="number">1</span>;</span><br><span class="line">    <span class="keyword">END</span> WHILE;</span><br><span class="line"><span class="keyword">END</span></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/mysql/">mysql</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://example.com/2019/06/18/mysql-export-100w/" data-title="一次导出100万条数据 | 一粒白沙" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2019/05/28/out-of-memory/"  title="Out Of Memory">
+ <strong>下一篇：</strong><br/> 
+ <span>Out Of Memory
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E5%AF%BC%E5%87%BA300%E4%B8%87%E6%9D%A1%E6%95%B0%E6%8D%AE"><span class="toc-number">1.</span> <span class="toc-text">一次导出300万条数据</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mysql/" title="mysql">mysql<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/线程池/" title="线程池">线程池<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 人生如逆旅，我亦是行人。 <br/>
+			此心安处是吾乡</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2024 
+		
+		<a href="/about" target="_blank" title="不合时宜的人">不合时宜的人</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
