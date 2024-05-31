@@ -85,9 +85,9 @@
     <h1 itemprop="name">Mysql8 主从配置</h1>
     
      
-           <p itemprop="description" >Mysql8 主从配置此篇是基于【Mysql8 在Centos7中安装部署】基础上进行配置，请先查看【Mysql8 在Centos7中安装部署】
+           <p itemprop="description" >此篇是基于【Mysql8 在Centos7中安装部署】基础上进行配置，请先查看【Mysql8 在Centos7中安装部署】
 一、主机配置主机的配置就三个步骤，比较容易
-1、授权给从机服务器12GRANT REPLICATION SLAVE ON *.* to</p>
+1、授权给从机服务器12GRANT REPLICATION SLAVE ON *.* to &amp;#x27;rep1</p>
         
     
     <time datetime="2019-09-21T11:33:09.000Z" itemprop="datePublished">2019-09-21</time>
@@ -107,7 +107,7 @@
     <h1 itemprop="name">Mysql8 在Centos7中安装部署</h1>
     
      
-           <p itemprop="description" >Mysql8 在Centos7中安装部署一、卸载MariaDB在CentOS中默认安装有MariaDB，是MySQL的一个分支，主要由开源社区维护。CentOS 7及以上版本已经不再使用MySQL数据库，而是使用MariaDB数据库。如果直接安装MySQL，会和MariaDB的文</p>
+           <p itemprop="description" >一、卸载MariaDB在CentOS中默认安装有MariaDB，是MySQL的一个分支，主要由开源社区维护。CentOS 7及以上版本已经不再使用MySQL数据库，而是使用MariaDB数据库。如果直接安装MySQL，会和MariaDB的文件冲突。因此，需要先卸载自带的Maria</p>
         
     
     <time datetime="2019-08-25T12:11:32.000Z" itemprop="datePublished">2019-08-25</time>
@@ -122,15 +122,15 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2019/07/14/out-of-memory/" title="Out Of Memory" itemprop="url">
+    <a href="/2019/07/14/out-of-memory/" title="Java 常见的内存溢出" itemprop="url">
   
-    <h1 itemprop="name">Out Of Memory</h1>
+    <h1 itemprop="name">Java 常见的内存溢出</h1>
     
      
-           <p itemprop="description" >Java 常见的内存溢出  以下测试环境基于mac pro；jdk11；idea2019完成
+           <p itemprop="description" >以下测试环境基于mac pro；jdk11；idea2019完成
 
 堆溢出：java.lang.OutOfMemoryError: Java heap space
-  123456789101112131415161718192021222324252</p>
+  12345678910111213141516171819202122232425262728293031323</p>
         
     
     <time datetime="2019-07-14T13:22:10.000Z" itemprop="datePublished">2019-07-14</time>
@@ -150,11 +150,11 @@
     <h1 itemprop="name">一次导出300万条数据</h1>
     
      
-           <p itemprop="description" >一次导出300万条数据做法通常如下：
+           <p itemprop="description" >做法通常如下：
 12常规查询： 一次性读取 300w 数据到 JVM 内存中，或者分页读取流式查询： 建立长连接，利用服务端游标，每次读取一条加载到 JVM 内存（多次获取，一次一行）
 
 常规查询
-默认情况下，完整的检索结果集会将其存储在内存中。在大多数情况</p>
+默认情况下，完整的检索结果集会将其存储在内存中。在大多数情况下，这是最有效的操作方</p>
         
     
     <time datetime="2019-06-18T04:30:45.000Z" itemprop="datePublished">2019-06-18</time>
@@ -174,7 +174,10 @@
     <h1 itemprop="name">ElasticSearch Head 安装部署</h1>
     
      
-           <p itemprop="description" >ElasticSearch Head 安装部署一、下载ElasticSearch Head到github中，https://github.com/mobz/elasticsearch-head，下载源码[[elasticsearch-head-master.zip](https:</p>
+           <p itemprop="description" >一、下载ElasticSearch Head到github中下载源码（2023-03-29 下载）
+1wget https://codeload.github.com/mobz/elasticsearch-head/zip/refs/heads/master
+
+二、解压并放到指定</p>
         
     
     <time datetime="2019-05-18T13:11:00.000Z" itemprop="datePublished">2019-05-18</time>
@@ -194,8 +197,8 @@
     <h1 itemprop="name">ElasticSearch 安装部署</h1>
     
      
-           <p itemprop="description" >ElasticSearch 安装部署一、下载ElasticSearch在es官网【https://elasticsearch.cn/download/】找到相关版本，如下载8.5.3
-1wget https://artifacts.elastic.co/downloads/ela</p>
+           <p itemprop="description" >一、下载ElasticSearch在es官网【https://elasticsearch.cn/download/】找到相关版本，如下载8.5.3
+1wget https://artifacts.elastic.co/downloads/elasticsearch/elastic</p>
         
     
     <time datetime="2019-04-13T11:33:45.000Z" itemprop="datePublished">2019-04-13</time>
@@ -215,11 +218,11 @@
     <h1 itemprop="name">线程池</h1>
     
      
-           <p itemprop="description" >线程池1. 为什么要用线程池
+           <p itemprop="description" >1. 为什么要用线程池
 
 降低资源消耗。通过重复利用已创建的线程降低线程创建、销毁线程造成的消耗。
 提高响应速度。当任务到达时，任务可以不需要等到线程创建就能立即执行。
-提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程</p>
+提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以</p>
         
     
     <time datetime="2019-03-16T07:32:11.000Z" itemprop="datePublished">2019-03-16</time>
@@ -239,7 +242,9 @@
     <h1 itemprop="name">Mysql8导入日期类型报错</h1>
     
      
-           <p itemprop="description" >Mysql8导入日期类型报错1MySQL 导入报错 [ERR] 1292 - Incorrect datetime value: &amp;#x27;0000-00-00 00:00:00&amp;#x27; for column &amp;#x27;create_time&amp;#x27; at row 1</p>
+           <p itemprop="description" >1MySQL 导入报错 [ERR] 1292 - Incorrect datetime value: &amp;#x27;0000-00-00 00:00:00&amp;#x27; for column &amp;#x27;create_time&amp;#x27; at row 1
+
+原因是 msyql5.7</p>
         
     
     <time datetime="2019-02-23T13:30:45.000Z" itemprop="datePublished">2019-02-23</time>
@@ -259,8 +264,8 @@
     <h1 itemprop="name">Docker中Cmd和EntryPoint</h1>
     
      
-           <p itemprop="description" >Docker中Cmd和EntryPoint该指令可以用于指定容器被启动时需要运行的命令。具体地，其支持shell、exec两种形式的语法
-1234# shell格式 CMD command  param1 param2 # exec格式 CMD [&amp;quot;command&amp;qu</p>
+           <p itemprop="description" >该指令可以用于指定容器被启动时需要运行的命令。具体地，其支持shell、exec两种形式的语法
+1234# shell格式 CMD command  param1 param2 # exec格式 CMD [&amp;quot;command&amp;quot;, &amp;quot;param1&amp;quo</p>
         
     
     <time datetime="2019-01-27T11:33:45.000Z" itemprop="datePublished">2019-01-27</time>
@@ -316,11 +321,11 @@
 			
 		
 			
-				<li><a href="/tags/线程池/" title="线程池">线程池<sup>1</sup></a></li>
+				<li><a href="/tags/excel/" title="excel">excel<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/excel/" title="excel">excel<sup>1</sup></a></li>
+				<li><a href="/tags/线程池/" title="线程池">线程池<sup>1</sup></a></li>
 			
 		
 			
