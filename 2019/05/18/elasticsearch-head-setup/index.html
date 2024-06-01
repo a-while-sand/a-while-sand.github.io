@@ -101,7 +101,7 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%8B%E8%BD%BDElasticSearch-Head"><span class="toc-number">1.</span> <span class="toc-text">一、下载ElasticSearch Head</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%A7%A3%E5%8E%8B%E5%B9%B6%E6%94%BE%E5%88%B0%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95"><span class="toc-number">2.</span> <span class="toc-text">二、解压并放到指定目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%AE%89%E8%A3%85nodejs%EF%BC%8C%E4%B8%8D%E8%83%BD%E7%89%88%E6%9C%AC%E5%A4%AA%E9%AB%98%EF%BC%8C%E5%90%A6%E5%88%99%E7%BC%96%E8%AF%91%E4%B8%8D%E9%80%9A%E8%BF%87%EF%BC%8C%E8%BF%99%E9%87%8C%E4%BD%BF%E7%94%A814-20"><span class="toc-number">3.</span> <span class="toc-text">三、安装nodejs，不能版本太高，否则编译不通过，这里使用14.20</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%BC%96%E8%AF%91%E5%B9%B6%E5%90%AF%E5%8A%A8"><span class="toc-number">4.</span> <span class="toc-text">四、编译并启动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%AE%BF%E9%97%AEHead"><span class="toc-number">5.</span> <span class="toc-text">五、访问Head</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">六、常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%E3%80%81npm-ERR-Failed-at-the-x70-104-x61-110-116-111-x6d-x6a-x73-45-112-x72-x65-98-x75-105-108-x74-64-50-46-x31-46-x31-54-install-script%EF%BC%9A"><span class="toc-number">6.1.</span> <span class="toc-text">1、npm ERR! Failed at the phantomjs-prebuilt@2.1.16 install script：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81%E5%90%AF%E5%8A%A8%E6%88%90%E5%8A%9F%EF%BC%8C%E6%AD%A4%E6%97%B6%E6%98%BE%E7%A4%BAelasticsearch%E6%9C%AA%E8%BF%9E%E6%8E%A5"><span class="toc-number">6.2.</span> <span class="toc-text">2、启动成功，此时显示elasticsearch未连接</span></a></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%8B%E8%BD%BDElasticSearch-Head"><span class="toc-number">1.</span> <span class="toc-text">一、下载ElasticSearch Head</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%A7%A3%E5%8E%8B%E5%B9%B6%E6%94%BE%E5%88%B0%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95"><span class="toc-number">2.</span> <span class="toc-text">二、解压并放到指定目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%AE%89%E8%A3%85nodejs%EF%BC%8C%E4%B8%8D%E8%83%BD%E7%89%88%E6%9C%AC%E5%A4%AA%E9%AB%98%EF%BC%8C%E5%90%A6%E5%88%99%E7%BC%96%E8%AF%91%E4%B8%8D%E9%80%9A%E8%BF%87%EF%BC%8C%E8%BF%99%E9%87%8C%E4%BD%BF%E7%94%A814-20"><span class="toc-number">3.</span> <span class="toc-text">三、安装nodejs，不能版本太高，否则编译不通过，这里使用14.20</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%BC%96%E8%AF%91%E5%B9%B6%E5%90%AF%E5%8A%A8"><span class="toc-number">4.</span> <span class="toc-text">四、编译并启动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%AE%BF%E9%97%AEHead"><span class="toc-number">5.</span> <span class="toc-text">五、访问Head</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">六、常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%E3%80%81npm-ERR-Failed-at-the-112-x68-97-110-x74-x6f-109-106-x73-x2d-x70-x72-x65-x62-x75-x69-108-116-x40-50-46-49-x2e-x31-x36-install-script%EF%BC%9A"><span class="toc-number">6.1.</span> <span class="toc-text">1、npm ERR! Failed at the phantomjs-prebuilt@2.1.16 install script：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81%E5%90%AF%E5%8A%A8%E6%88%90%E5%8A%9F%EF%BC%8C%E6%AD%A4%E6%97%B6%E6%98%BE%E7%A4%BAelasticsearch%E6%9C%AA%E8%BF%9E%E6%8E%A5"><span class="toc-number">6.2.</span> <span class="toc-text">2、启动成功，此时显示elasticsearch未连接</span></a></li></ol></li></ol>
 		
 		</div>
 		
@@ -116,7 +116,7 @@
 
 <h4 id="五、访问Head"><a href="#五、访问Head" class="headerlink" title="五、访问Head"></a><strong>五、访问Head</strong></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 浏览器输入以下地址</span><br><span class="line">http://localhost:9100/</span><br></pre></td></tr></table></figure>
 
-<h4 id="六、常见问题"><a href="#六、常见问题" class="headerlink" title="六、常见问题"></a><strong>六、常见问题</strong></h4><h5 id="1、npm-ERR-Failed-at-the-x70-104-x61-110-116-111-x6d-x6a-x73-45-112-x72-x65-98-x75-105-108-x74-64-50-46-x31-46-x31-54-install-script："><a href="#1、npm-ERR-Failed-at-the-x70-104-x61-110-116-111-x6d-x6a-x73-45-112-x72-x65-98-x75-105-108-x74-64-50-46-x31-46-x31-54-install-script：" class="headerlink" title="1、npm ERR! Failed at the &#x70;&#104;&#x61;&#110;&#116;&#111;&#x6d;&#x6a;&#x73;&#45;&#112;&#x72;&#x65;&#98;&#x75;&#105;&#108;&#x74;&#64;&#50;&#46;&#x31;&#46;&#x31;&#54; install script："></a><strong>1、npm ERR! Failed at the <a href="mailto:&#x70;&#104;&#x61;&#110;&#116;&#111;&#x6d;&#x6a;&#x73;&#45;&#112;&#x72;&#x65;&#98;&#x75;&#105;&#108;&#x74;&#64;&#50;&#46;&#x31;&#46;&#x31;&#54;">&#x70;&#104;&#x61;&#110;&#116;&#111;&#x6d;&#x6a;&#x73;&#45;&#112;&#x72;&#x65;&#98;&#x75;&#105;&#108;&#x74;&#64;&#50;&#46;&#x31;&#46;&#x31;&#54;</a> install script：</strong></h5><p>npm ERR! <a href="mailto:&#x70;&#x68;&#x61;&#x6e;&#116;&#111;&#x6d;&#x6a;&#x73;&#45;&#x70;&#114;&#x65;&#98;&#x75;&#105;&#x6c;&#116;&#x40;&#50;&#x2e;&#x31;&#46;&#49;&#x36;">&#x70;&#x68;&#x61;&#x6e;&#116;&#111;&#x6d;&#x6a;&#x73;&#45;&#x70;&#114;&#x65;&#98;&#x75;&#105;&#x6c;&#116;&#x40;&#50;&#x2e;&#x31;&#46;&#49;&#x36;</a> install: node install.js</p>
+<h4 id="六、常见问题"><a href="#六、常见问题" class="headerlink" title="六、常见问题"></a><strong>六、常见问题</strong></h4><h5 id="1、npm-ERR-Failed-at-the-112-x68-97-110-x74-x6f-109-106-x73-x2d-x70-x72-x65-x62-x75-x69-108-116-x40-50-46-49-x2e-x31-x36-install-script："><a href="#1、npm-ERR-Failed-at-the-112-x68-97-110-x74-x6f-109-106-x73-x2d-x70-x72-x65-x62-x75-x69-108-116-x40-50-46-49-x2e-x31-x36-install-script：" class="headerlink" title="1、npm ERR! Failed at the &#112;&#x68;&#97;&#110;&#x74;&#x6f;&#109;&#106;&#x73;&#x2d;&#x70;&#x72;&#x65;&#x62;&#x75;&#x69;&#108;&#116;&#x40;&#50;&#46;&#49;&#x2e;&#x31;&#x36; install script："></a><strong>1、npm ERR! Failed at the <a href="mailto:&#112;&#x68;&#97;&#110;&#x74;&#x6f;&#109;&#106;&#x73;&#x2d;&#x70;&#x72;&#x65;&#x62;&#x75;&#x69;&#108;&#116;&#x40;&#50;&#46;&#49;&#x2e;&#x31;&#x36;">&#112;&#x68;&#97;&#110;&#x74;&#x6f;&#109;&#106;&#x73;&#x2d;&#x70;&#x72;&#x65;&#x62;&#x75;&#x69;&#108;&#116;&#x40;&#50;&#46;&#49;&#x2e;&#x31;&#x36;</a> install script：</strong></h5><p>npm ERR! <a href="mailto:&#112;&#x68;&#x61;&#110;&#x74;&#111;&#109;&#x6a;&#x73;&#45;&#112;&#114;&#x65;&#x62;&#117;&#105;&#x6c;&#116;&#64;&#x32;&#x2e;&#49;&#x2e;&#x31;&#54;">&#112;&#x68;&#x61;&#110;&#x74;&#111;&#109;&#x6a;&#x73;&#45;&#112;&#114;&#x65;&#x62;&#117;&#105;&#x6c;&#116;&#64;&#x32;&#x2e;&#49;&#x2e;&#x31;&#54;</a> install: node install.js</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install phantomjs-prebuilt@2.1.16 --ignore-scripts</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">npm install -g</span><br></pre></td></tr></table></figure>
 
 <p>再切换到esuser用户，运行bin&#x2F;elasticsearch</p>
@@ -181,7 +181,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%8B%E8%BD%BDElasticSearch-Head"><span class="toc-number">1.</span> <span class="toc-text">一、下载ElasticSearch Head</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%A7%A3%E5%8E%8B%E5%B9%B6%E6%94%BE%E5%88%B0%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95"><span class="toc-number">2.</span> <span class="toc-text">二、解压并放到指定目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%AE%89%E8%A3%85nodejs%EF%BC%8C%E4%B8%8D%E8%83%BD%E7%89%88%E6%9C%AC%E5%A4%AA%E9%AB%98%EF%BC%8C%E5%90%A6%E5%88%99%E7%BC%96%E8%AF%91%E4%B8%8D%E9%80%9A%E8%BF%87%EF%BC%8C%E8%BF%99%E9%87%8C%E4%BD%BF%E7%94%A814-20"><span class="toc-number">3.</span> <span class="toc-text">三、安装nodejs，不能版本太高，否则编译不通过，这里使用14.20</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%BC%96%E8%AF%91%E5%B9%B6%E5%90%AF%E5%8A%A8"><span class="toc-number">4.</span> <span class="toc-text">四、编译并启动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%AE%BF%E9%97%AEHead"><span class="toc-number">5.</span> <span class="toc-text">五、访问Head</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">六、常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%E3%80%81npm-ERR-Failed-at-the-x70-104-x61-110-116-111-x6d-x6a-x73-45-112-x72-x65-98-x75-105-108-x74-64-50-46-x31-46-x31-54-install-script%EF%BC%9A"><span class="toc-number">6.1.</span> <span class="toc-text">1、npm ERR! Failed at the phantomjs-prebuilt@2.1.16 install script：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81%E5%90%AF%E5%8A%A8%E6%88%90%E5%8A%9F%EF%BC%8C%E6%AD%A4%E6%97%B6%E6%98%BE%E7%A4%BAelasticsearch%E6%9C%AA%E8%BF%9E%E6%8E%A5"><span class="toc-number">6.2.</span> <span class="toc-text">2、启动成功，此时显示elasticsearch未连接</span></a></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%B8%8B%E8%BD%BDElasticSearch-Head"><span class="toc-number">1.</span> <span class="toc-text">一、下载ElasticSearch Head</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%A7%A3%E5%8E%8B%E5%B9%B6%E6%94%BE%E5%88%B0%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95"><span class="toc-number">2.</span> <span class="toc-text">二、解压并放到指定目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%AE%89%E8%A3%85nodejs%EF%BC%8C%E4%B8%8D%E8%83%BD%E7%89%88%E6%9C%AC%E5%A4%AA%E9%AB%98%EF%BC%8C%E5%90%A6%E5%88%99%E7%BC%96%E8%AF%91%E4%B8%8D%E9%80%9A%E8%BF%87%EF%BC%8C%E8%BF%99%E9%87%8C%E4%BD%BF%E7%94%A814-20"><span class="toc-number">3.</span> <span class="toc-text">三、安装nodejs，不能版本太高，否则编译不通过，这里使用14.20</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%BC%96%E8%AF%91%E5%B9%B6%E5%90%AF%E5%8A%A8"><span class="toc-number">4.</span> <span class="toc-text">四、编译并启动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%AE%BF%E9%97%AEHead"><span class="toc-number">5.</span> <span class="toc-text">五、访问Head</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">六、常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%E3%80%81npm-ERR-Failed-at-the-112-x68-97-110-x74-x6f-109-106-x73-x2d-x70-x72-x65-x62-x75-x69-108-116-x40-50-46-49-x2e-x31-x36-install-script%EF%BC%9A"><span class="toc-number">6.1.</span> <span class="toc-text">1、npm ERR! Failed at the phantomjs-prebuilt@2.1.16 install script：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%E3%80%81%E5%90%AF%E5%8A%A8%E6%88%90%E5%8A%9F%EF%BC%8C%E6%AD%A4%E6%97%B6%E6%98%BE%E7%A4%BAelasticsearch%E6%9C%AA%E8%BF%9E%E6%8E%A5"><span class="toc-number">6.2.</span> <span class="toc-text">2、启动成功，此时显示elasticsearch未连接</span></a></li></ol></li></ol>
  
   </div>
 
@@ -201,11 +201,11 @@
 			
 		
 			
-				<li><a href="/tags/linux/" title="linux">linux<sup>5</sup></a></li>
+				<li><a href="/tags/linux/" title="linux">linux<sup>7</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/centos7/" title="centos7">centos7<sup>5</sup></a></li>
+				<li><a href="/tags/centos7/" title="centos7">centos7<sup>6</sup></a></li>
 			
 		
 			
@@ -214,6 +214,10 @@
 		
 			
 				<li><a href="/tags/redis/" title="redis">redis<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cluster/" title="cluster">cluster<sup>3</sup></a></li>
 			
 		
 			
@@ -229,7 +233,7 @@
 			
 		
 			
-				<li><a href="/tags/cluster/" title="cluster">cluster<sup>2</sup></a></li>
+				<li><a href="/tags/mongodb/" title="mongodb">mongodb<sup>2</sup></a></li>
 			
 		
 			
@@ -265,15 +269,11 @@
 			
 		
 			
-				<li><a href="/tags/collection/" title="collection">collection<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/thread-pool/" title="thread-pool">thread-pool<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>1</sup></a></li>
+				<li><a href="/tags/collection/" title="collection">collection<sup>1</sup></a></li>
 			
 		
 		</ul>
