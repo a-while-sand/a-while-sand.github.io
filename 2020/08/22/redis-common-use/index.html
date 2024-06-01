@@ -1,0 +1,563 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Redis 常用操作 | 一粒白沙</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="不合时宜的人">
+    
+
+    
+    <meta name="description" content="Redis的五种基本数据类型 string：字符串 (set get del strlen)  添加 得到 删除 总数 hash：对象 ( hput hget hdel hlen ) list：有序列表 （rpush lrange llen) set：无序集合 ( sadd smembers srem scard) zset：有序集合 (zadd zrange zrem zcard) 需要指定分数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis 常用操作">
+<meta property="og:url" content="http://example.com/2020/08/22/redis-common-use/index.html">
+<meta property="og:site_name" content="一粒白沙">
+<meta property="og:description" content="Redis的五种基本数据类型 string：字符串 (set get del strlen)  添加 得到 删除 总数 hash：对象 ( hput hget hdel hlen ) list：有序列表 （rpush lrange llen) set：无序集合 ( sadd smembers srem scard) zset：有序集合 (zadd zrange zrem zcard) 需要指定分数">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-22T07:23:11.000Z">
+<meta property="article:modified_time" content="2024-05-31T14:43:32.288Z">
+<meta property="article:author" content="不合时宜的人">
+<meta property="article:tag" content="redis">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="一粒白沙" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="一粒白沙" title="一粒白沙"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="一粒白沙">一粒白沙</a></h1>
+				<h2 class="blog-motto">白沙洲中的一粒</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2020/08/22/redis-common-use/" title="Redis 常用操作" itemprop="url">Redis 常用操作</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
+		
+  <p class="article-time">
+    <time datetime="2020-08-22T07:23:11.000Z" itemprop="datePublished"> 发表于 2020-08-22</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#Redis%E7%9A%84%E4%BA%94%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">Redis的五种基本数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#string"><span class="toc-number">1.1.</span> <span class="toc-text">string</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#hash"><span class="toc-number">1.2.</span> <span class="toc-text">hash</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#list"><span class="toc-number">1.3.</span> <span class="toc-text">list</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#set"><span class="toc-number">1.4.</span> <span class="toc-text">set</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#zset%EF%BC%88sorted-set%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">zset（sorted set）</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">2.</span> <span class="toc-text">通用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#key%E7%9B%B8%E5%85%B3"><span class="toc-number">2.1.</span> <span class="toc-text">key相关</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3"><span class="toc-number">2.2.</span> <span class="toc-text">数据库相关</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8Bredis%E8%AF%BB%E5%86%99%E6%80%A7%E8%83%BD"><span class="toc-number">2.3.</span> <span class="toc-text">查看redis读写性能</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Redis%E4%BA%8B%E5%8A%A1"><span class="toc-number">3.</span> <span class="toc-text">Redis事务</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#Redis%E4%BA%8B%E5%8A%A1%E6%89%A7%E8%A1%8C%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.1.</span> <span class="toc-text">Redis事务执行步骤</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Redis%E7%B1%BB%E5%9E%8B%E9%94%99%E8%AF%AF%EF%BC%88%E8%BF%90%E8%A1%8C%E6%97%B6%E9%94%99%E8%AF%AF%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">Redis类型错误（运行时错误）</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h5 id="Redis的五种基本数据类型"><a href="#Redis的五种基本数据类型" class="headerlink" title="Redis的五种基本数据类型"></a>Redis的五种基本数据类型</h5><ul>
+<li>string：字符串 (set get del strlen)  添加 得到 删除 总数</li>
+<li>hash：对象 ( hput hget hdel hlen )</li>
+<li>list：有序列表 （rpush lrange llen)</li>
+<li>set：无序集合 ( sadd smembers srem scard)</li>
+<li>zset：有序集合 (zadd zrange zrem zcard) 需要指定分数值  主要用于排行榜，topN</li>
+</ul>
+<h6 id="string"><a href="#string" class="headerlink" title="string"></a>string</h6><p>命令：</p>
+<p>set get getset mset mget</p>
+<p>setnx strlen append incr incrby</p>
+<p>decr decrby</p>
+<p>SET key value[EX seconds][PX milliseconds][NX|XX] 分布式事务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SET key value[EX seconds][PX milliseconds][NX|XX]</span><br><span class="line">NX :表示key不存在的时候，才能set成功，也即保证只有第一个客户端请求才能获得锁，而其他客户端请求只能等其释放锁，才能获取。</span><br><span class="line">EX seconds :设定key的过期时间，时间单位是秒。</span><br><span class="line">PX milliseconds: 设定key的过期时间，单位为毫秒</span><br><span class="line">XX: 仅当key存在时设置值</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">设置key和value，正确返回OK</span></span><br><span class="line">set key value</span><br><span class="line">set name zhangsan</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取key对应的value值，若没有返回nil</span></span><br><span class="line">get key</span><br><span class="line">get name</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">返回key对应的value，再重新设置这个key的值</span></span><br><span class="line">getset key value</span><br><span class="line">getset name lily</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">设置多个键值对 正确返回OK</span></span><br><span class="line">mset k1 v1 k2 v2 ...</span><br><span class="line">mset sex 1 age 20 address hz</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取多对key对应的value</span></span><br><span class="line">mget k1 k2 k3 ...</span><br><span class="line">mget sex age address</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">设置key-value:如果key不存在，则设置，如果key存在，则什么都不做</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">成功返回1，失败返回0</span></span><br><span class="line">setnx key value</span><br><span class="line">setnx phone 13577889900</span><br><span class="line"></span><br><span class="line">SET key value[EX seconds][PX milliseconds][NX|XX]</span><br></pre></td></tr></table></figure>
+
+<h6 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h6><p>hset hmset hget hmget hkeyshvals hgetall hexists hlen hsetnx hdel</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置值，必须指定大key和小key、value</span></span><br><span class="line">hset person name tom</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置多值</span></span><br><span class="line">hmset person sex 1 age 20</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取单个小key对应的value</span></span><br><span class="line">hget person sex</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取多个小key对应的value们</span></span><br><span class="line">hmget person name age</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取所有的小key</span></span><br><span class="line">hkeys person</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取所有的小key对应的values</span></span><br><span class="line">hvals person</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取所有大key中的键值对</span></span><br><span class="line">hgetall person</span><br><span class="line"></span><br><span class="line"><span class="comment">#判断小key是否存在</span></span><br><span class="line">hexists person age</span><br><span class="line"></span><br><span class="line"><span class="comment">#求大key中小key的数量</span></span><br><span class="line">hlen person</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置小key【小key不存在，则设置成功，如果存在，则什么都不做】</span></span><br><span class="line">hsetnx person age 25</span><br><span class="line"></span><br><span class="line"><span class="comment">#删除</span></span><br><span class="line">hdel person age</span><br></pre></td></tr></table></figure>
+
+<h6 id="list"><a href="#list" class="headerlink" title="list"></a>list</h6><p>lpush rpush lrange llen lindex lpop rpop rpoplpush lrem</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#左压栈</span></span><br><span class="line">lpush key v1 v2 ...</span><br><span class="line"><span class="comment">#特征:存入的数据顺序跟读取顺序相反</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#右压栈</span></span><br><span class="line">rpush key v1 v2 ...</span><br><span class="line"><span class="comment">#特征:存入的数据顺序跟读取顺序相同</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#查询列表中的数据</span></span><br><span class="line"><span class="comment">#下标从0开始，如果要读到最末尾，endIndex就是-1</span></span><br><span class="line">lrange key startIndex endIndex</span><br><span class="line">lrange key 0 -1</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取列表元素的个数</span></span><br><span class="line">llen key</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取指定索引的元素,index表示索引</span></span><br><span class="line">lindex key index</span><br><span class="line"><span class="comment">#获取指定索引为3的元素</span></span><br><span class="line">lindex key 3</span><br><span class="line"></span><br><span class="line"><span class="comment">#从左边弹出一个元素[获取最左边的元素，再删除它]</span></span><br><span class="line">lpop key</span><br><span class="line"></span><br><span class="line"><span class="comment">#从右边弹出一个元素</span></span><br></pre></td></tr></table></figure>
+
+<h6 id="set"><a href="#set" class="headerlink" title="set"></a>set</h6><p>sadd scard smembers sismember spop sdiff sinter sunionsdiffstore sinterstore sunionstore smove</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">存值</span></span><br><span class="line">sadd myset aa bb cc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">返回存入的个数</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取集合长度</span></span><br><span class="line">scard myset</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取集合元素</span></span><br><span class="line">smembers myset</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">判断元素是否在集合中。存在:返回1，不存在:返回0</span></span><br><span class="line">sismember myset cc</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">随机弹出一个元素</span></span><br><span class="line">spop myset</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">随机弹出指定个数元素</span></span><br><span class="line">spop myset 2</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">差集</span></span><br><span class="line">sdiff myset1 myset2</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">交集</span></span><br><span class="line">sinter myset1 myset2</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">并集</span></span><br><span class="line">sunion myset1 myset2</span><br></pre></td></tr></table></figure>
+
+<h6 id="zset（sorted-set）"><a href="#zset（sorted-set）" class="headerlink" title="zset（sorted set）"></a>zset（sorted set）</h6><p>zadd zcard zrange zincrby zscore zinterstore zrangebyscore zrevrangebyscorezrem zrank zremrangebyscore</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">向有序集合中增加元素</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">zadd 集合名 分数1 名称1 分数2 名称2 ...</span></span><br><span class="line">zadd tuhaobang 10 zhangsan 80 lisi 30 wangwu</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">返回插入的数量</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取集合中元素的数量</span></span><br><span class="line">zcard tuhaobang</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取集合中指定区间的元素名称，如果后面的索引是-1，则返回所有元素名称</span></span><br><span class="line">zrange tuhaobang 0 -1</span><br><span class="line">1) &quot;zhangsan&quot;</span><br><span class="line">2) &quot;wangwu&quot;</span><br><span class="line">3) &quot;lisi&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取集合所有的元素，包括名称和分数【是从小到大排序】</span></span><br><span class="line">zrange tuhaobang 0 -1 withscores</span><br><span class="line">1) &quot;zhangsan&quot;</span><br><span class="line">2) &quot;10&quot;</span><br><span class="line">3) &quot;wangwu&quot;</span><br><span class="line">4) &quot;30&quot;</span><br><span class="line">5) &quot;lisi&quot;</span><br><span class="line">6) &quot;80&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">获取集合前两位元素的名称和分数</span></span><br><span class="line">zrange tuhaobang 0 1 withscores</span><br><span class="line">1) &quot;zhangsan&quot;</span><br><span class="line">2) &quot;10&quot;</span><br><span class="line">3) &quot;wangwu&quot;</span><br><span class="line">4) &quot;30&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">为集合中指定的名称的元素增加分数</span></span><br><span class="line">zincrby tuhaobang 50 zhangsan</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">返回增加后的分数</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h5><h6 id="key相关"><a href="#key相关" class="headerlink" title="key相关"></a>key相关</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">#查找匹配规则的key, *:代表0到多个字符，?代表一个字符</span><br><span class="line">#查询所有key</span><br><span class="line">keys *</span><br><span class="line">#查询keys中第二个字母为a的key</span><br><span class="line">keys ?a*</span><br><span class="line"></span><br><span class="line">#判断key是否存在，存在:返回1，不存在:返回0</span><br><span class="line">exists key</span><br><span class="line"></span><br><span class="line">#删除key，删除成功返回1，删除不存在的key返回0</span><br><span class="line">del key</span><br><span class="line"></span><br><span class="line">#查看key剩余有效时间</span><br><span class="line">#ttl key</span><br><span class="line">ttl gender</span><br><span class="line">结果:返回剩余有效时间，如果已经过期：返回-2，如果没有设置有效时间：返回-1</span><br><span class="line"></span><br><span class="line">#设置已经存在的key的过期时间，单位为秒</span><br><span class="line">expire key seconds</span><br><span class="line"></span><br><span class="line">#为已经存在的key设置过期时间，单位是毫秒</span><br><span class="line">pexpire key 毫秒</span><br><span class="line">#查看指定key的剩余存活时间，单位是毫秒</span><br><span class="line">pttl key</span><br><span class="line"></span><br><span class="line">#移除指定key的生存时间，永久的持久化</span><br><span class="line">persist key</span><br><span class="line"></span><br><span class="line">#获取指定的key的value的数据类型</span><br><span class="line">type key</span><br><span class="line"></span><br><span class="line">#移动当前数据库中对应的key到其他数据库,dbindex是0-15</span><br><span class="line">move key dbindex</span><br></pre></td></tr></table></figure>
+
+<h6 id="数据库相关"><a href="#数据库相关" class="headerlink" title="数据库相关"></a>数据库相关</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#redis默认有16个数据库，分别是 db0 - db15</span><br><span class="line">#查看当前数据库下有多少key</span><br><span class="line">dbsize</span><br><span class="line"></span><br><span class="line">#切换数据库,dbindex是0-15</span><br><span class="line">select dbindex</span><br><span class="line"></span><br><span class="line">#清空当前数据库</span><br><span class="line">flushdb</span><br><span class="line"></span><br><span class="line">#清空所有数据库中的数据</span><br><span class="line">flushall</span><br><span class="line"></span><br><span class="line">#实时监控Redis服务接收到的命令【其他客户端的操作，能够被监控到】</span><br><span class="line">monitor</span><br></pre></td></tr></table></figure>
+
+<h6 id="查看redis读写性能"><a href="#查看redis读写性能" class="headerlink" title="查看redis读写性能"></a>查看redis读写性能</h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#redis写的性能</span><br><span class="line">redis-benchmark set</span><br><span class="line"></span><br><span class="line">#redis读的性能</span><br><span class="line">redis-benchmark get</span><br></pre></td></tr></table></figure>
+
+<h5 id="Redis事务"><a href="#Redis事务" class="headerlink" title="Redis事务"></a>Redis事务</h5><h6 id="Redis事务执行步骤"><a href="#Redis事务执行步骤" class="headerlink" title="Redis事务执行步骤"></a>Redis事务执行步骤</h6><p>通过上文命令执行，很显然Redis事务执行是三个阶段：</p>
+<p>开启：以MULTI开始一个事务</p>
+<p>入队：将多个命令入队到事务中，接到这些命令并不会立即执行，而是放到等待执行的事务队列里面</p>
+<p>执行：由EXEC命令触发事务</p>
+<p>事务出现错误的处理</p>
+<p>语法错误（编译器错误）</p>
+<p>在开启事务后，修改k1值为11，k2值为22，但k2语法错误，最终导致事务提交失败，k1、k2保留原值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k1 v1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k2 v2</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; MULTI</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k1 11</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; sets k2 22</span><br><span class="line">(error) ERR unknown command `sets`, with args beginning with: `k2`, `22`, </span><br><span class="line">127.0.0.1:6379&gt; exec</span><br><span class="line">(error) EXECABORT Transaction discarded because of previous errors.</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;v1&quot;</span><br><span class="line">127.0.0.1:6379&gt; get k2</span><br><span class="line">&quot;v2&quot;</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+<h6 id="Redis类型错误（运行时错误）"><a href="#Redis类型错误（运行时错误）" class="headerlink" title="Redis类型错误（运行时错误）"></a>Redis类型错误（运行时错误）</h6><p>在开启事务后，修改k1值为11，k2值为22，但将k2的类型作为List，在运行时检测类型错误，最终导致事务提交失败，此时事务并没有回滚，而是跳过错误命令继续执行， 结果k1值改变、k2保留原值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set k1 v1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k1 v2</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; MULTI</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set k1 11</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; lpush k2 22</span><br><span class="line">QUEUED</span><br><span class="line">127.0.0.1:6379&gt; EXEC</span><br><span class="line">1) OK</span><br><span class="line">2) (error) WRONGTYPE Operation against a key holding the wrong kind of value</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;11&quot;</span><br><span class="line">127.0.0.1:6379&gt; get k2</span><br><span class="line">&quot;v2&quot;</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/redis/">redis</a><a href="/tags/linux/">linux</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://example.com/2020/08/22/redis-common-use/" data-title="Redis 常用操作 | 一粒白沙" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2020/11/24/zookeeper-linux-setup/" title="Zookeeper 在Centos7中安装部署">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Zookeeper 在Centos7中安装部署</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2020/05/15/springboot-more-datasource/"  title="Springboot配置多个数据源">
+ <strong>下一篇：</strong><br/> 
+ <span>Springboot配置多个数据源
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#Redis%E7%9A%84%E4%BA%94%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">Redis的五种基本数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#string"><span class="toc-number">1.1.</span> <span class="toc-text">string</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#hash"><span class="toc-number">1.2.</span> <span class="toc-text">hash</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#list"><span class="toc-number">1.3.</span> <span class="toc-text">list</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#set"><span class="toc-number">1.4.</span> <span class="toc-text">set</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#zset%EF%BC%88sorted-set%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">zset（sorted set）</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">2.</span> <span class="toc-text">通用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#key%E7%9B%B8%E5%85%B3"><span class="toc-number">2.1.</span> <span class="toc-text">key相关</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3"><span class="toc-number">2.2.</span> <span class="toc-text">数据库相关</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8Bredis%E8%AF%BB%E5%86%99%E6%80%A7%E8%83%BD"><span class="toc-number">2.3.</span> <span class="toc-text">查看redis读写性能</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Redis%E4%BA%8B%E5%8A%A1"><span class="toc-number">3.</span> <span class="toc-text">Redis事务</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#Redis%E4%BA%8B%E5%8A%A1%E6%89%A7%E8%A1%8C%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.1.</span> <span class="toc-text">Redis事务执行步骤</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Redis%E7%B1%BB%E5%9E%8B%E9%94%99%E8%AF%AF%EF%BC%88%E8%BF%90%E8%A1%8C%E6%97%B6%E9%94%99%E8%AF%AF%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">Redis类型错误（运行时错误）</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>9</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/centos7/" title="centos7">centos7<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mysql/" title="mysql">mysql<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/linux/" title="linux">linux<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/springboot/" title="springboot">springboot<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/es/" title="es">es<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch/" title="elasticsearch">elasticsearch<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cluster/" title="cluster">cluster<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/zookeeper/" title="zookeeper">zookeeper<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cmd/" title="cmd">cmd<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/aqs/" title="aqs">aqs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/collection/" title="collection">collection<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/thread-pool/" title="thread-pool">thread-pool<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/kafka/" title="kafka">kafka<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/excel/" title="excel">excel<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p>  <br/>
+			人生如逆旅，我亦是行人</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2024 
+		
+		<a href="/about" target="_blank" title="不合时宜的人">不合时宜的人</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
