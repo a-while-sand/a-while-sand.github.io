@@ -80,6 +80,51 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
+    <a href="/2024/02/18/k8s-dashboard-setup/" title="K8S的dashboard 安装部署" itemprop="url">
+  
+    <h1 itemprop="name">K8S的dashboard 安装部署</h1>
+    
+     
+           <p itemprop="description" >一、部署 Dashboard1、安装dashboardkubernetes-dashboard.yaml（见最后配置文件）
+1kubectl apply -f kubernetes-dashboard.yaml
+
+从上图可知，服务被分配到了k8s-node1，对外端口为nodeP</p>
+        
+    
+    <time datetime="2024-02-18T14:13:44.000Z" itemprop="datePublished">2024-02-18</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2024/01/22/k8s-linux-setup/" title="K8s 安装部署" itemprop="url">
+  
+    <h1 itemprop="name">K8s 安装部署</h1>
+    
+     
+           <p itemprop="description" >一、前期准备1、前提条件
+三台兼容的 Linux 主机。Kubernetes 项目为基于 Debian 和 Red Hat 的 - - Linux 发行版以及一些不提供包管理器的发行版提供通用的指令
+每台机器 2 GB 或更多的 RAM （如果少于这个数字将会影响你应用的运行内存</p>
+        
+    
+    <time datetime="2024-01-22T12:11:56.000Z" itemprop="datePublished">2024-01-22</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
     <a href="/2023/09/30/mongodb-cluster-setup/" title="MongoDB的副本集中安装部署" itemprop="url">
   
     <h1 itemprop="name">MongoDB的副本集中安装部署</h1>
@@ -289,64 +334,6 @@ Reids官方不提供二进制包，需要用户自己编译，编译时，需要
 
 
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2021/01/08/zookeeper-cluster-setup/" title="Zookeeper 集群部署" itemprop="url">
-  
-    <h1 itemprop="name">Zookeeper 集群部署</h1>
-    
-     
-           <p itemprop="description" >1、修改三台主机名称
-
-
-IP
-192.168.1.10
-192.168.1.11
-192.168.1.12
-
-
-
-主机名称
-host10
-host11
-host12
-
-
-1234#在三台主机上分别执行    hostnamectl set-hostname host10    </p>
-        
-    
-    <time datetime="2021-01-08T14:11:30.000Z" itemprop="datePublished">2021-01-08</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2020/11/24/zookeeper-linux-setup/" title="Zookeeper 在Centos7中安装部署" itemprop="url">
-  
-    <h1 itemprop="name">Zookeeper 在Centos7中安装部署</h1>
-    
-     
-           <p itemprop="description" >下载zookeeper1wget http://mirror.bit.edu.cn/apache/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.tar.gz
-
-解压，指定目录123tar -zxvf zookeeper-3.3.6.tar.g</p>
-        
-    
-    <time datetime="2020-11-24T10:33:22.000Z" itemprop="datePublished">2020-11-24</time>
-  </a>
-</section>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix unexpand">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next&lt;span&gt;&lt;&#x2F;span&gt;</a>
@@ -371,7 +358,7 @@ host12
 			
 		
 			
-				<li><a href="/tags/linux/" title="linux">linux<sup>7</sup></a></li>
+				<li><a href="/tags/linux/" title="linux">linux<sup>8</sup></a></li>
 			
 		
 			
@@ -400,6 +387,14 @@ host12
 		
 			
 				<li><a href="/tags/elasticsearch/" title="elasticsearch">elasticsearch<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/k8s/" title="k8s">k8s<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/kubernetes/" title="kubernetes">kubernetes<sup>2</sup></a></li>
 			
 		
 			
@@ -436,14 +431,6 @@ host12
 		
 			
 				<li><a href="/tags/aqs/" title="aqs">aqs<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/thread-pool/" title="thread-pool">thread-pool<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/collection/" title="collection">collection<sup>1</sup></a></li>
 			
 		
 		</ul>
