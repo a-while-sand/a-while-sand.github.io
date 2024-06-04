@@ -64,10 +64,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -108,7 +109,11 @@
            <p itemprop="description" >以下测试环境基于mac pro；jdk11；idea2019完成
 
 堆溢出：java.lang.OutOfMemoryError: Java heap space
-  12345678910111213141516171819202122232425262728293031323</p>
+  import java.util.ArrayList;
+import java.util.List;
+
+/**
+</p>
         
     
     <time datetime="2019-07-14T13:22:10.000Z" itemprop="datePublished">2019-07-14</time>
@@ -129,10 +134,11 @@
     
      
            <p itemprop="description" >做法通常如下：
-12常规查询： 一次性读取 300w 数据到 JVM 内存中，或者分页读取流式查询： 建立长连接，利用服务端游标，每次读取一条加载到 JVM 内存（多次获取，一次一行）
+常规查询： 一次性读取 300w 数据到 JVM 内存中，或者分页读取
+流式查询： 建立长连接，利用服务端游标，每次读取一条加载到 JVM 内存（多次获取，一次一行）
 
 常规查询
-默认情况下，完整的检索结果集会将其存储在内存中。在大多数情况下，这是最有效的操作方</p>
+默认情况下，完整的检索结果集会将其存储在内存中。在大多数情况下，这是最有效的操作方式</p>
         
     
     <time datetime="2019-06-18T04:30:45.000Z" itemprop="datePublished">2019-06-18</time>
@@ -153,9 +159,9 @@
     
      
            <p itemprop="description" >一、下载ElasticSearch Head到github中下载源码（2023-03-29 下载）
-1wget https://codeload.github.com/mobz/elasticsearch-head/zip/refs/heads/master
+wget https://codeload.github.com/mobz/elasticsearch-head/zip/refs/heads/master
 
-二、解压并放到指定</p>
+二、解压并放到指定目</p>
         
     
     <time datetime="2019-05-18T13:11:00.000Z" itemprop="datePublished">2019-05-18</time>
@@ -176,7 +182,7 @@
     
      
            <p itemprop="description" >下载ElasticSearch在es官网【https://elasticsearch.cn/download/】找到相关版本，如下载8.5.3
-1wget https://artifacts.elastic.co/downloads/elasticsearch/elasticse</p>
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsea</p>
         
     
     <time datetime="2019-04-13T11:33:45.000Z" itemprop="datePublished">2019-04-13</time>
@@ -220,9 +226,9 @@
     <h1 itemprop="name">Mysql8导入日期类型报错</h1>
     
      
-           <p itemprop="description" >1MySQL 导入报错 [ERR] 1292 - Incorrect datetime value: &amp;#x27;0000-00-00 00:00:00&amp;#x27; for column &amp;#x27;create_time&amp;#x27; at row 1
+           <p itemprop="description" >MySQL 导入报错 [ERR] 1292 - Incorrect datetime value: &amp;#x27;0000-00-00 00:00:00&amp;#x27; for column &amp;#x27;create_time&amp;#x27; at row 1
 
-原因是 msyql5.7</p>
+原因是 msyql5.7 </p>
         
     
     <time datetime="2019-02-23T13:30:45.000Z" itemprop="datePublished">2019-02-23</time>
@@ -243,7 +249,10 @@
     
      
            <p itemprop="description" >该指令可以用于指定容器被启动时需要运行的命令。具体地，其支持shell、exec两种形式的语法
-1234# shell格式 CMD command  param1 param2 # exec格式 CMD [&amp;quot;command&amp;quot;, &amp;quot;param1&amp;quo</p>
+# shell格式 
+CMD command  param1 param2 
+# exec格式 
+CMD [&amp;quot;command&amp;quot;, &amp;quot;param1&amp;quot</p>
         
     
     <time datetime="2019-01-27T11:33:45.000Z" itemprop="datePublished">2019-01-27</time>
@@ -257,7 +266,7 @@
 
 
   <nav id="page-nav" class="clearfix unexpand">
-    <a class="extend prev" rel="prev" href="/page/2/">&lt;span&gt;&lt;&#x2F;span&gt;Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
   </nav>
 
 </div>
@@ -327,10 +336,6 @@
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -340,6 +345,10 @@
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -397,6 +406,8 @@
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

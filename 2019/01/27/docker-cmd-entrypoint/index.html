@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="该指令可以用于指定容器被启动时需要运行的命令。具体地，其支持shell、exec两种形式的语法 1234# shell格式 CMD command  param1 param2 # exec格式 CMD [&quot;command&quot;, &quot;param1&quot;, &quot;param1&quot;]  通常Docker中推荐使用exec格式语法，原因有二。一方面，shel">
+    <meta name="description" content="该指令可以用于指定容器被启动时需要运行的命令。具体地，其支持shell、exec两种形式的语法 # shell格式  CMD command  param1 param2  # exec格式  CMD [&quot;command&quot;, &quot;param1&quot;, &quot;param1&quot;]  通常Docker中推荐使用exec格式语法，原因有二。一方面，shell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker中Cmd和EntryPoint">
 <meta property="og:url" content="http://example.com/2019/01/27/docker-cmd-entrypoint/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="该指令可以用于指定容器被启动时需要运行的命令。具体地，其支持shell、exec两种形式的语法 1234# shell格式 CMD command  param1 param2 # exec格式 CMD [&quot;command&quot;, &quot;param1&quot;, &quot;param1&quot;]  通常Docker中推荐使用exec格式语法，原因有二。一方面，shel">
+<meta property="og:description" content="该指令可以用于指定容器被启动时需要运行的命令。具体地，其支持shell、exec两种形式的语法 # shell格式  CMD command  param1 param2  # exec格式  CMD [&quot;command&quot;, &quot;param1&quot;, &quot;param1&quot;]  通常Docker中推荐使用exec格式语法，原因有二。一方面，shell">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-01-27T11:33:45.000Z">
 <meta property="article:modified_time" content="2024-06-01T00:42:06.550Z">
@@ -68,10 +68,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -106,7 +107,10 @@
 		</div>
 		
 		<p>该指令可以用于指定容器被启动时需要运行的命令。具体地，其支持shell、exec两种形式的语法</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># shell格式 </span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> <span class="built_in">command</span>  param1 param2 </span></span><br><span class="line"><span class="comment"># exec格式 </span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;command&quot;</span>, <span class="string">&quot;param1&quot;</span>, <span class="string">&quot;param1&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight dockerfile"><span class="comment"># shell格式 </span>
+<span class="keyword">CMD</span><span class="language-bash"> <span class="built_in">command</span>  param1 param2 </span>
+<span class="comment"># exec格式 </span>
+<span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;command&quot;</span>, <span class="string">&quot;param1&quot;</span>, <span class="string">&quot;param1&quot;</span>]</span></code></pre>
 
 <p>通常Docker中推荐使用exec格式语法，原因有二。一方面，shell格式语法下会通过&#x2F;bin&#x2F;sh -c来执行命令；另一方面，某些镜像甚至不包含Shell，致使shell格式下的命令无法被正常执行。但使用exec格式时，会无法获取环境变量的值。此时则可以考虑使用shell格式语法</p>
 <p>+++++++++++++++  ‘ENTRYPOINT和CMD’的’异同’点  +++++++++++++++</p>
@@ -117,10 +121,15 @@
 <p>(1) docker run 中有[COMMAND],会’覆盖’CMD指令,追加作为’ENTRYPOINT 指令’的参数</p>
 <p>场景： 需要’用户传参’进行初始化</p>
 <p> 下面通过Dockerfile定义一个名为demo5:test的镜像</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 镜像 demo5:test</span></span><br><span class="line"><span class="keyword">FROM</span> busybox:<span class="number">1.35</span>.<span class="number">0</span></span><br><span class="line"><span class="comment"># 使用 exec 格式的ENTRYPOINT 设置固定的命令、参数</span></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;top&quot;</span>, <span class="string">&quot;-b&quot;</span>]</span></span><br><span class="line"><span class="comment"># 使用 exec 格式的CMD 设置默认的可变参数</span></span><br><span class="line"><span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;-H&quot;</span>]</span></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight dockerfile"><span class="comment"># 镜像 demo5:test</span>
+<span class="keyword">FROM</span> busybox:<span class="number">1.35</span>.<span class="number">0</span>
+<span class="comment"># 使用 exec 格式的ENTRYPOINT 设置固定的命令、参数</span>
+<span class="keyword">ENTRYPOINT</span><span class="language-bash"> [<span class="string">&quot;top&quot;</span>, <span class="string">&quot;-b&quot;</span>]</span>
+<span class="comment"># 使用 exec 格式的CMD 设置默认的可变参数</span>
+<span class="keyword">CMD</span><span class="language-bash"> [<span class="string">&quot;-H&quot;</span>]</span></code></pre>
 
 <p>由于此场景下CMD指令提供的是一个默认的可变参数，故我们可以通过docker run命令行参数 来覆盖 CMD指定的默认可变参数</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="keyword">run</span><span class="language-bash"> --name demo5B --<span class="built_in">rm</span> -it demo5:<span class="built_in">test</span> -m</span></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight dockerfile">docker <span class="keyword">run</span><span class="language-bash"> --name demo5B --<span class="built_in">rm</span> -it demo5:<span class="built_in">test</span> -m</span></code></pre>
 
   
 	</div>
@@ -241,10 +250,6 @@
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -254,6 +259,10 @@
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -311,6 +320,8 @@
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

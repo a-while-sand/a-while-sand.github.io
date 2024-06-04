@@ -64,10 +64,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -85,7 +86,8 @@
     <h1 itemprop="name">springboot redis lua 限流方案</h1>
     
      
-           <p itemprop="description" >限流方案pom配置文件，创建springboot项目。1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253&amp;lt;?xml version</p>
+           <p itemprop="description" >首先就让我们来看看为什么需要对接口进行限流？
+为什么要进行限流？因为互联网系统通常都要面对大并发大流量的请求，在突发情况下（最常见的场景就是秒杀、抢购），瞬时大流量会直接将系统打垮，无法对外提供服务。那为了防止出现这种情况最常见的解决方案之一就是限流，当请求达到一定的并发数或速率</p>
         
     
     <time datetime="2024-03-22T13:21:44.000Z" itemprop="datePublished">2024-03-22</time>
@@ -106,9 +108,9 @@
     
      
            <p itemprop="description" >一、部署 Dashboard1、安装dashboardkubernetes-dashboard.yaml（见最后配置文件）
-1kubectl apply -f kubernetes-dashboard.yaml
+kubectl apply -f kubernetes-dashboard.yaml
 
-从上图可知，服务被分配到了k8s-node1，对外端口为nodeP</p>
+从上图可知，服务被分配到了k8s-node1，对外端口为nodePo</p>
         
     
     <time datetime="2024-02-18T14:13:44.000Z" itemprop="datePublished">2024-02-18</time>
@@ -197,7 +199,7 @@
 
 
 
-1、下载和复制mongodb12345cd /usr/local</p>
+1、下载和复制mongodbcd /usr/local/src/</p>
         
     
     <time datetime="2023-02-15T12:14:55.000Z" itemprop="datePublished">2023-02-15</time>
@@ -266,9 +268,9 @@
     
      
            <p itemprop="description" >一、下载kafka安装kafka，前提需要安装zookeeper，我选择2.13版本
-1wget https://downloads.apache.org/kafka/3.1.2/kafka_2.13-3.1.2.tgz
+wget https://downloads.apache.org/kafka/3.1.2/kafka_2.13-3.1.2.tgz
 
-2、解压并改名12tar -zxvf kafka_2.1</p>
+2、解压并改名tar -zxvf kafka_2.13-3</p>
         
     
     <time datetime="2022-03-10T11:22:44.000Z" itemprop="datePublished">2022-03-10</time>
@@ -331,7 +333,7 @@ Blocking*：通过AQS实现
 
 
   <nav id="page-nav" class="clearfix unexpand">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next&lt;span&gt;&lt;&#x2F;span&gt;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
   </nav>
 
 </div>
@@ -401,10 +403,6 @@ Blocking*：通过AQS实现
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -414,6 +412,10 @@ Blocking*：通过AQS实现
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -471,6 +473,8 @@ Blocking*：通过AQS实现
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

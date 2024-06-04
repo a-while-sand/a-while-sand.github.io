@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="下载zookeeper1wget http:&#x2F;&#x2F;mirror.bit.edu.cn&#x2F;apache&#x2F;zookeeper&#x2F;zookeeper-3.3.6&#x2F;zookeeper-3.3.6.tar.gz  解压，指定目录123tar -zxvf zookeeper-3.3.6.tar.gzmkdir &#x2F;usr&#x2F;local&#x2F;zookeepermv zookeeper-3.3.6&#x2F;*  &#x2F;usr&#x2F;local&#x2F;">
+    <meta name="description" content="下载zookeeperwget http:&#x2F;&#x2F;mirror.bit.edu.cn&#x2F;apache&#x2F;zookeeper&#x2F;zookeeper-3.3.6&#x2F;zookeeper-3.3.6.tar.gz  解压，指定目录tar -zxvf zookeeper-3.3.6.tar.gz mkdir &#x2F;usr&#x2F;local&#x2F;zookeeper mv zookeeper-3.3.6&#x2F;*  &#x2F;usr&#x2F;local&#x2F;zo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Zookeeper 在Centos7中安装部署">
 <meta property="og:url" content="http://example.com/2020/11/24/zookeeper-linux-setup/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="下载zookeeper1wget http:&#x2F;&#x2F;mirror.bit.edu.cn&#x2F;apache&#x2F;zookeeper&#x2F;zookeeper-3.3.6&#x2F;zookeeper-3.3.6.tar.gz  解压，指定目录123tar -zxvf zookeeper-3.3.6.tar.gzmkdir &#x2F;usr&#x2F;local&#x2F;zookeepermv zookeeper-3.3.6&#x2F;*  &#x2F;usr&#x2F;local&#x2F;">
+<meta property="og:description" content="下载zookeeperwget http:&#x2F;&#x2F;mirror.bit.edu.cn&#x2F;apache&#x2F;zookeeper&#x2F;zookeeper-3.3.6&#x2F;zookeeper-3.3.6.tar.gz  解压，指定目录tar -zxvf zookeeper-3.3.6.tar.gz mkdir &#x2F;usr&#x2F;local&#x2F;zookeeper mv zookeeper-3.3.6&#x2F;*  &#x2F;usr&#x2F;local&#x2F;zo">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-11-24T10:33:22.000Z">
 <meta property="article:modified_time" content="2024-05-31T14:54:28.304Z">
@@ -68,10 +68,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -105,17 +106,38 @@
 		
 		</div>
 		
-		<h6 id="下载zookeeper"><a href="#下载zookeeper" class="headerlink" title="下载zookeeper"></a><strong>下载zookeeper</strong></h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://mirror.bit.edu.cn/apache/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.tar.gz</span><br></pre></td></tr></table></figure>
+		<h6 id="下载zookeeper"><a href="#下载zookeeper" class="headerlink" title="下载zookeeper"></a><strong>下载zookeeper</strong></h6><pre><code class="highlight shell">wget http://mirror.bit.edu.cn/apache/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.tar.gz</code></pre>
 
-<h6 id="解压，指定目录"><a href="#解压，指定目录" class="headerlink" title="解压，指定目录"></a><strong>解压，指定目录</strong></h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf zookeeper-3.3.6.tar.gz</span><br><span class="line">mkdir /usr/local/zookeeper</span><br><span class="line">mv zookeeper-3.3.6/*  /usr/local/zookeeper</span><br></pre></td></tr></table></figure>
+<h6 id="解压，指定目录"><a href="#解压，指定目录" class="headerlink" title="解压，指定目录"></a><strong>解压，指定目录</strong></h6><pre><code class="highlight shell">tar -zxvf zookeeper-3.3.6.tar.gz
+mkdir /usr/local/zookeeper
+mv zookeeper-3.3.6/*  /usr/local/zookeeper</code></pre>
 
-<h6 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a><strong>修改配置文件</strong></h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span>  /usr/local/zookeeper-3.3.6/conf/	</span><br><span class="line"><span class="built_in">cp</span> zoo_sample.cfg zoo.cfg</span><br><span class="line"></span><br><span class="line">vi zoo.cfg	</span><br><span class="line"><span class="comment"># The number of milliseconds of each tick	</span></span><br><span class="line">tickTime=2000	</span><br><span class="line"><span class="comment"># The number of ticks that the initial	</span></span><br><span class="line"><span class="comment"># synchronization phase can take	</span></span><br><span class="line">initLimit=10	</span><br><span class="line"><span class="comment"># The number of ticks that can pass between	</span></span><br><span class="line"><span class="comment"># sending a request and getting an acknowledgement	</span></span><br><span class="line">syncLimit=5	</span><br><span class="line"><span class="comment"># the directory where the snapshot is stored.	</span></span><br><span class="line">dataDir=/data/zookeeper/data	</span><br><span class="line"><span class="comment"># the port at which the clients will connect	</span></span><br><span class="line">clientPort=2181</span><br><span class="line"></span><br><span class="line"><span class="built_in">mkdir</span> -p /data/zookeeper/data</span><br></pre></td></tr></table></figure>
+<h6 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a><strong>修改配置文件</strong></h6><pre><code class="highlight sh"><span class="built_in">cd</span>  /usr/local/zookeeper-3.3.6/conf/	
+<span class="built_in">cp</span> zoo_sample.cfg zoo.cfg
 
-<h6 id="启动"><a href="#启动" class="headerlink" title="启动"></a><strong>启动</strong></h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./zkServer.sh start</span><br></pre></td></tr></table></figure>
+vi zoo.cfg	
+<span class="comment"># The number of milliseconds of each tick	</span>
+tickTime=2000	
+<span class="comment"># The number of ticks that the initial	</span>
+<span class="comment"># synchronization phase can take	</span>
+initLimit=10	
+<span class="comment"># The number of ticks that can pass between	</span>
+<span class="comment"># sending a request and getting an acknowledgement	</span>
+syncLimit=5	
+<span class="comment"># the directory where the snapshot is stored.	</span>
+dataDir=/data/zookeeper/data	
+<span class="comment"># the port at which the clients will connect	</span>
+clientPort=2181
 
-<h6 id="测试"><a href="#测试" class="headerlink" title="测试"></a><strong>测试</strong></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./zkCli.sh localhost:2181</span><br></pre></td></tr></table></figure>
+<span class="built_in">mkdir</span> -p /data/zookeeper/data</code></pre>
 
-<h6 id="开放端口"><a href="#开放端口" class="headerlink" title="开放端口"></a><strong>开放端口</strong></h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">开放redis端口</span>	</span><br><span class="line">firewall-cmd --zone=public --add-port=2181/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<h6 id="启动"><a href="#启动" class="headerlink" title="启动"></a><strong>启动</strong></h6><pre><code class="highlight sh">./zkServer.sh start</code></pre>
+
+<h6 id="测试"><a href="#测试" class="headerlink" title="测试"></a><strong>测试</strong></h6><pre><code class="highlight vim">./zkCli.<span class="keyword">sh</span> localhos<span class="variable">t:2181</span></code></pre>
+
+<h6 id="开放端口"><a href="#开放端口" class="headerlink" title="开放端口"></a><strong>开放端口</strong></h6><pre><code class="highlight shell"><span class="meta prompt_">#</span><span class="language-bash">开放redis端口</span>	
+firewall-cmd --zone=public --add-port=2181/tcp --permanent
+firewall-cmd --reload</code></pre>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -243,10 +265,6 @@
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -256,6 +274,10 @@
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -313,6 +335,8 @@
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

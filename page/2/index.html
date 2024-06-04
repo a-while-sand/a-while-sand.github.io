@@ -64,10 +64,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -126,7 +127,9 @@ host11
 host12
 
 
-1234#在三台主机上分别执行    hostnamectl set-hostname host10    </p>
+#在三台主机上分别执行    
+hostnamectl set-hostname host10    
+ho</p>
         
     
     <time datetime="2021-01-08T14:11:30.000Z" itemprop="datePublished">2021-01-08</time>
@@ -146,9 +149,10 @@ host12
     <h1 itemprop="name">Zookeeper 在Centos7中安装部署</h1>
     
      
-           <p itemprop="description" >下载zookeeper1wget http://mirror.bit.edu.cn/apache/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.tar.gz
+           <p itemprop="description" >下载zookeeperwget http://mirror.bit.edu.cn/apache/zookeeper/zookeeper-3.3.6/zookeeper-3.3.6.tar.gz
 
-解压，指定目录123tar -zxvf zookeeper-3.3.6.tar.g</p>
+解压，指定目录tar -zxvf zookeeper-3.3.6.tar.gz
+mk</p>
         
     
     <time datetime="2020-11-24T10:33:22.000Z" itemprop="datePublished">2020-11-24</time>
@@ -193,7 +197,12 @@ set：无序集合 ( sadd sm</p>
     
      
            <p itemprop="description" >第一步、定义多个数据源的mybatis配置
-123456789101112131415161718application.properties mybatis.mapper-locations=mappers/*.xmlmybatisLog.mapper-locations=ma</p>
+application.properties 
+
+mybatis.mapper-locations=mappers/*.xml
+mybatisLog.mapper-locations=mappersLog/*.xml
+
+## datas</p>
         
     
     <time datetime="2020-05-15T12:11:22.000Z" itemprop="datePublished">2020-05-15</time>
@@ -214,7 +223,9 @@ set：无序集合 ( sadd sm</p>
     
      
            <p itemprop="description" >1、pom.xml
-123456789&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;spring-boot-starter-jd</p>
+&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;spring-boot-starter-jdbc&amp;lt;/</p>
         
     
     <time datetime="2020-02-22T11:11:22.000Z" itemprop="datePublished">2020-02-22</time>
@@ -234,7 +245,10 @@ set：无序集合 ( sadd sm</p>
     <h1 itemprop="name">RabbitMQ 整合 Springboot</h1>
     
      
-           <p itemprop="description" >一、Rabbitmq-Producer 项目1、pom.xml12345678910111213141516&amp;lt;dependencies&amp;gt;    &amp;lt;dependency&amp;gt;        &amp;lt;groupId&amp;gt;org.springframework.b</p>
+           <p itemprop="description" >一、Rabbitmq-Producer 项目1、pom.xml&amp;lt;dependencies&amp;gt;
+    &amp;lt;dependency&amp;gt;
+        &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt;
+ </p>
         
     
     <time datetime="2019-12-15T08:22:11.000Z" itemprop="datePublished">2019-12-15</time>
@@ -303,7 +317,7 @@ Reids官方不提供二进制包，需要用户自己编译，编译时，需要
      
            <p itemprop="description" >此篇是基于【Mysql8 在Centos7中安装部署】基础上进行配置，请先查看【Mysql8 在Centos7中安装部署】
 一、主机配置主机的配置就三个步骤，比较容易
-1、授权给从机服务器12GRANT REPLICATION SLAVE ON *.* to &amp;#x27;rep1</p>
+1、授权给从机服务器GRANT REPLICATION SLAVE ON *.* to &amp;#x27;rep1&amp;#</p>
         
     
     <time datetime="2019-09-21T11:33:09.000Z" itemprop="datePublished">2019-09-21</time>
@@ -317,7 +331,7 @@ Reids官方不提供二进制包，需要用户自己编译，编译时，需要
 
 
   <nav id="page-nav" class="clearfix unexpand">
-    <a class="extend prev" rel="prev" href="/">&lt;span&gt;&lt;&#x2F;span&gt;Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next&lt;span&gt;&lt;&#x2F;span&gt;</a>
+    <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
   </nav>
 
 </div>
@@ -387,10 +401,6 @@ Reids官方不提供二进制包，需要用户自己编译，编译时，需要
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -400,6 +410,10 @@ Reids官方不提供二进制包，需要用户自己编译，编译时，需要
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -457,6 +471,8 @@ Reids官方不提供二进制包，需要用户自己编译，编译时，需要
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

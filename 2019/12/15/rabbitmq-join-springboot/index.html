@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="一、Rabbitmq-Producer 项目1、pom.xml12345678910111213141516&lt;dependencies&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;        &lt;artifactId&gt;spring-boot-sta">
+    <meta name="description" content="一、Rabbitmq-Producer 项目1、pom.xml&lt;dependencies&gt;     &lt;dependency&gt;         &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;         &lt;artifactId&gt;spring-boot-starter-web&lt;&#x2F;artifac">
 <meta property="og:type" content="article">
 <meta property="og:title" content="RabbitMQ 整合 Springboot">
 <meta property="og:url" content="http://example.com/2019/12/15/rabbitmq-join-springboot/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="一、Rabbitmq-Producer 项目1、pom.xml12345678910111213141516&lt;dependencies&gt;    &lt;dependency&gt;        &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;        &lt;artifactId&gt;spring-boot-sta">
+<meta property="og:description" content="一、Rabbitmq-Producer 项目1、pom.xml&lt;dependencies&gt;     &lt;dependency&gt;         &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;         &lt;artifactId&gt;spring-boot-starter-web&lt;&#x2F;artifac">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-12-15T08:22:11.000Z">
 <meta property="article:modified_time" content="2024-06-01T01:22:04.741Z">
@@ -68,10 +68,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -105,19 +106,237 @@
 		
 		</div>
 		
-		<h5 id="一、Rabbitmq-Producer-项目"><a href="#一、Rabbitmq-Producer-项目" class="headerlink" title="一、Rabbitmq-Producer 项目"></a>一、Rabbitmq-Producer 项目</h5><h6 id="1、pom-xml"><a href="#1、pom-xml" class="headerlink" title="1、pom.xml"></a>1、pom.xml</h6><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-amqp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+		<h5 id="一、Rabbitmq-Producer-项目"><a href="#一、Rabbitmq-Producer-项目" class="headerlink" title="一、Rabbitmq-Producer 项目"></a>一、Rabbitmq-Producer 项目</h5><h6 id="1、pom-xml"><a href="#1、pom-xml" class="headerlink" title="1、pom.xml"></a>1、pom.xml</h6><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
+    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>
 
-<h6 id="2、application-yml"><a href="#2、application-yml" class="headerlink" title="2、application.yml"></a>2、application.yml</h6><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8010</span></span><br><span class="line">  <span class="attr">servlet:</span></span><br><span class="line">    <span class="attr">context-path:</span> <span class="string">/</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">rabbit-producer</span></span><br><span class="line">  <span class="attr">rabbitmq:</span></span><br><span class="line">    <span class="attr">addresses:</span> <span class="number">192.168</span><span class="number">.1</span><span class="number">.10</span><span class="string">:5672,192.168.1.11:5672,192.168.1.12:5672</span></span><br><span class="line">    <span class="attr">virtual-host:</span> <span class="string">/</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">admin</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">admin</span></span><br><span class="line">    <span class="attr">connection-timeout:</span> <span class="number">15000</span></span><br><span class="line"><span class="comment">#    publisher-confirm-type: correlated</span></span><br></pre></td></tr></table></figure>
+    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span>
+    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-amqp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
+    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></code></pre>
 
-<h6 id="3、RabbitSend-java"><a href="#3、RabbitSend-java" class="headerlink" title="3、RabbitSend.java"></a>3、RabbitSend.java</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.amqp.AmqpException;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.core.Message;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.core.MessagePostProcessor;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.rabbit.connection.CorrelationData;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.rabbit.core.RabbitTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.annotation.Resource;</span><br><span class="line"><span class="keyword">import</span> java.util.UUID;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabbitSender</span> &#123;</span><br><span class="line">    <span class="meta">@Resource</span></span><br><span class="line">    <span class="keyword">private</span> RabbitTemplate rabbitTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> RabbitTemplate.<span class="type">ConfirmCallback</span> <span class="variable">confirmCallback</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RabbitTemplate</span>.ConfirmCallback() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">confirm</span><span class="params">(CorrelationData correlationData, <span class="type">boolean</span> b, String s)</span> &#123;</span><br><span class="line">            System.out.println(String.format(<span class="string">&quot;data=%s, ack=%s&quot;</span>, correlationData.getId(), b));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">send</span><span class="params">(SendMsg sendMsg)</span> <span class="keyword">throws</span> Exception&#123;</span><br><span class="line">        rabbitTemplate.setConfirmCallback(confirmCallback);</span><br><span class="line">        <span class="type">MessagePostProcessor</span> <span class="variable">postProcessor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MessagePostProcessor</span>()&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> Message <span class="title function_">postProcessMessage</span><span class="params">(Message message)</span> <span class="keyword">throws</span> AmqpException &#123;</span><br><span class="line">                System.err.println(<span class="string">&quot;to do post ==&gt;  &quot;</span> + message);</span><br><span class="line">                <span class="keyword">return</span> message;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="type">CorrelationData</span> <span class="variable">correlationData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CorrelationData</span>();</span><br><span class="line">        <span class="type">String</span> <span class="variable">uuid</span> <span class="operator">=</span> UUID.randomUUID().toString();</span><br><span class="line">        System.out.println(<span class="string">&quot;uuid=&quot;</span> + uuid );</span><br><span class="line">        System.out.println(<span class="string">&quot;exchanger= &quot;</span> + sendMsg.getExchangeName() + <span class="string">&quot; queue=&quot;</span>);</span><br><span class="line">        correlationData.setId(uuid);</span><br><span class="line">        rabbitTemplate.convertAndSend(sendMsg.getExchangeName(), sendMsg.getRouterKey(),</span><br><span class="line">                sendMsg.getData(), postProcessor, correlationData);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SendMsg</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Object data;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, Object&gt; header;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String exchangeName;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String routerKey;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getData</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setData</span><span class="params">(Object data)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.data = data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title function_">getHeader</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> header;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setHeader</span><span class="params">(Map&lt;String, Object&gt; header)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.header = header;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getExchangeName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> exchangeName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setExchangeName</span><span class="params">(String exchangeName)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.exchangeName = exchangeName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getRouterKey</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> routerKey;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setRouterKey</span><span class="params">(String routerKey)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.routerKey = routerKey;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h6 id="2、application-yml"><a href="#2、application-yml" class="headerlink" title="2、application.yml"></a>2、application.yml</h6><pre><code class="highlight yaml"><span class="attr">server:</span>
+  <span class="attr">port:</span> <span class="number">8010</span>
+  <span class="attr">servlet:</span>
+    <span class="attr">context-path:</span> <span class="string">/</span>
+<span class="attr">spring:</span>
+  <span class="attr">application:</span>
+    <span class="attr">name:</span> <span class="string">rabbit-producer</span>
+  <span class="attr">rabbitmq:</span>
+    <span class="attr">addresses:</span> <span class="number">192.168</span><span class="number">.1</span><span class="number">.10</span><span class="string">:5672,192.168.1.11:5672,192.168.1.12:5672</span>
+    <span class="attr">virtual-host:</span> <span class="string">/</span>
+    <span class="attr">username:</span> <span class="string">admin</span>
+    <span class="attr">password:</span> <span class="string">admin</span>
+    <span class="attr">connection-timeout:</span> <span class="number">15000</span>
+<span class="comment">#    publisher-confirm-type: correlated</span></code></pre>
 
-<h6 id="4、RabbitMqTest-java"><a href="#4、RabbitMqTest-java" class="headerlink" title="4、RabbitMqTest.java"></a>4、RabbitMqTest.java</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.test.context.SpringBootTest;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ProductApplicationTests</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RabbitSender rabbitSender;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">contextLoads</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">send</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">SendMsg</span> <span class="variable">sendMsg</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SendMsg</span>();</span><br><span class="line">        sendMsg.setData(<span class="string">&quot;中软国际&quot;</span>);</span><br><span class="line">        sendMsg.setExchangeName(<span class="string">&quot;exchange-001&quot;</span>);</span><br><span class="line">        sendMsg.setRouterKey(<span class="string">&quot;springboot.001&quot;</span>);</span><br><span class="line">        Map&lt;String, Object&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        map.put(<span class="string">&quot;attr1&quot;</span>, <span class="string">&quot;12345&quot;</span>);</span><br><span class="line">        map.put(<span class="string">&quot;attr2&quot;</span>, <span class="string">&quot;abcd&quot;</span>);</span><br><span class="line">        sendMsg.setHeader(map);</span><br><span class="line">        rabbitSender.send(sendMsg);</span><br><span class="line"></span><br><span class="line">        Thread.sleep(<span class="number">10000</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h6 id="3、RabbitSend-java"><a href="#3、RabbitSend-java" class="headerlink" title="3、RabbitSend.java"></a>3、RabbitSend.java</h6><pre><code class="highlight java"><span class="keyword">import</span> org.springframework.amqp.AmqpException;
+<span class="keyword">import</span> org.springframework.amqp.core.Message;
+<span class="keyword">import</span> org.springframework.amqp.core.MessagePostProcessor;
+<span class="keyword">import</span> org.springframework.amqp.rabbit.connection.CorrelationData;
+<span class="keyword">import</span> org.springframework.amqp.rabbit.core.RabbitTemplate;
+<span class="keyword">import</span> org.springframework.stereotype.Component;
 
-<h5 id="二、RabbitConsumer项目"><a href="#二、RabbitConsumer项目" class="headerlink" title="二、RabbitConsumer项目"></a>二、RabbitConsumer项目</h5><h6 id="1、pom-xml-1"><a href="#1、pom-xml-1" class="headerlink" title="1、pom.xml"></a>1、pom.xml</h6><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span> </span><br><span class="line">   <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="comment">&lt;!-- springboot rabbitmq(amqp) --&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-amqp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>           </span><br><span class="line">               </span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<span class="keyword">import</span> javax.annotation.Resource;
+<span class="keyword">import</span> java.util.UUID;
 
-<h6 id="2、application-properties"><a href="#2、application-properties" class="headerlink" title="2、application.properties"></a>2、application.properties</h6><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.servlet.context-path</span>=<span class="string">/</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">8002</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring.rabbitmq.addresses</span>=<span class="string">192.168.1.10:5672,192.168.1.11:5672,192.168.1.12:5672</span></span><br><span class="line"><span class="attr">spring.rabbitmq.username</span>=<span class="string">admin</span></span><br><span class="line"><span class="attr">spring.rabbitmq.password</span>=<span class="string">admin</span></span><br><span class="line"><span class="attr">spring.rabbitmq.virtual-host</span>=<span class="string">/</span></span><br><span class="line"><span class="attr">spring.rabbitmq.connection-timeout</span>=<span class="string">15000</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">##     表示消费者消费成功消息以后需要手工的进行签收(ack)，默认为auto</span></span><br><span class="line"><span class="attr">spring.rabbitmq.listener.simple.acknowledge-mode</span>=<span class="string">manual</span></span><br><span class="line"><span class="attr">spring.rabbitmq.listener.simple.concurrency</span>=<span class="string">5</span></span><br><span class="line"><span class="attr">spring.rabbitmq.listener.simple.max-concurrency</span>=<span class="string">10</span></span><br><span class="line"><span class="attr">spring.rabbitmq.listener.simple.prefetch</span>=<span class="string">1</span></span><br></pre></td></tr></table></figure>
 
-<h6 id="3、RabittReceive-java"><a href="#3、RabittReceive-java" class="headerlink" title="3、RabittReceive.java"></a>3、RabittReceive.java</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.amqp.rabbit.annotation.Exchange;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.rabbit.annotation.Queue;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.rabbit.annotation.QueueBinding;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.rabbit.annotation.RabbitHandler;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.rabbit.annotation.RabbitListener;</span><br><span class="line"><span class="keyword">import</span> org.springframework.amqp.support.AmqpHeaders;</span><br><span class="line"><span class="keyword">import</span> org.springframework.messaging.Message;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.rabbitmq.client.Channel;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabbitReceive</span> &#123;</span><br><span class="line">   </span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    *     组合使用监听</span></span><br><span class="line"><span class="comment">    *     <span class="doctag">@RabbitListener</span> <span class="doctag">@QueueBinding</span> <span class="doctag">@Queue</span> <span class="doctag">@Exchange</span></span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> message</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> channel</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="meta">@RabbitListener(bindings = @QueueBinding(</span></span><br><span class="line"><span class="meta">               value = @Queue(value = &quot;queue-001&quot;, durable = &quot;true&quot;),</span></span><br><span class="line"><span class="meta">               exchange = @Exchange(name = &quot;exchange-001&quot;,</span></span><br><span class="line"><span class="meta">               durable = &quot;true&quot;,</span></span><br><span class="line"><span class="meta">               type = &quot;topic&quot;,</span></span><br><span class="line"><span class="meta">               ignoreDeclarationExceptions = &quot;true&quot;),</span></span><br><span class="line"><span class="meta">               key = &quot;springboot.*&quot;</span></span><br><span class="line"><span class="meta">            )</span></span><br><span class="line"><span class="meta">         )</span></span><br><span class="line">   <span class="meta">@RabbitHandler</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onMessage</span><span class="params">(Message message, Channel channel)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">      <span class="comment">// 1. 收到消息以后进行业务端消费处理</span></span><br><span class="line">      System.err.println(<span class="string">&quot;-----------------------&quot;</span>);</span><br><span class="line">      System.err.println(<span class="string">&quot;消费消息:&quot;</span> + message.getPayload());</span><br><span class="line"></span><br><span class="line">      <span class="comment">//  2. 处理成功之后 获取deliveryTag 并进行手工的ACK操作, 因为我们配置文件里配置的是 手工签收</span></span><br><span class="line">      <span class="comment">// spring.rabbitmq.listener.simple.acknowledge-mode=manual</span></span><br><span class="line">      <span class="type">Long</span> <span class="variable">deliveryTag</span> <span class="operator">=</span> (Long)message.getHeaders().get(AmqpHeaders.DELIVERY_TAG);</span><br><span class="line">      channel.basicAck(deliveryTag, <span class="literal">false</span>); <span class="comment">//手动确认</span></span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<span class="meta">@Component</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabbitSender</span> &#123;
+    <span class="meta">@Resource</span>
+    <span class="keyword">private</span> RabbitTemplate rabbitTemplate;
+
+    <span class="keyword">private</span> RabbitTemplate.<span class="type">ConfirmCallback</span> <span class="variable">confirmCallback</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RabbitTemplate</span>.ConfirmCallback() &#123;
+        <span class="meta">@Override</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">confirm</span><span class="params">(CorrelationData correlationData, <span class="type">boolean</span> b, String s)</span> &#123;
+            System.out.println(String.format(<span class="string">&quot;data=%s, ack=%s&quot;</span>, correlationData.getId(), b));
+        &#125;
+    &#125;;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">send</span><span class="params">(SendMsg sendMsg)</span> <span class="keyword">throws</span> Exception&#123;
+        rabbitTemplate.setConfirmCallback(confirmCallback);
+        <span class="type">MessagePostProcessor</span> <span class="variable">postProcessor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MessagePostProcessor</span>()&#123;
+            <span class="meta">@Override</span>
+            <span class="keyword">public</span> Message <span class="title function_">postProcessMessage</span><span class="params">(Message message)</span> <span class="keyword">throws</span> AmqpException &#123;
+                System.err.println(<span class="string">&quot;to do post ==&gt;  &quot;</span> + message);
+                <span class="keyword">return</span> message;
+            &#125;
+        &#125;;
+        <span class="type">CorrelationData</span> <span class="variable">correlationData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CorrelationData</span>();
+        <span class="type">String</span> <span class="variable">uuid</span> <span class="operator">=</span> UUID.randomUUID().toString();
+        System.out.println(<span class="string">&quot;uuid=&quot;</span> + uuid );
+        System.out.println(<span class="string">&quot;exchanger= &quot;</span> + sendMsg.getExchangeName() + <span class="string">&quot; queue=&quot;</span>);
+        correlationData.setId(uuid);
+        rabbitTemplate.convertAndSend(sendMsg.getExchangeName(), sendMsg.getRouterKey(),
+                sendMsg.getData(), postProcessor, correlationData);
+    &#125;
+&#125;
+
+<span class="keyword">import</span> java.util.Map;
+
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SendMsg</span> &#123;
+
+    <span class="keyword">private</span> Object data;
+
+    <span class="keyword">private</span> Map&lt;String, Object&gt; header;
+
+    <span class="keyword">private</span> String exchangeName;
+
+    <span class="keyword">private</span> String routerKey;
+
+    <span class="keyword">public</span> Object <span class="title function_">getData</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> data;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setData</span><span class="params">(Object data)</span> &#123;
+        <span class="built_in">this</span>.data = data;
+    &#125;
+
+    <span class="keyword">public</span> Map&lt;String, Object&gt; <span class="title function_">getHeader</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> header;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setHeader</span><span class="params">(Map&lt;String, Object&gt; header)</span> &#123;
+        <span class="built_in">this</span>.header = header;
+    &#125;
+
+    <span class="keyword">public</span> String <span class="title function_">getExchangeName</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> exchangeName;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setExchangeName</span><span class="params">(String exchangeName)</span> &#123;
+        <span class="built_in">this</span>.exchangeName = exchangeName;
+    &#125;
+
+    <span class="keyword">public</span> String <span class="title function_">getRouterKey</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> routerKey;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setRouterKey</span><span class="params">(String routerKey)</span> &#123;
+        <span class="built_in">this</span>.routerKey = routerKey;
+    &#125;
+&#125;
+</code></pre>
+
+<h6 id="4、RabbitMqTest-java"><a href="#4、RabbitMqTest-java" class="headerlink" title="4、RabbitMqTest.java"></a>4、RabbitMqTest.java</h6><pre><code class="highlight java"><span class="keyword">import</span> org.junit.jupiter.api.Test;
+<span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;
+<span class="keyword">import</span> org.springframework.boot.test.context.SpringBootTest;
+
+<span class="keyword">import</span> java.util.HashMap;
+<span class="keyword">import</span> java.util.Map;
+
+
+<span class="meta">@SpringBootTest</span>
+<span class="keyword">class</span> <span class="title class_">ProductApplicationTests</span> &#123;
+
+    <span class="meta">@Autowired</span>
+    <span class="keyword">private</span> RabbitSender rabbitSender;
+
+    <span class="meta">@Test</span>
+    <span class="keyword">void</span> <span class="title function_">contextLoads</span><span class="params">()</span> &#123;
+    &#125;
+
+    <span class="meta">@Test</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">send</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;
+        <span class="type">SendMsg</span> <span class="variable">sendMsg</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SendMsg</span>();
+        sendMsg.setData(<span class="string">&quot;中软国际&quot;</span>);
+        sendMsg.setExchangeName(<span class="string">&quot;exchange-001&quot;</span>);
+        sendMsg.setRouterKey(<span class="string">&quot;springboot.001&quot;</span>);
+        Map&lt;String, Object&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();
+        map.put(<span class="string">&quot;attr1&quot;</span>, <span class="string">&quot;12345&quot;</span>);
+        map.put(<span class="string">&quot;attr2&quot;</span>, <span class="string">&quot;abcd&quot;</span>);
+        sendMsg.setHeader(map);
+        rabbitSender.send(sendMsg);
+
+        Thread.sleep(<span class="number">10000</span>);
+    &#125;
+&#125;
+</code></pre>
+
+<h5 id="二、RabbitConsumer项目"><a href="#二、RabbitConsumer项目" class="headerlink" title="二、RabbitConsumer项目"></a>二、RabbitConsumer项目</h5><h6 id="1、pom-xml-1"><a href="#1、pom-xml-1" class="headerlink" title="1、pom.xml"></a>1、pom.xml</h6><pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span>
+   <span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
+      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
+   <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span> 
+   <span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
+      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
+      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span>
+   <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>
+   <span class="comment">&lt;!-- springboot rabbitmq(amqp) --&gt;</span>
+   <span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
+      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-amqp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
+   <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>           
+               
+<span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></code></pre>
+
+<h6 id="2、application-properties"><a href="#2、application-properties" class="headerlink" title="2、application.properties"></a>2、application.properties</h6><pre><code class="highlight properties"><span class="attr">server.servlet.context-path</span>=<span class="string">/</span>
+<span class="attr">server.port</span>=<span class="string">8002</span>
+
+<span class="attr">spring.rabbitmq.addresses</span>=<span class="string">192.168.1.10:5672,192.168.1.11:5672,192.168.1.12:5672</span>
+<span class="attr">spring.rabbitmq.username</span>=<span class="string">admin</span>
+<span class="attr">spring.rabbitmq.password</span>=<span class="string">admin</span>
+<span class="attr">spring.rabbitmq.virtual-host</span>=<span class="string">/</span>
+<span class="attr">spring.rabbitmq.connection-timeout</span>=<span class="string">15000</span>
+<span class="comment"></span>
+<span class="comment">##     表示消费者消费成功消息以后需要手工的进行签收(ack)，默认为auto</span>
+<span class="attr">spring.rabbitmq.listener.simple.acknowledge-mode</span>=<span class="string">manual</span>
+<span class="attr">spring.rabbitmq.listener.simple.concurrency</span>=<span class="string">5</span>
+<span class="attr">spring.rabbitmq.listener.simple.max-concurrency</span>=<span class="string">10</span>
+<span class="attr">spring.rabbitmq.listener.simple.prefetch</span>=<span class="string">1</span></code></pre>
+
+<h6 id="3、RabittReceive-java"><a href="#3、RabittReceive-java" class="headerlink" title="3、RabittReceive.java"></a>3、RabittReceive.java</h6><pre><code class="highlight java"><span class="keyword">import</span> org.springframework.amqp.rabbit.annotation.Exchange;
+<span class="keyword">import</span> org.springframework.amqp.rabbit.annotation.Queue;
+<span class="keyword">import</span> org.springframework.amqp.rabbit.annotation.QueueBinding;
+<span class="keyword">import</span> org.springframework.amqp.rabbit.annotation.RabbitHandler;
+<span class="keyword">import</span> org.springframework.amqp.rabbit.annotation.RabbitListener;
+<span class="keyword">import</span> org.springframework.amqp.support.AmqpHeaders;
+<span class="keyword">import</span> org.springframework.messaging.Message;
+<span class="keyword">import</span> org.springframework.stereotype.Component;
+
+<span class="keyword">import</span> com.rabbitmq.client.Channel;
+
+<span class="meta">@Component</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabbitReceive</span> &#123;
+   
+   <span class="comment">/**</span>
+<span class="comment">    *     组合使用监听</span>
+<span class="comment">    *     <span class="doctag">@RabbitListener</span> <span class="doctag">@QueueBinding</span> <span class="doctag">@Queue</span> <span class="doctag">@Exchange</span></span>
+<span class="comment">    * <span class="doctag">@param</span> message</span>
+<span class="comment">    * <span class="doctag">@param</span> channel</span>
+<span class="comment">    * <span class="doctag">@throws</span> Exception</span>
+<span class="comment">    */</span>
+   <span class="meta">@RabbitListener(bindings = @QueueBinding(</span>
+<span class="meta">               value = @Queue(value = &quot;queue-001&quot;, durable = &quot;true&quot;),</span>
+<span class="meta">               exchange = @Exchange(name = &quot;exchange-001&quot;,</span>
+<span class="meta">               durable = &quot;true&quot;,</span>
+<span class="meta">               type = &quot;topic&quot;,</span>
+<span class="meta">               ignoreDeclarationExceptions = &quot;true&quot;),</span>
+<span class="meta">               key = &quot;springboot.*&quot;</span>
+<span class="meta">            )</span>
+<span class="meta">         )</span>
+   <span class="meta">@RabbitHandler</span>
+   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onMessage</span><span class="params">(Message message, Channel channel)</span> <span class="keyword">throws</span> Exception &#123;
+      <span class="comment">// 1. 收到消息以后进行业务端消费处理</span>
+      System.err.println(<span class="string">&quot;-----------------------&quot;</span>);
+      System.err.println(<span class="string">&quot;消费消息:&quot;</span> + message.getPayload());
+
+      <span class="comment">//  2. 处理成功之后 获取deliveryTag 并进行手工的ACK操作, 因为我们配置文件里配置的是 手工签收</span>
+      <span class="comment">// spring.rabbitmq.listener.simple.acknowledge-mode=manual</span>
+      <span class="type">Long</span> <span class="variable">deliveryTag</span> <span class="operator">=</span> (Long)message.getHeaders().get(AmqpHeaders.DELIVERY_TAG);
+      channel.basicAck(deliveryTag, <span class="literal">false</span>); <span class="comment">//手动确认</span>
+
+   &#125;
+&#125;</code></pre>
 
 
   
@@ -247,10 +466,6 @@
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -260,6 +475,10 @@
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -317,6 +536,8 @@
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

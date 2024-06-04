@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="1、修改三台主机名称   IP 192.168.1.10 192.168.1.11 192.168.1.12    主机名称 host10 host11 host12   1234#在三台主机上分别执行    hostnamectl set-hostname host10    hostnamectl set-hostname host11    hostnamectl set-hostname">
+    <meta name="description" content="1、修改三台主机名称   IP 192.168.1.10 192.168.1.11 192.168.1.12    主机名称 host10 host11 host12   #在三台主机上分别执行     hostnamectl set-hostname host10     hostnamectl set-hostname host11     hostnamectl set-hostname h">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Zookeeper 集群部署">
 <meta property="og:url" content="http://example.com/2021/01/08/zookeeper-cluster-setup/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="1、修改三台主机名称   IP 192.168.1.10 192.168.1.11 192.168.1.12    主机名称 host10 host11 host12   1234#在三台主机上分别执行    hostnamectl set-hostname host10    hostnamectl set-hostname host11    hostnamectl set-hostname">
+<meta property="og:description" content="1、修改三台主机名称   IP 192.168.1.10 192.168.1.11 192.168.1.12    主机名称 host10 host11 host12   #在三台主机上分别执行     hostnamectl set-hostname host10     hostnamectl set-hostname host11     hostnamectl set-hostname h">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-01-08T14:11:30.000Z">
 <meta property="article:modified_time" content="2024-06-01T00:24:34.037Z">
@@ -68,10 +68,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -121,15 +122,31 @@
 <td>host12</td>
 </tr>
 </tbody></table>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">在三台主机上分别执行</span>    </span><br><span class="line">hostnamectl set-hostname host10    </span><br><span class="line">hostnamectl set-hostname host11    </span><br><span class="line">hostnamectl set-hostname host12</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight shell"><span class="meta prompt_">#</span><span class="language-bash">在三台主机上分别执行</span>    
+hostnamectl set-hostname host10    
+hostnamectl set-hostname host11    
+hostnamectl set-hostname host12</code></pre>
 
-<h6 id="2、配置zoo-cfg文件，在文件最后追加"><a href="#2、配置zoo-cfg文件，在文件最后追加" class="headerlink" title="2、配置zoo.cfg文件，在文件最后追加"></a><strong>2、配置zoo.cfg文件，在文件最后追加</strong></h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">server.0=host10:2888:3888    </span><br><span class="line">server.1=host11:2888:3888    </span><br><span class="line">server.2=host12:2888:3888</span><br></pre></td></tr></table></figure>
+<h6 id="2、配置zoo-cfg文件，在文件最后追加"><a href="#2、配置zoo-cfg文件，在文件最后追加" class="headerlink" title="2、配置zoo.cfg文件，在文件最后追加"></a><strong>2、配置zoo.cfg文件，在文件最后追加</strong></h6><pre><code class="highlight shell">server.0=host10:2888:3888    
+server.1=host11:2888:3888    
+server.2=host12:2888:3888</code></pre>
 
-<h6 id="3、创建myid文件"><a href="#3、创建myid文件" class="headerlink" title="3、创建myid文件"></a><strong>3、创建myid文件</strong></h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vi /data/zookeeper/zookeeper/myid    </span><br><span class="line">host10 内容：0    </span><br><span class="line">host11 内容：1    </span><br><span class="line">host12 内容：2</span><br></pre></td></tr></table></figure>
+<h6 id="3、创建myid文件"><a href="#3、创建myid文件" class="headerlink" title="3、创建myid文件"></a><strong>3、创建myid文件</strong></h6><pre><code class="highlight sh">vi /data/zookeeper/zookeeper/myid    
+host10 内容：0    
+host11 内容：1    
+host12 内容：2</code></pre>
 
-<h6 id="4、三台机器启动"><a href="#4、三台机器启动" class="headerlink" title="4、三台机器启动"></a><strong>4、三台机器启动</strong></h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">./zkServer.sh start 启动    </span><br><span class="line">./zkServer.sh status 查看    </span><br><span class="line">./zkCli.sh 连接    连接后，    </span><br><span class="line"><span class="built_in">ls</span> /  查看内容    </span><br><span class="line">create /fj fengqing 创建/fj，内容为fengqing    </span><br><span class="line"><span class="built_in">ls</span> /fj    几个客户端连接，都可以看到相同的信息。</span><br></pre></td></tr></table></figure>
+<h6 id="4、三台机器启动"><a href="#4、三台机器启动" class="headerlink" title="4、三台机器启动"></a><strong>4、三台机器启动</strong></h6><pre><code class="highlight sh">./zkServer.sh start 启动    
+./zkServer.sh status 查看    
+./zkCli.sh 连接    连接后，    
+<span class="built_in">ls</span> /  查看内容    
+create /fj fengqing 创建/fj，内容为fengqing    
+<span class="built_in">ls</span> /fj    几个客户端连接，都可以看到相同的信息。</code></pre>
 
-<h6 id="5、开放端口"><a href="#5、开放端口" class="headerlink" title="5、开放端口"></a><strong>5、开放端口</strong></h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">开放zookeeper端口</span>	</span><br><span class="line">firewall-cmd --zone=public --add-port=2888/tcp --permanent</span><br><span class="line">firewall-cmd --zone=public --add-port=3888/tcp --permanent</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<h6 id="5、开放端口"><a href="#5、开放端口" class="headerlink" title="5、开放端口"></a><strong>5、开放端口</strong></h6><pre><code class="highlight shell"><span class="meta prompt_">#</span><span class="language-bash">开放zookeeper端口</span>	
+firewall-cmd --zone=public --add-port=2888/tcp --permanent
+firewall-cmd --zone=public --add-port=3888/tcp --permanent
+firewall-cmd --reload</code></pre>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -257,10 +274,6 @@
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -270,6 +283,10 @@
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -327,6 +344,8 @@
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

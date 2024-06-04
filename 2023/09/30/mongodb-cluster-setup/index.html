@@ -72,10 +72,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -134,52 +135,116 @@
 </tr>
 </tbody></table>
 <p>使用mongo 客户端 连接任意节点(假设 目前创建的节点有 11、12、13三台都安装好了mongodb)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 没有设置密码</span><br><span class="line">mongo</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight 1c"><span class="meta"># 没有设置密码</span>
+mongo</code></pre>
 
 <p>接连成功后，开始配置副本集，下面的_id要与conf文件中的replSet参数一致。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">初始变量</span></span><br><span class="line">cfg = &#123;</span><br><span class="line">   _id: &quot;ynzw&quot;,</span><br><span class="line">   members: [</span><br><span class="line">     &#123;</span><br><span class="line">       _id: 0,</span><br><span class="line">       host: &#x27;192.168.11.11:27017&#x27;,</span><br><span class="line">       priority: 3</span><br><span class="line">     &#125;,</span><br><span class="line">     &#123;</span><br><span class="line">       _id: 1,</span><br><span class="line">       host: &#x27;192.168.11.12:27017&#x27;,</span><br><span class="line">       priority: 2</span><br><span class="line">     &#125;,</span><br><span class="line">     &#123;</span><br><span class="line">       _id: 2,</span><br><span class="line">       host: &#x27;192.168.11.13:27017&#x27;,</span><br><span class="line">       priority: 1</span><br><span class="line">     &#125; </span><br><span class="line">   ]</span><br><span class="line"> &#125;;</span><br><span class="line"><span class="meta prompt_"> #</span><span class="language-bash">初始化副本集</span></span><br><span class="line">  rs.initiate(cfg) </span><br><span class="line">  rs.status()</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight shell"><span class="meta prompt_"># </span><span class="language-bash">初始变量</span>
+cfg = &#123;
+   _id: &quot;ynzw&quot;,
+   members: [
+     &#123;
+       _id: 0,
+       host: &#x27;192.168.11.11:27017&#x27;,
+       priority: 3
+     &#125;,
+     &#123;
+       _id: 1,
+       host: &#x27;192.168.11.12:27017&#x27;,
+       priority: 2
+     &#125;,
+     &#123;
+       _id: 2,
+       host: &#x27;192.168.11.13:27017&#x27;,
+       priority: 1
+     &#125; 
+   ]
+ &#125;;
+<span class="meta prompt_"> #</span><span class="language-bash">初始化副本集</span>
+  rs.initiate(cfg) 
+  rs.status()</code></pre>
 
 <p><strong>创建账户密码</strong></p>
 <p>1、副本集搭建成功后，需要给整个副本集创建账户和密码</p>
 <p>2、在主节点上，用客户端连接，创建用户权限（主节点，可以用rs.status()查看）</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mongo    </span><br><span class="line">ynzw:PRIMARY&gt; use admin    </span><br><span class="line">switched to db admin    </span><br><span class="line">ynzw:PRIMARY&gt;db.createUser(&#123;user:<span class="string">&quot;admin&quot;</span>, <span class="built_in">pwd</span>:<span class="string">&quot;admin123&quot;</span>, roles:[&#123;role: <span class="string">&quot;userAdminAnyDatabase&quot;</span>, db:<span class="string">&quot;admin&quot;</span> &#125;]&#125;) </span><br><span class="line">Successfully </span><br><span class="line">added user: &#123;        <span class="string">&quot;user&quot;</span> : <span class="string">&quot;admin&quot;</span>,        <span class="string">&quot;roles&quot;</span> : [            &#123;                <span class="string">&quot;role&quot;</span> : <span class="string">&quot;userAdminAnyDatabase&quot;</span>,                <span class="string">&quot;db&quot;</span> : <span class="string">&quot;admin&quot;</span>            &#125;        ]    &#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight sh">mongo    
+ynzw:PRIMARY&gt; use admin    
+switched to db admin    
+ynzw:PRIMARY&gt;db.createUser(&#123;user:<span class="string">&quot;admin&quot;</span>, <span class="built_in">pwd</span>:<span class="string">&quot;admin123&quot;</span>, roles:[&#123;role: <span class="string">&quot;userAdminAnyDatabase&quot;</span>, db:<span class="string">&quot;admin&quot;</span> &#125;]&#125;) 
+Successfully 
+added user: &#123;        <span class="string">&quot;user&quot;</span> : <span class="string">&quot;admin&quot;</span>,        <span class="string">&quot;roles&quot;</span> : [            &#123;                <span class="string">&quot;role&quot;</span> : <span class="string">&quot;userAdminAnyDatabase&quot;</span>,                <span class="string">&quot;db&quot;</span> : <span class="string">&quot;admin&quot;</span>            &#125;        ]    &#125;
+
+</code></pre>
 
 <p><strong>以下操作可选，用于正式数据库</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#以下操作可选，用于正式数据库    </span></span><br><span class="line">ynzw:PRIMARY&gt; use mytest  </span><br><span class="line"><span class="comment">#创建mytest数据库    </span></span><br><span class="line">switched to db mytest    </span><br><span class="line">ynzw:PRIMARY&gt; db.createUser(&#123;user:<span class="string">&quot;mytest&quot;</span>,<span class="built_in">pwd</span>:<span class="string">&quot;mytest&quot;</span>,roles:[&#123;role:<span class="string">&quot;dbOwner&quot;</span>,db:<span class="string">&quot;mytest&quot;</span>&#125;]&#125;)    </span><br><span class="line">Successfully </span><br><span class="line">added user: &#123;        <span class="string">&quot;user&quot;</span> : <span class="string">&quot;mytest&quot;</span>,        <span class="string">&quot;roles&quot;</span> : [            &#123;                <span class="string">&quot;role&quot;</span> : <span class="string">&quot;dbOwner&quot;</span>,                <span class="string">&quot;db&quot;</span> : <span class="string">&quot;mytest&quot;</span>            &#125;        ]    &#125;    </span><br><span class="line"><span class="comment">#可以通过连接验证    </span></span><br><span class="line">[root@localhost ~]<span class="comment"># mongo -u mytest -p mytest</span></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight sh"><span class="comment">#以下操作可选，用于正式数据库    </span>
+ynzw:PRIMARY&gt; use mytest  
+<span class="comment">#创建mytest数据库    </span>
+switched to db mytest    
+ynzw:PRIMARY&gt; db.createUser(&#123;user:<span class="string">&quot;mytest&quot;</span>,<span class="built_in">pwd</span>:<span class="string">&quot;mytest&quot;</span>,roles:[&#123;role:<span class="string">&quot;dbOwner&quot;</span>,db:<span class="string">&quot;mytest&quot;</span>&#125;]&#125;)    
+Successfully 
+added user: &#123;        <span class="string">&quot;user&quot;</span> : <span class="string">&quot;mytest&quot;</span>,        <span class="string">&quot;roles&quot;</span> : [            &#123;                <span class="string">&quot;role&quot;</span> : <span class="string">&quot;dbOwner&quot;</span>,                <span class="string">&quot;db&quot;</span> : <span class="string">&quot;mytest&quot;</span>            &#125;        ]    &#125;    
+<span class="comment">#可以通过连接验证    </span>
+[root@localhost ~]<span class="comment"># mongo -u mytest -p mytest</span></code></pre>
 
 <p><strong>创建副本集认证key文件</strong></p>
 <p>1、生成keyfile文件</p>
 <p>1）注意三个节点必须要用同一份keyfile，在一台机器生成，拷贝到另外两台</p>
 <p>2）修改成 600 的文件属性</p>
 <p>3）文件至少6个字符，小于1024字节</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> 100 &gt; keyfile    </span><br><span class="line"><span class="built_in">chmod</span> 600 keyfile    </span><br><span class="line"><span class="built_in">cp</span> keyfile /data/local/mongodb/conf/</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight sh">openssl rand -<span class="built_in">base64</span> 100 &gt; keyfile    
+<span class="built_in">chmod</span> 600 keyfile    
+<span class="built_in">cp</span> keyfile /data/local/mongodb/conf/</code></pre>
 
 <p><strong>并且把这份keyfile同步到其他两个节点的 ~&#x2F;keyfile 文件夹中；</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp /data/local/mongodb/conf/keyfile root@192.168.11.12:/root</span><br><span class="line">scp /data/local/mongodb/conf/keyfile root@192.168.11.13:/root</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight shell">scp /data/local/mongodb/conf/keyfile root@192.168.11.12:/root
+scp /data/local/mongodb/conf/keyfile root@192.168.11.13:/root</code></pre>
 
 <p><strong>配置副本集key文件</strong></p>
 <p>1、关闭副本集：分别关闭每个节点的mongod</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> mongo -u admin -p admin123 </span><br><span class="line"><span class="comment">#若配置过密码时，使用用户名和密码    </span></span><br><span class="line">ynzw:PRIMARY&gt; use admin    </span><br><span class="line">ynzw:PRIMARY&gt; db.shutdownServer()</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight sh"> mongo -u admin -p admin123 
+<span class="comment">#若配置过密码时，使用用户名和密码    </span>
+ynzw:PRIMARY&gt; use admin    
+ynzw:PRIMARY&gt; db.shutdownServer()</code></pre>
 
 <p>2、修改每个节点的配置文件mongo.conf中的下面项</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi  /usr/local/mongodb/conf/mongod.conf   </span><br><span class="line"><span class="comment">#是否以安装认证方式运行    </span></span><br><span class="line">auth=<span class="literal">true</span>    </span><br><span class="line"><span class="comment">#KeyFile鉴权文件：改为实际路径    </span></span><br><span class="line">keyFile=/usr/local/mongodb/conf/keyfile</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight sh">vi  /usr/local/mongodb/conf/mongod.conf   
+<span class="comment">#是否以安装认证方式运行    </span>
+auth=<span class="literal">true</span>    
+<span class="comment">#KeyFile鉴权文件：改为实际路径    </span>
+keyFile=/usr/local/mongodb/conf/keyfile
+</code></pre>
 
 <p><strong>重新启动副本集</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl  restart  mongodb</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight ebnf"><span class="attribute">systemctl  restart  mongodb</span></code></pre>
 
 <p><strong>配置副本集测试</strong></p>
 <p><img src="/../image/mongodb-cluster-setup-1.png"></p>
 <p><strong>测试数据同步</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mongo -u admin -p admin123     </span><br><span class="line">ynzw:PRIMARY&gt; use testdb    </span><br><span class="line">ynzw:PRIMARY&gt; show tables    </span><br><span class="line">synctable    </span><br><span class="line">ynzw:PRIMARY&gt; db.synctable.insert(&#123;name:&quot;zhangsan&quot;&#125;)    </span><br><span class="line"></span><br><span class="line">ynzw:PRIMARY&gt;WriteResult(&#123; &quot;nInserted&quot; : 1 &#125;)    </span><br></pre></td></tr></table></figure>
+<pre><code class="highlight shell">mongo -u admin -p admin123     
+ynzw:PRIMARY&gt; use testdb    
+ynzw:PRIMARY&gt; show tables    
+synctable    
+ynzw:PRIMARY&gt; db.synctable.insert(&#123;name:&quot;zhangsan&quot;&#125;)    
+
+ynzw:PRIMARY&gt;WriteResult(&#123; &quot;nInserted&quot; : 1 &#125;)</code></pre>
 
 <p>使用工具登录其它服务器，查看相关的表结构</p>
 <p><img src="/../image/mongodb-cluster-setup-2.png"></p>
 <p><strong>测试宕机切换</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">登录到主服务器结点(192.168.11.11)上，关闭服务systemctl stop mongodb</span><br><span class="line">登录到其它服务器结点(192.168.11.12)上，    </span><br><span class="line">ynzw：SECONDARY&gt; rs.status()</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight scss">登录到主服务器结点(<span class="number">192.168</span>.<span class="number">11.11</span>)上，关闭服务systemctl stop mongodb
+登录到其它服务器结点(<span class="number">192.168</span>.<span class="number">11.12</span>)上，    
+ynzw：SECONDARY&gt; rs<span class="selector-class">.status</span>()</code></pre>
 
 <p><img src="/../image/mongodb-cluster-setup-3.png"></p>
 <p><strong>设置mongodb排序内存大小</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#查询，默认为32M    </span><br><span class="line">use admin    </span><br><span class="line">db.runCommand(&#123; getParameter : 1, &quot;internalQueryExecMaxBlockingSortBytes&quot; : 1 &#125; )</span><br><span class="line"></span><br><span class="line">#设置为256M    </span><br><span class="line">use admin    </span><br><span class="line">db.adminCommand(&#123;setParameter:1, internalQueryExecMaxBlockingSortBytes:268435456&#125;)</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight apache"><span class="comment">#查询，默认为32M    </span>
+<span class="attribute">use</span> admin    
+<span class="attribute">db</span>.runCommand(&#123; getParameter : <span class="number">1</span>, <span class="string">&quot;internalQueryExecMaxBlockingSortBytes&quot;</span> : <span class="number">1</span> &#125; )
+
+<span class="comment">#设置为256M    </span>
+<span class="attribute">use</span> admin    
+<span class="attribute">db</span>.adminCommand(&#123;setParameter:<span class="number">1</span>, internalQueryExecMaxBlockingSortBytes:<span class="number">268435456</span>&#125;)</code></pre>
 
   
 	</div>
@@ -308,10 +373,6 @@
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -321,6 +382,10 @@
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -378,6 +443,8 @@
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

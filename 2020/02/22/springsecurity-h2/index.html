@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="1、pom.xml 123456789&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;spring-boot-starter-jdbc&lt;&#x2F;artifactId&gt;&lt;&#x2F;dependency&gt;&lt;dependency&gt;">
+    <meta name="description" content="1、pom.xml &lt;dependency&gt;     &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;     &lt;artifactId&gt;spring-boot-starter-jdbc&lt;&#x2F;artifactId&gt; &lt;&#x2F;dependency&gt; &lt;dependency&gt;     &amp;l">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringSecurity和H2数据库配置">
 <meta property="og:url" content="http://example.com/2020/02/22/springsecurity-h2/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="1、pom.xml 123456789&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;spring-boot-starter-jdbc&lt;&#x2F;artifactId&gt;&lt;&#x2F;dependency&gt;&lt;dependency&gt;">
+<meta property="og:description" content="1、pom.xml &lt;dependency&gt;     &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;     &lt;artifactId&gt;spring-boot-starter-jdbc&lt;&#x2F;artifactId&gt; &lt;&#x2F;dependency&gt; &lt;dependency&gt;     &amp;l">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/image/springsecurity-h2-1.png">
 <meta property="og:image" content="http://example.com/image/springsecurity-h2-2.png">
@@ -71,10 +71,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -109,29 +110,142 @@
 		</div>
 		
 		<p><strong>1、pom.xml</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-jdbc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.h2database<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>h2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight xml"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-jdbc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span>
+<span class="tag">&lt;<span class="name">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.h2database<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>h2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></code></pre>
 
 <p><strong>2、application.yml</strong></p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">driver-class-name:</span> <span class="string">org.h2.Driver</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:h2:mem:test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;DB_CLOSE_DELAY=-1</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">sa</span></span><br><span class="line">    <span class="attr">initialization-mode:</span> <span class="string">embedded</span></span><br><span class="line">  <span class="attr">h2:</span></span><br><span class="line">    <span class="attr">console:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">path:</span> <span class="string">/h2-console</span></span><br><span class="line">      <span class="attr">settings:</span></span><br><span class="line">        <span class="attr">trace:</span> <span class="literal">true</span></span><br><span class="line">        <span class="attr">web-allow-others:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight yaml"><span class="attr">spring:</span>
+  <span class="attr">datasource:</span>
+    <span class="attr">driver-class-name:</span> <span class="string">org.h2.Driver</span>
+    <span class="attr">password:</span> <span class="string">&#x27;&#x27;</span>
+    <span class="attr">url:</span> <span class="string">jdbc:h2:mem:test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;DB_CLOSE_DELAY=-1</span>
+    <span class="attr">username:</span> <span class="string">sa</span>
+    <span class="attr">initialization-mode:</span> <span class="string">embedded</span>
+  <span class="attr">h2:</span>
+    <span class="attr">console:</span>
+      <span class="attr">enabled:</span> <span class="literal">true</span>
+      <span class="attr">path:</span> <span class="string">/h2-console</span>
+      <span class="attr">settings:</span>
+        <span class="attr">trace:</span> <span class="literal">true</span>
+        <span class="attr">web-allow-others:</span> <span class="literal">true</span></code></pre>
 
 <p><strong>3、SecurityConfig.java</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">@RequiredArgsConstructor</span><br><span class="line">@EnableWebSecurity(debug = true)</span><br><span class="line">@Configuration</span><br><span class="line">public class SecurityConfig extends WebSecurityConfigurerAdapter &#123;</span><br><span class="line">    private final DataSource dataSource;</span><br><span class="line">    </span><br><span class="line"> @Override</span><br><span class="line">    protected void configure(AuthenticationManagerBuilder auth) throws Exception &#123;</span><br><span class="line">        auth.jdbcAuthentication()</span><br><span class="line">            .withDefaultSchema()</span><br><span class="line">            .dataSource(dataSource) </span><br><span class="line">            .withUser(&quot;user&quot;)</span><br><span class="line">            .password(&quot;&#123;bcrypt&#125;$2a$10$6QmVRYIaEO14ngBZ0Qzdd.1bbeSLuAgWkVqfKvQn1CoA1gVaTJsYK&quot;)</span><br><span class="line">            .roles(&quot;USER&quot;, &quot;ADMIN&quot;)</span><br><span class="line">            .and()</span><br><span class="line">            .withUser(&quot;old_user&quot;)</span><br><span class="line">            .password(&quot;&#123;SHA-1&#125;7ce0359f12857f2a90c7de465f40a95f01cb5da9&quot;)</span><br><span class="line">            .roles(&quot;USER&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@Override</span><br><span class="line">public void configure(WebSecurity web) throws Exception &#123;</span><br><span class="line">    web</span><br><span class="line">        .ignoring()</span><br><span class="line">        .antMatchers(</span><br><span class="line">            &quot;/error/**&quot;,</span><br><span class="line">            &quot;/h2-console/**&quot;);  //h2-console 放行</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight scala"><span class="meta">@RequiredArgsConstructor</span>
+<span class="meta">@EnableWebSecurity</span>(debug = <span class="literal">true</span>)
+<span class="meta">@Configuration</span>
+public <span class="class"><span class="keyword">class</span> <span class="title">SecurityConfig</span> <span class="keyword">extends</span> <span class="title">WebSecurityConfigurerAdapter</span> </span>&#123;
+    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">DataSource</span> dataSource;
+    
+ <span class="meta">@Override</span>
+    <span class="keyword">protected</span> void configure(<span class="type">AuthenticationManagerBuilder</span> auth) <span class="keyword">throws</span> <span class="type">Exception</span> &#123;
+        auth.jdbcAuthentication()
+            .withDefaultSchema()
+            .dataSource(dataSource) 
+            .withUser(<span class="string">&quot;user&quot;</span>)
+            .password(<span class="string">&quot;&#123;bcrypt&#125;$2a$10$6QmVRYIaEO14ngBZ0Qzdd.1bbeSLuAgWkVqfKvQn1CoA1gVaTJsYK&quot;</span>)
+            .roles(<span class="string">&quot;USER&quot;</span>, <span class="string">&quot;ADMIN&quot;</span>)
+            .and()
+            .withUser(<span class="string">&quot;old_user&quot;</span>)
+            .password(<span class="string">&quot;&#123;SHA-1&#125;7ce0359f12857f2a90c7de465f40a95f01cb5da9&quot;</span>)
+            .roles(<span class="string">&quot;USER&quot;</span>);
+&#125;
+<span class="meta">@Override</span>
+public void configure(<span class="type">WebSecurity</span> web) <span class="keyword">throws</span> <span class="type">Exception</span> &#123;
+    web
+        .ignoring()
+        .antMatchers(
+            <span class="string">&quot;/error/**&quot;</span>,
+            <span class="string">&quot;/h2-console/**&quot;</span>);  <span class="comment">//h2-console 放行</span>
+&#125;
+
+&#125;</code></pre>
 
 <p><strong>4、h2-console访问</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">访问http://localhost:8080/h2-console</span><br><span class="line">Setting Name:  Generic H2 (Embedded)</span><br><span class="line">JDBC URL:  jdbc:h2:mem:test</span><br><span class="line">User Name: sa</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight delphi">访问http:<span class="comment">//localhost:8080/h2-console</span>
+Setting <span class="keyword">Name</span>:  <span class="keyword">Generic</span> H2 (Embedded)
+JDBC URL:  jdbc:h2:mem:test
+User <span class="keyword">Name</span>: sa</code></pre>
 
 <p><img src="/../image/springsecurity-h2-1.png"></p>
 <p>1、内存数据库自动创建表结构和数据 </p>
 <p>2、查询用户信息</p>
 <p><img src="/../image/springsecurity-h2-2.png"></p>
 <p><strong>5、Controller层</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/api&quot;)</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ApiResource</span> &#123;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;principal&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Principal <span class="title function_">getCurrentPrincipalName</span><span class="params">(Principal principal)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> principal;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;authentication&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Authentication <span class="title function_">getCurrentAuthentication</span><span class="params">(Authentication authentication)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;param= &#123;&#125;&quot;</span>, authentication);</span><br><span class="line">        <span class="type">Authentication</span> <span class="variable">auth</span> <span class="operator">=</span> SecurityContextHolder.getContext().getAuthentication();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> authentication;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@RestController</span>
+<span class="meta">@RequestMapping(&quot;/api&quot;)</span>
+<span class="meta">@Slf4j</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ApiResource</span> &#123;
+    <span class="meta">@GetMapping(&quot;principal&quot;)</span>
+    <span class="keyword">public</span> Principal <span class="title function_">getCurrentPrincipalName</span><span class="params">(Principal principal)</span> &#123;
+        <span class="keyword">return</span> principal;
+    &#125;
+
+    <span class="meta">@GetMapping(&quot;authentication&quot;)</span>
+    <span class="keyword">public</span> Authentication <span class="title function_">getCurrentAuthentication</span><span class="params">(Authentication authentication)</span> &#123;
+        log.info(<span class="string">&quot;param= &#123;&#125;&quot;</span>, authentication);
+        <span class="type">Authentication</span> <span class="variable">auth</span> <span class="operator">=</span> SecurityContextHolder.getContext().getAuthentication();
+
+        <span class="keyword">return</span> authentication;
+    &#125;
+&#125;</code></pre>
 
 <p><strong>6、测试</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">GET http://localhost:8080/api/principal</span><br><span class="line">Authorization: Basic user 12345678</span><br><span class="line"></span><br><span class="line">显示下面信息：</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;authorities&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;authority&quot;: &quot;ROLE_ADMIN&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;authority&quot;: &quot;ROLE_USER&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;details&quot;: &#123;</span><br><span class="line">    &quot;remoteAddress&quot;: &quot;127.0.0.1&quot;,</span><br><span class="line">    &quot;sessionId&quot;: &quot;C34E4E6215B2670E9E02FC26ED8A8895&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;authenticated&quot;: true,</span><br><span class="line">  &quot;principal&quot;: &#123;</span><br><span class="line">    &quot;password&quot;: null,</span><br><span class="line">    &quot;username&quot;: &quot;user&quot;,</span><br><span class="line">    &quot;authorities&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;authority&quot;: &quot;ROLE_ADMIN&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;authority&quot;: &quot;ROLE_USER&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;accountNonExpired&quot;: true,</span><br><span class="line">    &quot;accountNonLocked&quot;: true,</span><br><span class="line">    &quot;credentialsNonExpired&quot;: true,</span><br><span class="line">    &quot;enabled&quot;: true</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;credentials&quot;: null,</span><br><span class="line">  &quot;name&quot;: &quot;user&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight pgsql"><span class="keyword">GET</span> http://localhost:<span class="number">8080</span>/api/principal
+<span class="keyword">Authorization</span>: Basic <span class="keyword">user</span> <span class="number">12345678</span>
+
+显示下面信息：
+
+&#123;
+  &quot;authorities&quot;: [
+    &#123;
+      &quot;authority&quot;: &quot;ROLE_ADMIN&quot;
+    &#125;,
+    &#123;
+      &quot;authority&quot;: &quot;ROLE_USER&quot;
+    &#125;
+  ],
+  &quot;details&quot;: &#123;
+    &quot;remoteAddress&quot;: &quot;127.0.0.1&quot;,
+    &quot;sessionId&quot;: &quot;C34E4E6215B2670E9E02FC26ED8A8895&quot;
+  &#125;,
+  &quot;authenticated&quot;: <span class="keyword">true</span>,
+  &quot;principal&quot;: &#123;
+    &quot;password&quot;: <span class="keyword">null</span>,
+    &quot;username&quot;: &quot;user&quot;,
+    &quot;authorities&quot;: [
+      &#123;
+        &quot;authority&quot;: &quot;ROLE_ADMIN&quot;
+      &#125;,
+      &#123;
+        &quot;authority&quot;: &quot;ROLE_USER&quot;
+      &#125;
+    ],
+    &quot;accountNonExpired&quot;: <span class="keyword">true</span>,
+    &quot;accountNonLocked&quot;: <span class="keyword">true</span>,
+    &quot;credentialsNonExpired&quot;: <span class="keyword">true</span>,
+    &quot;enabled&quot;: <span class="keyword">true</span>
+  &#125;,
+  &quot;credentials&quot;: <span class="keyword">null</span>,
+  &quot;name&quot;: &quot;user&quot;
+&#125;</code></pre>
 
 <p><strong>7、注意事项</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">若需要【api/principal】方法中访问权限，则不能出现在下面方法中配置</span><br><span class="line">@Override</span><br><span class="line">public void configure(WebSecurity web) throws Exception &#123;</span><br><span class="line">    web</span><br><span class="line">        .ignoring()</span><br><span class="line">        .antMatchers(</span><br><span class="line">            &quot;/error/**&quot;,</span><br><span class="line">            &quot;/h2-console/**&quot;);  //h2-console 放行</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight aspectj">若需要【api/principal】方法中访问权限，则不能出现在下面方法中配置
+<span class="meta">@Override</span>
+<span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">configure</span><span class="params">(WebSecurity web)</span> <span class="keyword">throws</span> Exception </span>&#123;
+    web
+        .ignoring()
+        .antMatchers(
+            <span class="string">&quot;/error/**&quot;</span>,
+            <span class="string">&quot;/h2-console/**&quot;</span>);  <span class="comment">//h2-console 放行</span>
+&#125;</code></pre>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -259,10 +373,6 @@
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -272,6 +382,10 @@
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -329,6 +443,8 @@
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

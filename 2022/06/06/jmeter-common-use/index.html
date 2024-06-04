@@ -70,10 +70,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -120,7 +121,23 @@
 <p>  设置【变量名称】：username,token</p>
 <p><img src="/../image/jmeter-common-use-1.png"></p>
 <p>选择文件格式如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">13000000000,6d67e63fc63b42b08625889e8c187a5d</span><br><span class="line"></span><br><span class="line">13000000001,d47b1cc370894882ac56230bf442304a</span><br><span class="line"></span><br><span class="line">13000000002,fb2b44a274054a24970995584ff32584</span><br><span class="line"></span><br><span class="line">13000000003,13d8531e93e1431694a57f7e597644ac</span><br><span class="line"></span><br><span class="line">13000000004,8e75629ba4c840d59a1d8e514c4b3967</span><br><span class="line"></span><br><span class="line">13000000005,69639ad83a414bf2a358353afcd747d8</span><br><span class="line"></span><br><span class="line">13000000006,385b7ff61d4d4e5b8bd51895e14ee34e</span><br><span class="line"></span><br><span class="line">13000000007,4362538d00df41e1b9090f4d1537ed36</span><br><span class="line"></span><br><span class="line">13000000008,8ac10122511240328db36fb878e0385a</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight dns"><span class="number">13000000000</span>,<span class="number">6d</span>67e63fc63b42b08625889e8c187a5d
+
+<span class="number">13000000001</span>,d47b1cc370894882ac56230bf442304a
+
+<span class="number">13000000002</span>,fb2b44a274054a24970995584ff32584
+
+<span class="number">13000000003</span>,<span class="number">13d</span>8531e93e1431694a57f7e597644ac
+
+<span class="number">13000000004</span>,<span class="number">8</span>e75629ba4c840d59a1d8e5<span class="number">14c4b3967</span>
+
+<span class="number">13000000005</span>,<span class="number">69639</span>ad83a414bf2a358353afcd747d8
+
+<span class="number">13000000006</span>,<span class="number">385</span>b7ff61d4d4e5b8bd51895e14ee34e
+
+<span class="number">13000000007</span>,<span class="number">4362538d</span>00df41e1b9090f4d1537ed36
+
+<span class="number">13000000008</span>,<span class="number">8</span>ac10122511240328db36fb878e0385a</code></pre>
 
 <p>http请求中引用变量</p>
 <p><img src="/../image/jmeter-common-use-2.png"></p>
@@ -251,10 +268,6 @@
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -264,6 +277,10 @@
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -321,6 +338,8 @@
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

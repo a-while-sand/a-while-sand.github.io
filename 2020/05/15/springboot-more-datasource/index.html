@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="第一步、定义多个数据源的mybatis配置 123456789101112131415161718application.properties mybatis.mapper-locations&#x3D;mappers&#x2F;*.xmlmybatisLog.mapper-locations&#x3D;mappersLog&#x2F;*.xml## datasource master #spring.datasource.type&#x3D;c">
+    <meta name="description" content="第一步、定义多个数据源的mybatis配置 application.properties   mybatis.mapper-locations&#x3D;mappers&#x2F;*.xml mybatisLog.mapper-locations&#x3D;mappersLog&#x2F;*.xml  ## datasource master # spring.datasource.type&#x3D;com.alibaba.druid.pool">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Springboot配置多个数据源">
 <meta property="og:url" content="http://example.com/2020/05/15/springboot-more-datasource/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="第一步、定义多个数据源的mybatis配置 123456789101112131415161718application.properties mybatis.mapper-locations&#x3D;mappers&#x2F;*.xmlmybatisLog.mapper-locations&#x3D;mappersLog&#x2F;*.xml## datasource master #spring.datasource.type&#x3D;c">
+<meta property="og:description" content="第一步、定义多个数据源的mybatis配置 application.properties   mybatis.mapper-locations&#x3D;mappers&#x2F;*.xml mybatisLog.mapper-locations&#x3D;mappersLog&#x2F;*.xml  ## datasource master # spring.datasource.type&#x3D;com.alibaba.druid.pool">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-05-15T12:11:22.000Z">
 <meta property="article:modified_time" content="2024-05-31T12:04:48.148Z">
@@ -68,10 +68,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -106,13 +107,78 @@
 		</div>
 		
 		<p><strong>第一步、定义多个数据源的mybatis配置</strong></p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">application.properties</span> <span class="string"></span></span><br><span class="line"></span><br><span class="line"><span class="attr">mybatis.mapper-locations</span>=<span class="string">mappers/*.xml</span></span><br><span class="line"><span class="attr">mybatisLog.mapper-locations</span>=<span class="string">mappersLog/*.xml</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">## datasource master #</span></span><br><span class="line"><span class="attr">spring.datasource.type</span>=<span class="string">com.alibaba.druid.pool.DruidDataSource</span></span><br><span class="line"><span class="attr">spring.datasource.driver-class-name</span>=<span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line"><span class="attr">spring.datasource.url</span>=<span class="string">jdbc:mysql://localhost:3306/test1?characterEncoding=UTF-8</span></span><br><span class="line"><span class="attr">spring.datasource.username</span>=<span class="string">root</span></span><br><span class="line"><span class="attr">spring.datasource.password</span>=<span class="string">466420182</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">## datasource log #</span></span><br><span class="line"><span class="attr">spring.datasourceLog.type</span>=<span class="string">com.alibaba.druid.pool.DruidDataSource</span></span><br><span class="line"><span class="attr">spring.datasourceLog.driver-class-name</span>=<span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line"><span class="attr">spring.datasourceLog.url</span>=<span class="string">jdbc:mysql://localhost:3306/log?characterEncoding=UTF-8</span></span><br><span class="line"><span class="attr">spring.datasourceLog.username</span>=<span class="string">root</span></span><br><span class="line"><span class="attr">spring.datasourceLog.password</span>=<span class="string">466420182</span></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight properties"><span class="attr">application.properties</span> <span class="string"></span>
+
+<span class="attr">mybatis.mapper-locations</span>=<span class="string">mappers/*.xml</span>
+<span class="attr">mybatisLog.mapper-locations</span>=<span class="string">mappersLog/*.xml</span>
+<span class="comment"></span>
+<span class="comment">## datasource master #</span>
+<span class="attr">spring.datasource.type</span>=<span class="string">com.alibaba.druid.pool.DruidDataSource</span>
+<span class="attr">spring.datasource.driver-class-name</span>=<span class="string">com.mysql.jdbc.Driver</span>
+<span class="attr">spring.datasource.url</span>=<span class="string">jdbc:mysql://localhost:3306/test1?characterEncoding=UTF-8</span>
+<span class="attr">spring.datasource.username</span>=<span class="string">root</span>
+<span class="attr">spring.datasource.password</span>=<span class="string">466420182</span>
+<span class="comment"></span>
+<span class="comment">## datasource log #</span>
+<span class="attr">spring.datasourceLog.type</span>=<span class="string">com.alibaba.druid.pool.DruidDataSource</span>
+<span class="attr">spring.datasourceLog.driver-class-name</span>=<span class="string">com.mysql.jdbc.Driver</span>
+<span class="attr">spring.datasourceLog.url</span>=<span class="string">jdbc:mysql://localhost:3306/log?characterEncoding=UTF-8</span>
+<span class="attr">spring.datasourceLog.username</span>=<span class="string">root</span>
+<span class="attr">spring.datasourceLog.password</span>=<span class="string">466420182</span></code></pre>
 
 <p><strong>第二步、定义多个数据源</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DatasourceConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(destroyMethod =  &quot;close&quot;, name = DataSources.MASTER_DB)</span></span><br><span class="line">    <span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">dataSource</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> DataSourceBuilder.create().type(DruidDataSource.class).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(destroyMethod =  &quot;close&quot;, name = DataSources.LOG_DB)</span></span><br><span class="line">    <span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasourceLog&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">dataSourceLog</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> DataSourceBuilder.create().type(DruidDataSource.class).build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@Configuration</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DatasourceConfig</span> &#123;
+
+    <span class="meta">@Bean(destroyMethod =  &quot;close&quot;, name = DataSources.MASTER_DB)</span>
+    <span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource&quot;)</span>
+    <span class="keyword">public</span> DataSource <span class="title function_">dataSource</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> DataSourceBuilder.create().type(DruidDataSource.class).build();
+    &#125;
+
+    <span class="meta">@Bean(destroyMethod =  &quot;close&quot;, name = DataSources.LOG_DB)</span>
+    <span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasourceLog&quot;)</span>
+    <span class="keyword">public</span> DataSource <span class="title function_">dataSourceLog</span><span class="params">()</span> &#123;
+        <span class="keyword">return</span> DataSourceBuilder.create().type(DruidDataSource.class).build();
+    &#125;
+&#125;
+</code></pre>
 
 <p><strong>第三步、分别配置多个数据源</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@MapperScan(basePackages = &#123;&quot;com.qingfeng.practice.dao&quot;&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="meta">@Qualifier(DataSources.MASTER_DB)</span></span><br><span class="line">    <span class="keyword">private</span> DataSource masterDB;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@Primary</span></span><br><span class="line">    <span class="meta">@ConfigurationProperties(prefix = &quot;mybatis&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> SqlSessionFactoryBean <span class="title function_">sqlSessionFactoryBean</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">SqlSessionFactoryBean</span> <span class="variable">sqlSessionFactoryBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBean</span>();</span><br><span class="line">        sqlSessionFactoryBean.setDataSource(masterDB);</span><br><span class="line">        <span class="keyword">return</span> sqlSessionFactoryBean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@MapperScan(basePackages = &#123;&quot;com.qingfeng.practice.daoLog&quot;&#125;, sqlSessionFactoryRef = &quot;logSqlSessionFactory&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisLogConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="meta">@Qualifier(&quot;logDB&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> DataSource logDB;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;logSqlSessionFactory&quot;)</span></span><br><span class="line">    <span class="meta">@ConfigurationProperties(prefix = &quot;mybatisLog&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> SqlSessionFactoryBean <span class="title function_">sqlSessionFactoryBean</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">SqlSessionFactoryBean</span> <span class="variable">sqlSessionFactoryBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBean</span>();</span><br><span class="line">        sqlSessionFactoryBean.setDataSource(logDB);</span><br><span class="line">        <span class="keyword">return</span> sqlSessionFactoryBean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight java"><span class="meta">@Configuration</span>
+<span class="meta">@MapperScan(basePackages = &#123;&quot;com.qingfeng.practice.dao&quot;&#125;)</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisConfig</span> &#123;
+
+    <span class="meta">@Autowired</span>
+    <span class="meta">@Qualifier(DataSources.MASTER_DB)</span>
+    <span class="keyword">private</span> DataSource masterDB;
+
+    <span class="meta">@Bean</span>
+    <span class="meta">@Primary</span>
+    <span class="meta">@ConfigurationProperties(prefix = &quot;mybatis&quot;)</span>
+    <span class="keyword">public</span> SqlSessionFactoryBean <span class="title function_">sqlSessionFactoryBean</span><span class="params">()</span> &#123;
+        <span class="type">SqlSessionFactoryBean</span> <span class="variable">sqlSessionFactoryBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBean</span>();
+        sqlSessionFactoryBean.setDataSource(masterDB);
+        <span class="keyword">return</span> sqlSessionFactoryBean;
+    &#125;
+&#125;
+
+<span class="meta">@Configuration</span>
+<span class="meta">@MapperScan(basePackages = &#123;&quot;com.qingfeng.practice.daoLog&quot;&#125;, sqlSessionFactoryRef = &quot;logSqlSessionFactory&quot;)</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MybatisLogConfig</span> &#123;
+
+    <span class="meta">@Autowired</span>
+    <span class="meta">@Qualifier(&quot;logDB&quot;)</span>
+    <span class="keyword">private</span> DataSource logDB;
+
+    <span class="meta">@Bean(name = &quot;logSqlSessionFactory&quot;)</span>
+    <span class="meta">@ConfigurationProperties(prefix = &quot;mybatisLog&quot;)</span>
+    <span class="keyword">public</span> SqlSessionFactoryBean <span class="title function_">sqlSessionFactoryBean</span><span class="params">()</span> &#123;
+        <span class="type">SqlSessionFactoryBean</span> <span class="variable">sqlSessionFactoryBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBean</span>();
+        sqlSessionFactoryBean.setDataSource(logDB);
+        <span class="keyword">return</span> sqlSessionFactoryBean;
+    &#125;
+&#125;</code></pre>
 
 <p>这里需要注意两个数据源配置的差别，也是支持多数据源的关键</p>
 <p>1）Configuration 扫描不同的前缀，取不同包下的sql对应的xml文件</p>
@@ -247,10 +313,6 @@
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -260,6 +322,10 @@
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -317,6 +383,8 @@
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

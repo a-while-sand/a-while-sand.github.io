@@ -11,12 +11,12 @@
     
 
     
-    <meta name="description" content="一、FastDFS介绍FastDFS开源地址：https:&#x2F;&#x2F;github.com&#x2F;happyfish100 参考：分布式文件系统FastDFS设计原理  参考：FastDFS分布式文件系统。 二、配置libfastcommonlibfastcommon是从 FastDFS 和 FastDHT 中提取出来的公共 C 函数库，基础环境，安装即可 。 1、下载libfastcommon1wget ht">
+    <meta name="description" content="一、FastDFS介绍FastDFS开源地址：https:&#x2F;&#x2F;github.com&#x2F;happyfish100 参考：分布式文件系统FastDFS设计原理  参考：FastDFS分布式文件系统。 二、配置libfastcommonlibfastcommon是从 FastDFS 和 FastDHT 中提取出来的公共 C 函数库，基础环境，安装即可 。 1、下载libfastcommonwget htt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="FastDFS 在Centos7中安装部署">
 <meta property="og:url" content="http://example.com/2022/11/22/fastdfs-linux-setup/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="一、FastDFS介绍FastDFS开源地址：https:&#x2F;&#x2F;github.com&#x2F;happyfish100 参考：分布式文件系统FastDFS设计原理  参考：FastDFS分布式文件系统。 二、配置libfastcommonlibfastcommon是从 FastDFS 和 FastDHT 中提取出来的公共 C 函数库，基础环境，安装即可 。 1、下载libfastcommon1wget ht">
+<meta property="og:description" content="一、FastDFS介绍FastDFS开源地址：https:&#x2F;&#x2F;github.com&#x2F;happyfish100 参考：分布式文件系统FastDFS设计原理  参考：FastDFS分布式文件系统。 二、配置libfastcommonlibfastcommon是从 FastDFS 和 FastDHT 中提取出来的公共 C 函数库，基础环境，安装即可 。 1、下载libfastcommonwget htt">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/image/fastdfs-common-use-1.png">
 <meta property="article:published_time" content="2022-11-22T13:10:32.000Z">
@@ -70,10 +70,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -111,82 +112,188 @@
 <p>参考：<a target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-20196318-id-4058561.html">分布式文件系统FastDFS设计原理</a> </p>
 <p>参考：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/Leo_wl/p/6731647.html">FastDFS分布式文件系统</a>。</p>
 <h5 id="二、配置libfastcommon"><a href="#二、配置libfastcommon" class="headerlink" title="二、配置libfastcommon"></a><strong>二、配置libfastcommon</strong></h5><p>libfastcommon是从 FastDFS 和 FastDHT 中提取出来的公共 C 函数库，基础环境，安装即可 。</p>
-<h6 id="1、下载libfastcommon"><a href="#1、下载libfastcommon" class="headerlink" title="1、下载libfastcommon"></a><strong>1、下载libfastcommon</strong></h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/happyfish100/libfastcommon/archive/V1.0.42.tar.gz</span><br></pre></td></tr></table></figure>
+<h6 id="1、下载libfastcommon"><a href="#1、下载libfastcommon" class="headerlink" title="1、下载libfastcommon"></a><strong>1、下载libfastcommon</strong></h6><pre><code class="highlight shell">wget https://github.com/happyfish100/libfastcommon/archive/V1.0.42.tar.gz</code></pre>
 
-<h6 id="2、解压"><a href="#2、解压" class="headerlink" title="2、解压"></a><strong>2、解压</strong></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf V1.0.42.tar.gz</span><br><span class="line">cd libfastcommon-1.0.42</span><br></pre></td></tr></table></figure>
+<h6 id="2、解压"><a href="#2、解压" class="headerlink" title="2、解压"></a><strong>2、解压</strong></h6><pre><code class="highlight apache"><span class="attribute">tar</span> -zxvf V1.<span class="number">0</span>.<span class="number">42</span>.tar.gz
+<span class="attribute">cd</span> libfastcommon-<span class="number">1</span>.<span class="number">0</span>.<span class="number">42</span></code></pre>
 
-<h6 id="3、编译、安装"><a href="#3、编译、安装" class="headerlink" title="3、编译、安装"></a><strong>3、编译、安装</strong></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./make.sh</span><br><span class="line">./make.sh install</span><br></pre></td></tr></table></figure>
+<h6 id="3、编译、安装"><a href="#3、编译、安装" class="headerlink" title="3、编译、安装"></a><strong>3、编译、安装</strong></h6><pre><code class="highlight vim">./<span class="keyword">make</span>.<span class="keyword">sh</span>
+./<span class="keyword">make</span>.<span class="keyword">sh</span> install</code></pre>
 
-<h5 id="三、配置fastdsf"><a href="#三、配置fastdsf" class="headerlink" title="三、配置fastdsf"></a><strong>三、配置fastdsf</strong></h5><h6 id="1、下载fastdsf"><a href="#1、下载fastdsf" class="headerlink" title="1、下载fastdsf"></a><strong>1、下载fastdsf</strong></h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/happyfish100/fastdfs/archive/V6.04.tar.gz</span><br></pre></td></tr></table></figure>
+<h5 id="三、配置fastdsf"><a href="#三、配置fastdsf" class="headerlink" title="三、配置fastdsf"></a><strong>三、配置fastdsf</strong></h5><h6 id="1、下载fastdsf"><a href="#1、下载fastdsf" class="headerlink" title="1、下载fastdsf"></a><strong>1、下载fastdsf</strong></h6><pre><code class="highlight shell">wget https://github.com/happyfish100/fastdfs/archive/V6.04.tar.gz</code></pre>
 
-<h6 id="2、解压-1"><a href="#2、解压-1" class="headerlink" title="2、解压"></a><strong>2、解压</strong></h6><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf V6.<span class="number">04</span>.tar.gz</span><br><span class="line">cd fastdfs-<span class="number">6.04</span></span><br></pre></td></tr></table></figure>
+<h6 id="2、解压-1"><a href="#2、解压-1" class="headerlink" title="2、解压"></a><strong>2、解压</strong></h6><pre><code class="highlight dockerfile">tar -zxvf V6.<span class="number">04</span>.tar.gz
+cd fastdfs-<span class="number">6.04</span></code></pre>
 
-<h6 id="3、编译、安装-1"><a href="#3、编译、安装-1" class="headerlink" title="3、编译、安装"></a><strong>3、编译、安装</strong></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./make.sh</span><br><span class="line">./make.sh install</span><br></pre></td></tr></table></figure>
+<h6 id="3、编译、安装-1"><a href="#3、编译、安装-1" class="headerlink" title="3、编译、安装"></a><strong>3、编译、安装</strong></h6><pre><code class="highlight vim">./<span class="keyword">make</span>.<span class="keyword">sh</span>
+./<span class="keyword">make</span>.<span class="keyword">sh</span> install</code></pre>
 
-<h6 id="4、默认安装生成文件"><a href="#4、默认安装生成文件" class="headerlink" title="4、默认安装生成文件"></a><strong>4、默认安装生成文件</strong></h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动文件（用于启动服务）</span></span><br><span class="line">/etc/init.d/fdfs_storaged</span><br><span class="line">/etc/init.d/fdfs_tracker</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">配置文件（用于配置参数）</span></span><br><span class="line">/etc/fdfs/client.conf.sample</span><br><span class="line">/etc/fdfs/storage.conf.sample</span><br><span class="line">/etc/fdfs/tracker.conf.sample</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">命令工具，在/usr/bin目录下</span></span><br><span class="line">fdfs_appender_test</span><br><span class="line">fdfs_appender_test1</span><br><span class="line">fdfs_append_file</span><br><span class="line">fdfs_crc32</span><br><span class="line">fdfs_delete_file</span><br><span class="line">fdfs_download_file</span><br><span class="line">fdfs_file_info</span><br><span class="line">fdfs_monitor</span><br><span class="line">fdfs_storaged</span><br><span class="line">fdfs_test</span><br><span class="line">fdfs_test1</span><br><span class="line">fdfs_trackerd</span><br><span class="line">fdfs_upload_appender</span><br><span class="line">fdfs_upload_file</span><br><span class="line">stop.sh</span><br><span class="line">restart.sh</span><br></pre></td></tr></table></figure>
+<h6 id="4、默认安装生成文件"><a href="#4、默认安装生成文件" class="headerlink" title="4、默认安装生成文件"></a><strong>4、默认安装生成文件</strong></h6><pre><code class="highlight shell"><span class="meta prompt_"># </span><span class="language-bash">启动文件（用于启动服务）</span>
+/etc/init.d/fdfs_storaged
+/etc/init.d/fdfs_tracker
+<span class="meta prompt_"># </span><span class="language-bash">配置文件（用于配置参数）</span>
+/etc/fdfs/client.conf.sample
+/etc/fdfs/storage.conf.sample
+/etc/fdfs/tracker.conf.sample
+<span class="meta prompt_"># </span><span class="language-bash">命令工具，在/usr/bin目录下</span>
+fdfs_appender_test
+fdfs_appender_test1
+fdfs_append_file
+fdfs_crc32
+fdfs_delete_file
+fdfs_download_file
+fdfs_file_info
+fdfs_monitor
+fdfs_storaged
+fdfs_test
+fdfs_test1
+fdfs_trackerd
+fdfs_upload_appender
+fdfs_upload_file
+stop.sh
+restart.sh</code></pre>
 
 <h5 id="四、配置Fastdfs跟踪器（Tracker"><a href="#四、配置Fastdfs跟踪器（Tracker" class="headerlink" title="四、配置Fastdfs跟踪器（Tracker)"></a><strong>四、配置Fastdfs跟踪器（Tracker)</strong></h5><p>配置文件详细说明参考：<a target="_blank" rel="noopener" href="http://bbs.chinaunix.net/forum.php?mod=viewthread&tid=1941456&extra=page=1&filter=digest&digest=1">FastDFS 配置文件详解</a></p>
 <p>1）进入 &#x2F;etc&#x2F;fdfs，复制 FastDFS 跟踪器样例配置文件 tracker.conf.sample，并重命名为 tracker.conf。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/fdfs</span><br><span class="line">cp tracker.conf.sample tracker.conf</span><br><span class="line">vi tracker.conf</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight vim"><span class="keyword">cd</span> /etc/fdfs
+<span class="keyword">cp</span> tracker.<span class="keyword">conf</span>.sample tracker.<span class="keyword">conf</span>
+<span class="keyword">vi</span> tracker.<span class="keyword">conf</span></code></pre>
 
 <p>2）编辑tracker.conf ，根据需要修改下面参数的值，其它的默认即可。http.server_port为nginx端口</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 提供服务的端口</span><br><span class="line">port=22122</span><br><span class="line"># Tracker 数据和日志目录地址(根目录必须存在,子目录会自动创建)</span><br><span class="line">base_path=/data/fj/tools/fastdfs/tracker</span><br><span class="line"># HTTP 服务端口</span><br><span class="line">http.server_port=6080</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight ini">
+<span class="comment"># 提供服务的端口</span>
+<span class="attr">port</span>=<span class="number">22122</span>
+<span class="comment"># Tracker 数据和日志目录地址(根目录必须存在,子目录会自动创建)</span>
+<span class="attr">base_path</span>=/data/fj/tools/fastdfs/tracker
+<span class="comment"># HTTP 服务端口</span>
+<span class="attr">http.server_port</span>=<span class="number">6080</span></code></pre>
 
 <p>3）创建tracker基础数据目录，即base_path对应的目录</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/fj/tools/fastdfs/tracker</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight awk">mkdir -p <span class="regexp">/data/</span>fj<span class="regexp">/tools/</span>fastdfs/tracker</code></pre>
 
 <ol start="4">
 <li>启动 tracker（若服务器有防火墙记得允许）</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/fdfs_trackerd start</span><br><span class="line"># 或者</span><br><span class="line">/etc/init.d/fdfs_trackerd /etc/fdfs/tracker.conf</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight swift"><span class="regexp">/etc/</span><span class="keyword">init</span>.d<span class="operator">/</span>fdfs_trackerd start
+# 或者
+<span class="regexp">/etc/</span><span class="keyword">init</span>.d<span class="regexp">/fdfs_trackerd /</span>etc<span class="regexp">/fdfs/</span>tracker.conf</code></pre>
 
 <h5 id="五、配置-FastDFS-存储-Storage"><a href="#五、配置-FastDFS-存储-Storage" class="headerlink" title="五、配置 FastDFS 存储 (Storage)"></a><strong>五、配置 FastDFS 存储 (Storage)</strong></h5><p>1、进入 &#x2F;etc&#x2F;fdfs 目录，复制 FastDFS 存储器样例配置文件 storage.conf.sample，并重命名为 storage.conf</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/fdfs</span><br><span class="line">cp storage.conf.sample storage.conf</span><br><span class="line">vi storage.conf</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight vim"><span class="keyword">cd</span> /etc/fdfs
+<span class="keyword">cp</span> storage.<span class="keyword">conf</span>.sample storage.<span class="keyword">conf</span>
+<span class="keyword">vi</span> storage.<span class="keyword">conf</span></code></pre>
 
 <ol start="2">
 <li>编辑storage.conf ，根据需要修改下面参数的值，其它的默认即可。http.server_port为nginx端口</li>
 </ol>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 指定此 storage server 所在 组(卷)</span><br><span class="line">group_name=imooc</span><br><span class="line"></span><br><span class="line"># storage server 服务端口</span><br><span class="line">port=23000</span><br><span class="line"></span><br><span class="line"># 心跳间隔时间，单位为秒 (这里是指主动向 tracker server 发送心跳)</span><br><span class="line">heart_beat_interval=30</span><br><span class="line"></span><br><span class="line"># Storage 数据和日志目录地址(根目录必须存在，子目录会自动生成)</span><br><span class="line">base_path=/data/fj/tools/fastdfs/storage</span><br><span class="line"></span><br><span class="line"># 存放文件时 storage server 支持多个路径。这里配置存放文件的基路径数目，通常只配一个目录。</span><br><span class="line">store_path_count=1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 逐一配置 store_path_count 个路径，索引号基于 0。</span><br><span class="line"># 如果不配置 store_path0，那它就和 base_path 对应的路径一样。</span><br><span class="line">store_path0=/data/fj/tools/fastdfs/storage</span><br><span class="line"></span><br><span class="line"># FastDFS 存储文件时，采用了两级目录。这里配置存放文件的目录个数。 </span><br><span class="line"># 如果本参数只为 N（如： 256），那么 storage server 在初次运行时，会在 store_path 下自动创建 N * N 个存放文件的子目录。</span><br><span class="line">subdir_count_per_path=256</span><br><span class="line"></span><br><span class="line"># tracker_server 的列表 ，会主动连接 tracker_server</span><br><span class="line"># 有多个 tracker server 时，每个 tracker server 写一行</span><br><span class="line">tracker_server=192.168.1.10:22122</span><br><span class="line"># 允许系统同步的时间段 (默认是全天) 。一般用于避免高峰同步产生一些问题而设定。</span><br><span class="line">sync_start_time=00:00</span><br><span class="line">sync_end_time=23:59</span><br><span class="line"># 访问端口</span><br><span class="line">http.server_port=6080</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight ini">
+<span class="comment"># 指定此 storage server 所在 组(卷)</span>
+<span class="attr">group_name</span>=imooc
+
+<span class="comment"># storage server 服务端口</span>
+<span class="attr">port</span>=<span class="number">23000</span>
+
+<span class="comment"># 心跳间隔时间，单位为秒 (这里是指主动向 tracker server 发送心跳)</span>
+<span class="attr">heart_beat_interval</span>=<span class="number">30</span>
+
+<span class="comment"># Storage 数据和日志目录地址(根目录必须存在，子目录会自动生成)</span>
+<span class="attr">base_path</span>=/data/fj/tools/fastdfs/storage
+
+<span class="comment"># 存放文件时 storage server 支持多个路径。这里配置存放文件的基路径数目，通常只配一个目录。</span>
+<span class="attr">store_path_count</span>=<span class="number">1</span>
+
+
+<span class="comment"># 逐一配置 store_path_count 个路径，索引号基于 0。</span>
+<span class="comment"># 如果不配置 store_path0，那它就和 base_path 对应的路径一样。</span>
+<span class="attr">store_path0</span>=/data/fj/tools/fastdfs/storage
+
+<span class="comment"># FastDFS 存储文件时，采用了两级目录。这里配置存放文件的目录个数。 </span>
+<span class="comment"># 如果本参数只为 N（如： 256），那么 storage server 在初次运行时，会在 store_path 下自动创建 N * N 个存放文件的子目录。</span>
+<span class="attr">subdir_count_per_path</span>=<span class="number">256</span>
+
+<span class="comment"># tracker_server 的列表 ，会主动连接 tracker_server</span>
+<span class="comment"># 有多个 tracker server 时，每个 tracker server 写一行</span>
+<span class="attr">tracker_server</span>=<span class="number">192.168</span>.<span class="number">1.10</span>:<span class="number">22122</span>
+<span class="comment"># 允许系统同步的时间段 (默认是全天) 。一般用于避免高峰同步产生一些问题而设定。</span>
+<span class="attr">sync_start_time</span>=<span class="number">00</span>:<span class="number">00</span>
+<span class="attr">sync_end_time</span>=<span class="number">23</span>:<span class="number">59</span>
+<span class="comment"># 访问端口</span>
+<span class="attr">http.server_port</span>=<span class="number">6080</span></code></pre>
 
 <p>3）创建Storage基础数据目录，对应base_path目录</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/fj/tools/fastdfs/storage</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight awk">mkdir -p <span class="regexp">/data/</span>fj<span class="regexp">/tools/</span>fastdfs/storage</code></pre>
 
 <p>4）启动 storage（若服务器有防火墙记得允许）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/etc/init.d/fdfs_storaged  start</span><br><span class="line"># 或者</span><br><span class="line">/etc/init.d/fdfs_storaged  /etc/fdfs/storage.conf</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight swift"><span class="regexp">/etc/</span><span class="keyword">init</span>.d<span class="operator">/</span>fdfs_storaged  start
+# 或者
+<span class="regexp">/etc/</span><span class="keyword">init</span>.d<span class="regexp">/fdfs_storaged  /</span>etc<span class="regexp">/fdfs/</span>storage.conf</code></pre>
 
 <h5 id="六、文件上传测试"><a href="#六、文件上传测试" class="headerlink" title="六、文件上传测试"></a><strong>六、文件上传测试</strong></h5><p>1） 修改 tracker 服务器中的客户端配置文件 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/fdfs</span><br><span class="line">cp client.conf.sample client.conf</span><br><span class="line">vim client.conf</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight vim"><span class="keyword">cd</span> /etc/fdfs
+<span class="keyword">cp</span> client.<span class="keyword">conf</span>.sample client.<span class="keyword">conf</span>
+<span class="keyword">vim</span> client.<span class="keyword">conf</span></code></pre>
 
 <p>2）修改如下配置即可，其它默认。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Client 的数据和日志目录</span><br><span class="line">base_path=/data/fj/tools/fastdfs/client</span><br><span class="line"></span><br><span class="line"># Tracker端口</span><br><span class="line">tracker_server=192.168.1.10:22122</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight routeros">Client 的数据和日志目录
+<span class="attribute">base_path</span>=/data/fj/tools/fastdfs/client
+
+<span class="comment"># Tracker端口</span>
+<span class="attribute">tracker_server</span>=192.168.1.10:22122</code></pre>
 
 <p>3） 创建相关目录</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/fj/tools/fastdfs/client</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight awk">mkdir -p <span class="regexp">/data/</span>fj<span class="regexp">/tools/</span>fastdfs/client</code></pre>
 
 <p>4）上传测试</p>
 <p>在linux内部执行如下命令上传 imooc.jpeg </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/fdfs_upload_file /etc/fdfs/client.conf imooc.jpeg</span><br><span class="line">或者</span><br><span class="line">/usr/bin/fdfs_test /etc/fdfs/client.conf upload imooc.jpeg</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight awk"><span class="regexp">/usr/</span>bin<span class="regexp">/fdfs_upload_file /</span>etc<span class="regexp">/fdfs/</span>client.conf imooc.jpeg
+或者
+<span class="regexp">/usr/</span>bin<span class="regexp">/fdfs_test /</span>etc<span class="regexp">/fdfs/</span>client.conf upload imooc.jpeg</code></pre>
 
 <p><img src="/../image/fastdfs-common-use-1.png"></p>
-<h5 id="七、FastDFS-配置-Nginx-模块"><a href="#七、FastDFS-配置-Nginx-模块" class="headerlink" title="七、FastDFS 配置 Nginx 模块"></a><strong>七、FastDFS 配置 Nginx 模块</strong></h5><h6 id="1、下载fastdfs-nginx-module"><a href="#1、下载fastdfs-nginx-module" class="headerlink" title="1、下载fastdfs-nginx-module"></a><strong>1、下载fastdfs-nginx-module</strong></h6><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">wget</span> <span class="string">https://github.com/happyfish100/fastdfs-nginx-module/archive/refs/tags/V1.22.tar.gz</span></span><br></pre></td></tr></table></figure>
+<h5 id="七、FastDFS-配置-Nginx-模块"><a href="#七、FastDFS-配置-Nginx-模块" class="headerlink" title="七、FastDFS 配置 Nginx 模块"></a><strong>七、FastDFS 配置 Nginx 模块</strong></h5><h6 id="1、下载fastdfs-nginx-module"><a href="#1、下载fastdfs-nginx-module" class="headerlink" title="1、下载fastdfs-nginx-module"></a><strong>1、下载fastdfs-nginx-module</strong></h6><pre><code class="highlight yaml"><span class="string">wget</span> <span class="string">https://github.com/happyfish100/fastdfs-nginx-module/archive/refs/tags/V1.22.tar.gz</span></code></pre>
 
-<h6 id="2、解压-2"><a href="#2、解压-2" class="headerlink" title="2、解压"></a><strong>2、解压</strong></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf fastdfs-nginx-module-1.22.tar.gz</span><br></pre></td></tr></table></figure>
+<h6 id="2、解压-2"><a href="#2、解压-2" class="headerlink" title="2、解压"></a><strong>2、解压</strong></h6><pre><code class="highlight apache"><span class="attribute">tar</span> -zxvf fastdfs-nginx-module-<span class="number">1</span>.<span class="number">22</span>.tar.gz</code></pre>
 
-<h6 id="3、下载nginx"><a href="#3、下载nginx" class="headerlink" title="3、下载nginx"></a><strong>3、下载nginx</strong></h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -c https://nginx.org/download/nginx-1.16.1.tar.gz</span><br></pre></td></tr></table></figure>
+<h6 id="3、下载nginx"><a href="#3、下载nginx" class="headerlink" title="3、下载nginx"></a><strong>3、下载nginx</strong></h6><pre><code class="highlight sh">wget -c https://nginx.org/download/nginx-1.16.1.tar.gz</code></pre>
 
-<h6 id="4、解压nginx"><a href="#4、解压nginx" class="headerlink" title="4、解压nginx"></a><strong>4、解压nginx</strong></h6><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf nginx-1.16.1.tar.gz</span><br><span class="line">cd nginx-1.16.1</span><br></pre></td></tr></table></figure>
+<h6 id="4、解压nginx"><a href="#4、解压nginx" class="headerlink" title="4、解压nginx"></a><strong>4、解压nginx</strong></h6><pre><code class="highlight apache"><span class="attribute">tar</span> -zxvf nginx-<span class="number">1</span>.<span class="number">16</span>.<span class="number">1</span>.tar.gz
+<span class="attribute">cd</span> nginx-<span class="number">1</span>.<span class="number">16</span>.<span class="number">1</span></code></pre>
 
-<h6 id="5、配置nginx中的fastdfs"><a href="#5、配置nginx中的fastdfs" class="headerlink" title="5、配置nginx中的fastdfs"></a><strong>5、配置nginx中的fastdfs</strong></h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --add-module=../fastdfs-nginx-module-master-1.22/src</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h6 id="5、配置nginx中的fastdfs"><a href="#5、配置nginx中的fastdfs" class="headerlink" title="5、配置nginx中的fastdfs"></a><strong>5、配置nginx中的fastdfs</strong></h6><pre><code class="highlight sh">./configure --add-module=../fastdfs-nginx-module-master-1.22/src
+make &amp;&amp; make install
+</code></pre>
 
-<h6 id="6、查看Nginx-的模块"><a href="#6、查看Nginx-的模块" class="headerlink" title="6、查看Nginx 的模块"></a><strong>6、查看Nginx 的模块</strong></h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -V</span><br></pre></td></tr></table></figure>
+<h6 id="6、查看Nginx-的模块"><a href="#6、查看Nginx-的模块" class="headerlink" title="6、查看Nginx 的模块"></a><strong>6、查看Nginx 的模块</strong></h6><pre><code class="highlight sh">/usr/local/nginx/sbin/nginx -V</code></pre>
 
-<h6 id="7、复制-相关文件-配置文件到指定目录"><a href="#7、复制-相关文件-配置文件到指定目录" class="headerlink" title="7、复制 相关文件 配置文件到指定目录"></a><strong>7、复制 相关文件 配置文件到指定目录</strong></h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /fastdfs-nginx-module-master/src/mod_fastdfs.conf /etc/fdfs/</span><br><span class="line"><span class="built_in">cp</span> /<span class="variable">$&#123;fastdfs&#125;</span>/conf/http.conf /etc/fdfs/</span><br><span class="line"><span class="built_in">cp</span> /<span class="variable">$&#123;fastdfs&#125;</span>/conf/mime.types /etc/fdfs/</span><br></pre></td></tr></table></figure>
+<h6 id="7、复制-相关文件-配置文件到指定目录"><a href="#7、复制-相关文件-配置文件到指定目录" class="headerlink" title="7、复制 相关文件 配置文件到指定目录"></a><strong>7、复制 相关文件 配置文件到指定目录</strong></h6><pre><code class="highlight sh"><span class="built_in">cp</span> /fastdfs-nginx-module-master/src/mod_fastdfs.conf /etc/fdfs/
+<span class="built_in">cp</span> /<span class="variable">$&#123;fastdfs&#125;</span>/conf/http.conf /etc/fdfs/
+<span class="built_in">cp</span> /<span class="variable">$&#123;fastdfs&#125;</span>/conf/mime.types /etc/fdfs/</code></pre>
 
-<h6 id="8、修改mod-fastdfs-conf"><a href="#8、修改mod-fastdfs-conf" class="headerlink" title="8、修改mod_fastdfs.conf"></a><strong>8、修改mod_fastdfs.conf</strong></h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">连接超时时间connect_timeout=10</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Tracker Server</span></span><br><span class="line">tracker_server=192.168.1.10:22122</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">StorageServer 默认端口</span></span><br><span class="line">storage_server_port=23000</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">如果文件ID的uri中包含/group**，则要设置为<span class="literal">true</span></span></span><br><span class="line">url_have_group_name = true</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Storage 配置的store_path0路径，必须和storage.conf中的一致</span></span><br><span class="line">store_path0=/data/fj/tools/fastdfs/storage</span><br></pre></td></tr></table></figure>
+<h6 id="8、修改mod-fastdfs-conf"><a href="#8、修改mod-fastdfs-conf" class="headerlink" title="8、修改mod_fastdfs.conf"></a><strong>8、修改mod_fastdfs.conf</strong></h6><pre><code class="highlight shell"><span class="meta prompt_"># </span><span class="language-bash">连接超时时间connect_timeout=10</span>
+<span class="meta prompt_"></span>
+<span class="meta prompt_"># </span><span class="language-bash">Tracker Server</span>
+tracker_server=192.168.1.10:22122
+<span class="meta prompt_"># </span><span class="language-bash">StorageServer 默认端口</span>
+storage_server_port=23000
+<span class="meta prompt_"></span>
+<span class="meta prompt_"># </span><span class="language-bash">如果文件ID的uri中包含/group**，则要设置为<span class="literal">true</span></span>
+url_have_group_name = true
+<span class="meta prompt_"></span>
+<span class="meta prompt_"># </span><span class="language-bash">Storage 配置的store_path0路径，必须和storage.conf中的一致</span>
+store_path0=/data/fj/tools/fastdfs/storage</code></pre>
 
-<h6 id="9、配置nginx-conf"><a href="#9、配置nginx-conf" class="headerlink" title="9、配置nginx.conf"></a><strong>9、配置nginx.conf</strong></h6><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">6080</span>;    <span class="comment">## 该端口为storage.conf中的http.server_port相同</span></span><br><span class="line">    <span class="attribute">server_name</span>  localhost;</span><br><span class="line">    <span class="section">location</span> /imooc/M00 &#123;</span><br><span class="line">        ngx_fastdfs_module;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h6 id="9、配置nginx-conf"><a href="#9、配置nginx-conf" class="headerlink" title="9、配置nginx.conf"></a><strong>9、配置nginx.conf</strong></h6><pre><code class="highlight nginx"><span class="section">server</span> &#123;
+    <span class="attribute">listen</span>       <span class="number">6080</span>;    <span class="comment">## 该端口为storage.conf中的http.server_port相同</span>
+    <span class="attribute">server_name</span>  localhost;
+    <span class="section">location</span> /imooc/M00 &#123;
+        ngx_fastdfs_module;
+    &#125; 
+&#125;
+</code></pre>
 
-<h6 id="10、测试文件"><a href="#10、测试文件" class="headerlink" title="10、测试文件"></a><strong>10、测试文件</strong></h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget http://192.168.1.10:6080/imooc/M00/00/00/wKgBCmQ4-R6AWMM4AAExw2yVFXE73.jpeg</span><br><span class="line"><span class="comment"># 可以下载就可，若不能查看mod_fastdfs.conf中的存取路径是否正确，或查看nginx的日志，可以定位问题。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h6 id="10、测试文件"><a href="#10、测试文件" class="headerlink" title="10、测试文件"></a><strong>10、测试文件</strong></h6><pre><code class="highlight sh">wget http://192.168.1.10:6080/imooc/M00/00/00/wKgBCmQ4-R6AWMM4AAExw2yVFXE73.jpeg
+<span class="comment"># 可以下载就可，若不能查看mod_fastdfs.conf中的存取路径是否正确，或查看nginx的日志，可以定位问题。</span>
+</code></pre>
 
   
 	</div>
@@ -315,10 +422,6 @@
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -328,6 +431,10 @@
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -385,6 +492,8 @@
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			

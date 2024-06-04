@@ -68,10 +68,11 @@
 					
 					<li>
  					
-						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
-							<label>Search</label>
-						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
-						</form>
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:example.com">
+					</form>
 					
 					</li>
 				</ul>
@@ -161,29 +162,136 @@
 </tbody></table>
 <p><strong>Redis安装</strong></p>
 <p>每个节点上执行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">创建配置所有相关目录</span></span><br><span class="line">mkdir -p /redis/cluster/7000/&#123;logs,conf,data&#125;</span><br><span class="line">mkdir -p /redis/cluster/8000/&#123;logs,conf,data&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">官方下载二进制包并安装</span></span><br><span class="line">wget https://download.redis.io/releases/redis-7.0.4.tar.gz -P /redis</span><br><span class="line">cd /redis</span><br><span class="line">tar -zxvf /tmp/redis-7.0.4.tar.gz</span><br><span class="line">cd /redis/redis-7.0.4/</span><br><span class="line">make</span><br><span class="line">make install PREFIX=/redis/cluster/7000/</span><br><span class="line">make install PREFIX=/redis/cluster/8000/</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">从安装包中，复制文件到redis配置中，作为7000、8000节点的配置文件</span></span><br><span class="line">cp redis.conf /redis/cluster/7000/conf/redis-7000.conf</span><br><span class="line">cp redis.conf /redis/cluster/8000/conf/redis-8000.conf</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight shell"><span class="meta prompt_">#</span><span class="language-bash">创建配置所有相关目录</span>
+mkdir -p /redis/cluster/7000/&#123;logs,conf,data&#125;
+mkdir -p /redis/cluster/8000/&#123;logs,conf,data&#125;
+<span class="meta prompt_"></span>
+<span class="meta prompt_">#</span><span class="language-bash">官方下载二进制包并安装</span>
+wget https://download.redis.io/releases/redis-7.0.4.tar.gz -P /redis
+cd /redis
+tar -zxvf /tmp/redis-7.0.4.tar.gz
+cd /redis/redis-7.0.4/
+make
+make install PREFIX=/redis/cluster/7000/
+make install PREFIX=/redis/cluster/8000/
+<span class="meta prompt_">#</span><span class="language-bash">从安装包中，复制文件到redis配置中，作为7000、8000节点的配置文件</span>
+cp redis.conf /redis/cluster/7000/conf/redis-7000.conf
+cp redis.conf /redis/cluster/8000/conf/redis-8000.conf</code></pre>
 
 <p><strong>在7000节点配置如下</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 允许访问Redis的源地址，如果是需要不做源体制限制，可配置为 bind *</span></span><br><span class="line"> <span class="built_in">bind</span> 0.0.0.0</span><br><span class="line"> <span class="comment"># redis监听端口</span></span><br><span class="line"> port 7000</span><br><span class="line"> <span class="comment"># 默认进程运行在后台</span></span><br><span class="line"> daemonize <span class="built_in">yes</span></span><br><span class="line"> <span class="comment"># 配置日志文件路径</span></span><br><span class="line"> logfile <span class="string">&quot;/redis/cluster/7000/logs/redis7000.log&quot;</span></span><br><span class="line"> <span class="comment"># 配置持久化文件存放路径</span></span><br><span class="line"> <span class="built_in">dir</span> /redis/cluster/7000/data/</span><br><span class="line"> <span class="comment"># 配置auth安全认证</span></span><br><span class="line"> requirepass 123456</span><br><span class="line"> <span class="comment">#修改pidfile 为 /var/run/redis_7000.pid</span></span><br><span class="line"> pidfile /var/run/redis_7000.pid</span><br><span class="line"> <span class="comment"># 启用redis-cluster集群模式</span></span><br><span class="line"> cluster-enabled <span class="built_in">yes</span></span><br><span class="line"> <span class="comment"># redis-cluster集群配置文件的存放路径（注意：此文件可默认生成，此处保持默认）</span></span><br><span class="line"> cluster-config-file /redis/cluster/7000/conf/nodes-7000.conf</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight sh"><span class="comment"># 允许访问Redis的源地址，如果是需要不做源体制限制，可配置为 bind *</span>
+ <span class="built_in">bind</span> 0.0.0.0
+ <span class="comment"># redis监听端口</span>
+ port 7000
+ <span class="comment"># 默认进程运行在后台</span>
+ daemonize <span class="built_in">yes</span>
+ <span class="comment"># 配置日志文件路径</span>
+ logfile <span class="string">&quot;/redis/cluster/7000/logs/redis7000.log&quot;</span>
+ <span class="comment"># 配置持久化文件存放路径</span>
+ <span class="built_in">dir</span> /redis/cluster/7000/data/
+ <span class="comment"># 配置auth安全认证</span>
+ requirepass 123456
+ <span class="comment">#修改pidfile 为 /var/run/redis_7000.pid</span>
+ pidfile /var/run/redis_7000.pid
+ <span class="comment"># 启用redis-cluster集群模式</span>
+ cluster-enabled <span class="built_in">yes</span>
+ <span class="comment"># redis-cluster集群配置文件的存放路径（注意：此文件可默认生成，此处保持默认）</span>
+ cluster-config-file /redis/cluster/7000/conf/nodes-7000.conf</code></pre>
 
 <p><strong>在8000节点配置如下</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 允许访问Redis的源地址，如果是需要不做源体制限制，可配置为 bind *</span></span><br><span class="line"> <span class="built_in">bind</span> 0.0.0.0</span><br><span class="line"> <span class="comment"># redis监听端口</span></span><br><span class="line"> port 8000</span><br><span class="line"> <span class="comment"># 默认进程运行在后台</span></span><br><span class="line"> daemonize <span class="built_in">yes</span></span><br><span class="line"> <span class="comment"># 配置日志文件路径</span></span><br><span class="line"> logfile <span class="string">&quot;/redis/cluster/8000/logs/redis8000.log&quot;</span></span><br><span class="line"> <span class="comment"># 配置持久化文件存放路径</span></span><br><span class="line"> <span class="built_in">dir</span> /redis/cluster/8000/data/</span><br><span class="line"> <span class="comment"># 配置auth安全认证</span></span><br><span class="line"> requirepass 123456</span><br><span class="line"> <span class="comment">#修改pidfile 为 /var/run/redis_8000.pid</span></span><br><span class="line"> pidfile /var/run/redis_8000.pid</span><br><span class="line"> <span class="comment"># 启用redis-cluster集群模式</span></span><br><span class="line"> cluster-enabled <span class="built_in">yes</span></span><br><span class="line"> <span class="comment"># redis-cluster集群配置文件的存放路径（注意：此文件可默认生成，此处保持默认）</span></span><br><span class="line"> cluster-config-file /redis/cluster/8000/conf/nodes-8000.conf</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight sh"><span class="comment"># 允许访问Redis的源地址，如果是需要不做源体制限制，可配置为 bind *</span>
+ <span class="built_in">bind</span> 0.0.0.0
+ <span class="comment"># redis监听端口</span>
+ port 8000
+ <span class="comment"># 默认进程运行在后台</span>
+ daemonize <span class="built_in">yes</span>
+ <span class="comment"># 配置日志文件路径</span>
+ logfile <span class="string">&quot;/redis/cluster/8000/logs/redis8000.log&quot;</span>
+ <span class="comment"># 配置持久化文件存放路径</span>
+ <span class="built_in">dir</span> /redis/cluster/8000/data/
+ <span class="comment"># 配置auth安全认证</span>
+ requirepass 123456
+ <span class="comment">#修改pidfile 为 /var/run/redis_8000.pid</span>
+ pidfile /var/run/redis_8000.pid
+ <span class="comment"># 启用redis-cluster集群模式</span>
+ cluster-enabled <span class="built_in">yes</span>
+ <span class="comment"># redis-cluster集群配置文件的存放路径（注意：此文件可默认生成，此处保持默认）</span>
+ cluster-config-file /redis/cluster/8000/conf/nodes-8000.conf</code></pre>
 
 <p><strong>在每个节点上启动服务</strong></p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /redis/cluster/7000/bin/</span><br><span class="line">./redis-server ../conf/redis-7000.conf</span><br><span class="line"><span class="built_in">cd</span> /redis/cluster/8000/bin/</span><br><span class="line">./redis-server ../conf/redis-8000.conf</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight sh"><span class="built_in">cd</span> /redis/cluster/7000/bin/
+./redis-server ../conf/redis-7000.conf
+<span class="built_in">cd</span> /redis/cluster/8000/bin/
+./redis-server ../conf/redis-8000.conf</code></pre>
 
 <p><strong>检查节点启动，确保都启动成功</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@dba bin]# ps -ef | grep redis </span><br><span class="line">root     22515 0.1 0.4 168780 8600 ?       Ssl 09:33   0:00 ./redis-server 0.0.0.0:7000 [cluster] </span><br><span class="line">root     22521 0.6 0.5 174924 10676 ?       Ssl 09:33   0:00 ./redis-server 0.0.0.0:8000 [cluster]</span><br><span class="line">root     22533 0.0 0.0 112812   980 pts/0   R+   09:33   0:00 grep --color=auto redis</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight shell">[root@dba bin]# ps -ef | grep redis 
+root     22515 0.1 0.4 168780 8600 ?       Ssl 09:33   0:00 ./redis-server 0.0.0.0:7000 [cluster] 
+root     22521 0.6 0.5 174924 10676 ?       Ssl 09:33   0:00 ./redis-server 0.0.0.0:8000 [cluster]
+root     22533 0.0 0.0 112812   980 pts/0   R+   09:33   0:00 grep --color=auto redis</code></pre>
 
 <p><strong>开放端口</strong></p>
 <p>每个节点都执行</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-port=7000/tcp --permanent</span><br><span class="line">firewall-cmd --zone=public --add-port=17000/tcp --permanent</span><br><span class="line">firewall-cmd --zone=public --add-port=8000/tcp --permanent</span><br><span class="line">firewall-cmd --zone=public --add-port=18000/tcp --permanent</span><br><span class="line">firewall-cmd --reload	</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight sh">firewall-cmd --zone=public --add-port=7000/tcp --permanent
+firewall-cmd --zone=public --add-port=17000/tcp --permanent
+firewall-cmd --zone=public --add-port=8000/tcp --permanent
+firewall-cmd --zone=public --add-port=18000/tcp --permanent
+firewall-cmd --reload</code></pre>
 
 <p><strong>创建集群</strong></p>
 <p>在集群中任意节点上执行以下命令</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./redis-cli --cluster create 192.168.11.11:7000 192.168.11.11:8000 192.168.11.10:7000 192.168.11.10:8000 192.168.11.8:7000 192.168.11.8:8000 --cluster-replicas 1 -a 123456</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight sh">./redis-cli --cluster create 192.168.11.11:7000 192.168.11.11:8000 192.168.11.10:7000 192.168.11.10:8000 192.168.11.8:7000 192.168.11.8:8000 --cluster-replicas 1 -a 123456
+</code></pre>
 
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">Warning: Using a password with &#x27;-a&#x27; or &#x27;-u&#x27; option on the command line interface may not be safe.</span><br><span class="line">&gt;&gt;&gt; Performing hash slots allocation on 6 nodes...</span><br><span class="line">Master[0] -&gt; Slots 0 - 5460</span><br><span class="line">Master[1] -&gt; Slots 5461 - 10922</span><br><span class="line">Master[2] -&gt; Slots 10923 - 16383</span><br><span class="line">Adding replica 192.168.11.10:8000 to 192.168.11.11:7000</span><br><span class="line">Adding replica 192.168.11.8:8000 to 192.168.11.10:7000</span><br><span class="line">Adding replica 192.168.11.11:8000 to 192.168.11.8:7000</span><br><span class="line">M: 3f16ba26a627b11485e3700524ad2bbd5713badf 192.168.11.11:7000</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">S: 72b65ade684e6c560ba1cf7e2664680ca361a5b1 192.168.11.11:8000</span><br><span class="line">   replicates 87d2e014af5029f7a93c851a562034c3bdf8cb34</span><br><span class="line">M: 229d4c3dffee3cdeb587a61afd6663be49d05e34 192.168.11.10:7000</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">S: b3ed58bcb2eb5161e493ce01fd71488502b38a51 192.168.11.10:8000</span><br><span class="line">   replicates 3f16ba26a627b11485e3700524ad2bbd5713badf</span><br><span class="line">M: 87d2e014af5029f7a93c851a562034c3bdf8cb34 192.168.11.8:7000</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">S: 69ef6cbbe15907290f7545e1c7b2e359210bafaa 192.168.11.8:8000</span><br><span class="line">   replicates 229d4c3dffee3cdeb587a61afd6663be49d05e34</span><br><span class="line">Can I set the above configuration? (type &#x27;yes&#x27; to accept): yes</span><br><span class="line">&gt;&gt;&gt; Nodes configuration updated</span><br><span class="line">&gt;&gt;&gt; Assign a different config epoch to each node</span><br><span class="line">&gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster</span><br><span class="line">Waiting for the cluster to join</span><br><span class="line">.</span><br><span class="line">&gt;&gt;&gt; Performing Cluster Check (using node 192.168.11.11:7000)</span><br><span class="line">M: 3f16ba26a627b11485e3700524ad2bbd5713badf 192.168.11.11:7000</span><br><span class="line">   slots:[0-5460] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 72b65ade684e6c560ba1cf7e2664680ca361a5b1 192.168.11.11:8000</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 87d2e014af5029f7a93c851a562034c3bdf8cb34</span><br><span class="line">S: b3ed58bcb2eb5161e493ce01fd71488502b38a51 192.168.11.10:8000</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 3f16ba26a627b11485e3700524ad2bbd5713badf</span><br><span class="line">M: 87d2e014af5029f7a93c851a562034c3bdf8cb34 192.168.11.8:7000</span><br><span class="line">   slots:[10923-16383] (5461 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">S: 69ef6cbbe15907290f7545e1c7b2e359210bafaa 192.168.11.8:8000</span><br><span class="line">   slots: (0 slots) slave</span><br><span class="line">   replicates 229d4c3dffee3cdeb587a61afd6663be49d05e34</span><br><span class="line">M: 229d4c3dffee3cdeb587a61afd6663be49d05e34 192.168.11.10:7000</span><br><span class="line">   slots:[5461-10922] (5462 slots) master</span><br><span class="line">   1 additional replica(s)</span><br><span class="line">[OK] All nodes agree about slots configuration.</span><br><span class="line">&gt;&gt;&gt; Check for open slots...</span><br><span class="line">&gt;&gt;&gt; Check slots coverage...</span><br><span class="line">[OK] All 16384 slots covered.</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight vbnet"><span class="symbol">Warning:</span> <span class="keyword">Using</span> a password <span class="keyword">with</span> <span class="comment">&#x27;-a&#x27; or &#x27;-u&#x27; option on the command line interface may not be safe.</span>
+&gt;&gt;&gt; Performing hash slots allocation <span class="keyword">on</span> <span class="number">6</span> nodes...
+Master[<span class="number">0</span>] -&gt; Slots <span class="number">0</span> - <span class="number">5460</span>
+Master[<span class="number">1</span>] -&gt; Slots <span class="number">5461</span> - <span class="number">10922</span>
+Master[<span class="number">2</span>] -&gt; Slots <span class="number">10923</span> - <span class="number">16383</span>
+Adding replica <span class="number">192.168</span>.<span class="number">11.10</span>:<span class="number">8000</span> <span class="keyword">to</span> <span class="number">192.168</span>.<span class="number">11.11</span>:<span class="number">7000</span>
+Adding replica <span class="number">192.168</span>.<span class="number">11.8</span>:<span class="number">8000</span> <span class="keyword">to</span> <span class="number">192.168</span>.<span class="number">11.10</span>:<span class="number">7000</span>
+Adding replica <span class="number">192.168</span>.<span class="number">11.11</span>:<span class="number">8000</span> <span class="keyword">to</span> <span class="number">192.168</span>.<span class="number">11.8</span>:<span class="number">7000</span>
+<span class="symbol">M:</span> <span class="number">3</span>f16ba26a627b11485e3700524ad2bbd5713badf <span class="number">192.168</span>.<span class="number">11.11</span>:<span class="number">7000</span>
+   slots:[<span class="number">0</span>-<span class="number">5460</span>] (<span class="number">5461</span> slots) master
+<span class="symbol">S:</span> <span class="number">72</span>b65ade684e6c560ba1cf7e2664680ca361a5b1 <span class="number">192.168</span>.<span class="number">11.11</span>:<span class="number">8000</span>
+   replicates <span class="number">87</span>d2e014af5029f7a93c851a562034c3bdf8cb34
+<span class="symbol">M:</span> <span class="number">229</span>d4c3dffee3cdeb587a61afd6663be49d05e34 <span class="number">192.168</span>.<span class="number">11.10</span>:<span class="number">7000</span>
+   slots:[<span class="number">5461</span>-<span class="number">10922</span>] (<span class="number">5462</span> slots) master
+<span class="symbol">S:</span> b3ed58bcb2eb5161e493ce01fd71488502b38a51 <span class="number">192.168</span>.<span class="number">11.10</span>:<span class="number">8000</span>
+   replicates <span class="number">3</span>f16ba26a627b11485e3700524ad2bbd5713badf
+<span class="symbol">M:</span> <span class="number">87</span>d2e014af5029f7a93c851a562034c3bdf8cb34 <span class="number">192.168</span>.<span class="number">11.8</span>:<span class="number">7000</span>
+   slots:[<span class="number">10923</span>-<span class="number">16383</span>] (<span class="number">5461</span> slots) master
+<span class="symbol">S:</span> <span class="number">69</span>ef6cbbe15907290f7545e1c7b2e359210bafaa <span class="number">192.168</span>.<span class="number">11.8</span>:<span class="number">8000</span>
+   replicates <span class="number">229</span>d4c3dffee3cdeb587a61afd6663be49d05e34
+Can I <span class="keyword">set</span> the above configuration? (type <span class="comment">&#x27;yes&#x27; to accept): yes</span>
+&gt;&gt;&gt; Nodes configuration updated
+&gt;&gt;&gt; Assign a different config epoch <span class="keyword">to</span> <span class="keyword">each</span> node
+&gt;&gt;&gt; Sending CLUSTER MEET messages <span class="keyword">to</span> <span class="keyword">join</span> the cluster
+Waiting <span class="keyword">for</span> the cluster <span class="keyword">to</span> <span class="keyword">join</span>
+.
+&gt;&gt;&gt; Performing Cluster Check (<span class="keyword">using</span> node <span class="number">192.168</span>.<span class="number">11.11</span>:<span class="number">7000</span>)
+<span class="symbol">M:</span> <span class="number">3</span>f16ba26a627b11485e3700524ad2bbd5713badf <span class="number">192.168</span>.<span class="number">11.11</span>:<span class="number">7000</span>
+   slots:[<span class="number">0</span>-<span class="number">5460</span>] (<span class="number">5461</span> slots) master
+   <span class="number">1</span> additional replica(s)
+<span class="symbol">S:</span> <span class="number">72</span>b65ade684e6c560ba1cf7e2664680ca361a5b1 <span class="number">192.168</span>.<span class="number">11.11</span>:<span class="number">8000</span>
+   slots: (<span class="number">0</span> slots) slave
+   replicates <span class="number">87</span>d2e014af5029f7a93c851a562034c3bdf8cb34
+<span class="symbol">S:</span> b3ed58bcb2eb5161e493ce01fd71488502b38a51 <span class="number">192.168</span>.<span class="number">11.10</span>:<span class="number">8000</span>
+   slots: (<span class="number">0</span> slots) slave
+   replicates <span class="number">3</span>f16ba26a627b11485e3700524ad2bbd5713badf
+<span class="symbol">M:</span> <span class="number">87</span>d2e014af5029f7a93c851a562034c3bdf8cb34 <span class="number">192.168</span>.<span class="number">11.8</span>:<span class="number">7000</span>
+   slots:[<span class="number">10923</span>-<span class="number">16383</span>] (<span class="number">5461</span> slots) master
+   <span class="number">1</span> additional replica(s)
+<span class="symbol">S:</span> <span class="number">69</span>ef6cbbe15907290f7545e1c7b2e359210bafaa <span class="number">192.168</span>.<span class="number">11.8</span>:<span class="number">8000</span>
+   slots: (<span class="number">0</span> slots) slave
+   replicates <span class="number">229</span>d4c3dffee3cdeb587a61afd6663be49d05e34
+<span class="symbol">M:</span> <span class="number">229</span>d4c3dffee3cdeb587a61afd6663be49d05e34 <span class="number">192.168</span>.<span class="number">11.10</span>:<span class="number">7000</span>
+   slots:[<span class="number">5461</span>-<span class="number">10922</span>] (<span class="number">5462</span> slots) master
+   <span class="number">1</span> additional replica(s)
+[OK] All nodes agree about slots configuration.
+&gt;&gt;&gt; Check <span class="keyword">for</span> open slots...
+&gt;&gt;&gt; Check slots coverage...
+[OK] All <span class="number">16384</span> slots covered.</code></pre>
 
 <ul>
 <li>–cluster &#x2F; -c</li>
@@ -198,10 +306,36 @@
 </ul>
 <p>表示为1个主节点配置1个从节点；以此类推，如配置将1替换成任意值 n，则表示为1个主节点配置n个从节点，<strong>如果不加–cluster-replicas 1则会创建6个主节点</strong></p>
 <p><strong>查看集群信息</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost bin]# ./redis-cli -c -h 192.168.11.11 -p 7000 -a 123456 cluster info</span><br><span class="line">Warning: Using a password with &#x27;-a&#x27; or &#x27;-u&#x27; option on the command line interface may not be safe.</span><br><span class="line">cluster_state:ok</span><br><span class="line">cluster_slots_assigned:16384</span><br><span class="line">cluster_slots_ok:16384</span><br><span class="line">cluster_slots_pfail:0</span><br><span class="line">cluster_slots_fail:0</span><br><span class="line">cluster_known_nodes:6</span><br><span class="line">cluster_size:3</span><br><span class="line">cluster_current_epoch:6</span><br><span class="line">cluster_my_epoch:1</span><br><span class="line">cluster_stats_messages_ping_sent:231</span><br><span class="line">cluster_stats_messages_pong_sent:243</span><br><span class="line">cluster_stats_messages_sent:474</span><br><span class="line">cluster_stats_messages_ping_received:238</span><br><span class="line">cluster_stats_messages_pong_received:231</span><br><span class="line">cluster_stats_messages_meet_received:5</span><br><span class="line">cluster_stats_messages_received:474</span><br><span class="line">total_cluster_links_buffer_limit_exceeded:0</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight vbnet">[root@localhost bin]# ./redis-cli -c -h <span class="number">192.168</span>.<span class="number">11.11</span> -p <span class="number">7000</span> -a <span class="number">123456</span> cluster info
+<span class="symbol">Warning:</span> <span class="keyword">Using</span> a password <span class="keyword">with</span> <span class="comment">&#x27;-a&#x27; or &#x27;-u&#x27; option on the command line interface may not be safe.</span>
+<span class="symbol">cluster_state:</span>ok
+<span class="symbol">cluster_slots_assigned:</span><span class="number">16384</span>
+<span class="symbol">cluster_slots_ok:</span><span class="number">16384</span>
+<span class="symbol">cluster_slots_pfail:</span><span class="number">0</span>
+<span class="symbol">cluster_slots_fail:</span><span class="number">0</span>
+<span class="symbol">cluster_known_nodes:</span><span class="number">6</span>
+<span class="symbol">cluster_size:</span><span class="number">3</span>
+<span class="symbol">cluster_current_epoch:</span><span class="number">6</span>
+<span class="symbol">cluster_my_epoch:</span><span class="number">1</span>
+<span class="symbol">cluster_stats_messages_ping_sent:</span><span class="number">231</span>
+<span class="symbol">cluster_stats_messages_pong_sent:</span><span class="number">243</span>
+<span class="symbol">cluster_stats_messages_sent:</span><span class="number">474</span>
+<span class="symbol">cluster_stats_messages_ping_received:</span><span class="number">238</span>
+<span class="symbol">cluster_stats_messages_pong_received:</span><span class="number">231</span>
+<span class="symbol">cluster_stats_messages_meet_received:</span><span class="number">5</span>
+<span class="symbol">cluster_stats_messages_received:</span><span class="number">474</span>
+<span class="symbol">total_cluster_links_buffer_limit_exceeded:</span><span class="number">0</span></code></pre>
 
 <p><strong>查看集群节点信息</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost bin]# ./redis-cli -c -h 192.168.11.11 -p 7000 -a 123456 cluster nodes</span><br><span class="line">Warning: Using a password with &#x27;-a&#x27; or &#x27;-u&#x27; option on the command line interface may not be safe.</span><br><span class="line">72b65ade684e6c560ba1cf7e2664680ca361a5b1 192.168.11.11:8000@18000 slave 87d2e014af5029f7a93c851a562034c3bdf8cb34 0 1669874940000 5 connected</span><br><span class="line">b3ed58bcb2eb5161e493ce01fd71488502b38a51 192.168.11.10:8000@18000 slave 3f16ba26a627b11485e3700524ad2bbd5713badf 0 1669874937000 1 connected</span><br><span class="line">87d2e014af5029f7a93c851a562034c3bdf8cb34 192.168.11.8:7000@17000 master - 0 1669874941962 5 connected 10923-16383</span><br><span class="line">69ef6cbbe15907290f7545e1c7b2e359210bafaa 192.168.11.8:8000@18000 slave 229d4c3dffee3cdeb587a61afd6663be49d05e34 0 1669874941000 3 connected</span><br><span class="line">3f16ba26a627b11485e3700524ad2bbd5713badf 192.168.11.11:7000@17000 myself,master - 0 1669874936000 1 connected 0-5460</span><br><span class="line">229d4c3dffee3cdeb587a61afd6663be49d05e34 192.168.11.10:7000@17000 master - 0 1669874939000 3 connected 5461-10922</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight dns">[root@localhost bin]# ./redis-cli -c -h <span class="number">192.168.11.11</span> -p <span class="number">7000</span> -a <span class="number">123456</span> cluster nodes
+Warning: Using a password with &#x27;-a&#x27; or &#x27;-u&#x27; option on the command line interface may not be safe.
+<span class="number">72</span>b65ade684e6c560ba1cf7e2664680ca<span class="number">361a5b1</span> <span class="number">192.168.11.11</span>:<span class="number">8000@18000</span> slave <span class="number">87d</span>2e014af5029f7a93c851a562034c3bdf8cb34 <span class="number">0</span> <span class="number">1669874940000</span> <span class="number">5</span> connected
+b3ed58bcb2eb5161e493ce01fd714<span class="number">88502b38a51</span> <span class="number">192.168.11.10</span>:<span class="number">8000@18000</span> slave <span class="number">3</span>f16ba26a627b11485e3700524ad2bbd5713badf <span class="number">0</span> <span class="number">1669874937000</span> <span class="number">1</span> connected
+<span class="number">87d</span>2e014af5029f7a93c851a562034c3bdf8cb<span class="number">34 192.168.11</span>.<span class="number">8</span>:<span class="number">7000@17000</span> master - <span class="number">0</span> <span class="number">1669874941962</span> <span class="number">5</span> connected <span class="number">10923-16383</span>
+<span class="number">69</span>ef6cbbe15907290f7545e1c7b2e359210bafaa <span class="number">192.168.11.8</span>:<span class="number">8000@18000</span> slave <span class="number">229d</span>4c3dffee3cdeb587a61afd6663be<span class="number">49d05e34 0</span> <span class="number">1669874941000</span> <span class="number">3</span> connected
+<span class="number">3</span>f16ba26a627b11485e3700524ad2bbd5713badf <span class="number">192.168.11.11</span>:<span class="number">7000@17000</span> myself,master - <span class="number">0</span> <span class="number">1669874936000</span> <span class="number">1</span> connected <span class="number">0</span>-<span class="number">5460</span>
+<span class="number">229d</span>4c3dffee3cdeb587a61afd6663be<span class="number">49d05e34 192</span>.<span class="number">168.11.10</span>:<span class="number">7000@17000</span> master - <span class="number">0</span> <span class="number">1669874939000</span> <span class="number">3</span> connected <span class="number">5461-10922</span>
+</code></pre>
 
 <p><strong>Important - 重要</strong></p>
 <p>进入cluster模式集群中必须使用 -c &#x2F; –cluster参数，不然是无法进入到集群当中</p>
@@ -345,10 +479,6 @@
 			
 		
 			
-				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
@@ -358,6 +488,10 @@
 		
 			
 				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
 			
 		
 			
@@ -415,6 +549,8 @@
 		
 		
 		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			
