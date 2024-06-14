@@ -19,7 +19,7 @@
 <meta property="og:description" content="下载ElasticSearch在es官网【https:&#x2F;&#x2F;elasticsearch.cn&#x2F;download&#x2F;】找到相关版本，如下载8.5.3 wget https:&#x2F;&#x2F;artifacts.elastic.co&#x2F;downloads&#x2F;elasticsearch&#x2F;elasticsearch-8.5.3-linux-x86_64.tar.gz  解压并放到&#x2F;usr&#x2F;local&amp;#x2">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-04-13T11:33:45.000Z">
-<meta property="article:modified_time" content="2024-06-01T00:42:06.553Z">
+<meta property="article:modified_time" content="2024-06-14T02:20:14.107Z">
 <meta property="article:author" content="不合时宜的人">
 <meta property="article:tag" content="es">
 <meta property="article:tag" content="elasticsearch">
@@ -109,9 +109,6 @@
 
 <h4 id="解压并放到-usr-local-目录下"><a href="#解压并放到-usr-local-目录下" class="headerlink" title="解压并放到&#x2F;usr&#x2F;local&#x2F;目录下"></a><strong>解压并放到&#x2F;usr&#x2F;local&#x2F;目录下</strong></h4><pre><code class="highlight shell">tar -zxvf elasticsearch-8.5.3-linux-x86_64.tar.gz
 mv  elasticsearch-8.5.3 /usr/local/</code></pre>
-
-<p>由于此场景下CMD指令提供的是一个默认的可变参数，故我们可以通过docker run命令行参数 来覆盖 CMD指定的默认可变参数</p>
-<pre><code class="highlight dockerfile">docker <span class="keyword">run</span><span class="language-bash"> --name demo5B --<span class="built_in">rm</span> -it demo5:<span class="built_in">test</span> -m</span></code></pre>
 
 <h4 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a><strong>修改配置文件</strong></h4><h5 id="修改config-elasticsearch-yml"><a href="#修改config-elasticsearch-yml" class="headerlink" title="修改config&#x2F;elasticsearch.yml"></a><strong>修改config&#x2F;elasticsearch.yml</strong></h5><pre><code class="highlight yaml"><span class="comment"># Cluster</span>
 <span class="attr">cluster.name:</span> <span class="string">my-es</span>
