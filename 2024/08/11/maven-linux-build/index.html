@@ -1,0 +1,543 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Maven 在Centos7中离线构建 | 一粒白沙</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="不合时宜的人">
+    
+
+    
+    <meta name="description" content="总体思路： 1、在本地电脑重新生成依赖库 2、将本地电脑中依赖库复制到离线机中 3、再将离线机的maven的配置文件指定依赖库 4、最后在离线机中执行构建命令  一、在本地电脑重新生成依赖库1、为了得到一个纯净的依赖库，本地重新生成依赖库，将maven的setting.xml的localRepository指定其它目录，如d:\maven\repository2 2、在项目根目录下执行以下命令，重">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maven 在Centos7中离线构建">
+<meta property="og:url" content="http://example.com/2024/08/11/maven-linux-build/index.html">
+<meta property="og:site_name" content="一粒白沙">
+<meta property="og:description" content="总体思路： 1、在本地电脑重新生成依赖库 2、将本地电脑中依赖库复制到离线机中 3、再将离线机的maven的配置文件指定依赖库 4、最后在离线机中执行构建命令  一、在本地电脑重新生成依赖库1、为了得到一个纯净的依赖库，本地重新生成依赖库，将maven的setting.xml的localRepository指定其它目录，如d:\maven\repository2 2、在项目根目录下执行以下命令，重">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-08-11T01:01:33.000Z">
+<meta property="article:modified_time" content="2024-08-11T01:38:22.724Z">
+<meta property="article:author" content="不合时宜的人">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="maven">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="一粒白沙" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="一粒白沙" title="一粒白沙"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="一粒白沙">一粒白沙</a></h1>
+				<h2 class="blog-motto">白沙洲中的一粒</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2024/08/11/maven-linux-build/" title="Maven 在Centos7中离线构建" itemprop="url">Maven 在Centos7中离线构建</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
+		
+  <p class="article-time">
+    <time datetime="2024-08-11T01:01:33.000Z" itemprop="datePublished"> 发表于 2024-08-11</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">总体思路：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9C%A8%E6%9C%AC%E5%9C%B0%E7%94%B5%E8%84%91%E9%87%8D%E6%96%B0%E7%94%9F%E6%88%90%E4%BE%9D%E8%B5%96%E5%BA%93"><span class="toc-number">2.</span> <span class="toc-text">一、在本地电脑重新生成依赖库</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%A4%8D%E5%88%B6%E4%BE%9D%E8%B5%96%E5%BA%93%E5%88%B0%E7%A6%BB%E7%BA%BF%E6%9C%BA"><span class="toc-number">3.</span> <span class="toc-text">二、复制依赖库到离线机</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BF%AE%E6%94%B9%E7%A6%BB%E7%BA%BF%E6%9C%BA%E7%9A%84maven%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">三、修改离线机的maven配置文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%89%A7%E8%A1%8C%E6%9E%84%E5%BB%BA%E6%89%93%E5%8C%85%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text">四、执行构建打包命令</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">五、遇到的问题</span></a></li></ol>
+		
+		</div>
+		
+		<h6 id="总体思路："><a href="#总体思路：" class="headerlink" title="总体思路："></a><strong>总体思路</strong>：</h6><blockquote>
+<p>1、在本地电脑重新生成依赖库</p>
+<p>2、将本地电脑中依赖库复制到离线机中</p>
+<p>3、再将离线机的maven的配置文件指定依赖库</p>
+<p>4、最后在离线机中执行构建命令</p>
+</blockquote>
+<h6 id="一、在本地电脑重新生成依赖库"><a href="#一、在本地电脑重新生成依赖库" class="headerlink" title="一、在本地电脑重新生成依赖库"></a>一、在本地电脑重新生成依赖库</h6><p>1、为了得到一个纯净的依赖库，本地重新生成依赖库，将maven的setting.xml的localRepository指定其它目录，如d:\maven\repository2</p>
+<p>2、在项目根目录下执行以下命令，重新生成的依赖库</p>
+<pre><code class="highlight sh">mvn clean package -Dmaven.test.skip=<span class="literal">true</span></code></pre>
+
+<h6 id="二、复制依赖库到离线机"><a href="#二、复制依赖库到离线机" class="headerlink" title="二、复制依赖库到离线机"></a>二、复制依赖库到离线机</h6><p>1、将【d:\maven\repository2】目录压缩，再复制到离线机上。</p>
+<h6 id="三、修改离线机的maven配置文件"><a href="#三、修改离线机的maven配置文件" class="headerlink" title="三、修改离线机的maven配置文件"></a>三、修改离线机的maven配置文件</h6><p>1、修改本地依赖库的路径，先打开maven&#x2F;conf&#x2F;setting.xml文件，设置<localRepository>属性</p>
+<pre><code class="highlight xml"><span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:\workspace\maven\repository2<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></code></pre>
+
+<p>2、指定镜像配置</p>
+<pre><code class="highlight shell">&lt;mirror&gt;
+     &lt;id&gt;central&lt;/id&gt;
+     &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;
+     &lt;name&gt;central Mirror&lt;/name&gt;
+     &lt;url&gt;file://D:\workspace\maven\repository2&lt;/url&gt;
+  &lt;/mirror&gt;</code></pre>
+
+<h6 id="四、执行构建打包命令"><a href="#四、执行构建打包命令" class="headerlink" title="四、执行构建打包命令"></a>四、执行构建打包命令</h6><p>1、在项目根目录下，执行以下命令</p>
+<pre><code class="highlight sh">mvn clean package -Dmaven.test.skip=<span class="literal">true</span></code></pre>
+
+<h6 id="五、遇到的问题"><a href="#五、遇到的问题" class="headerlink" title="五、遇到的问题"></a>五、遇到的问题</h6><p>1、com.aliyun.tea的问题</p>
+<pre><code class="highlight sh">No versions available <span class="keyword">for</span> com.aliyun:tea:jar:[1.1.14, 2.0.0) within specifie</code></pre>
+
+<p>在本机是没有问题，一构建成功，到离线机就报错，依赖库中也存在com.aliyun.tea.jar。</p>
+<p>项目中【com.aliyun.dysmsapi20170525】包间接引用了【com.aliyu.tea.jar】，依赖库只有1.1.14的jar，而没有2.0.0版本jar，</p>
+<p>最后在pom.xml文件中指定com.aliyun.tea的版本为1.1.14，问题解决。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/linux/">linux</a><a href="/tags/java/">java</a><a href="/tags/maven/">maven</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://example.com/2024/08/11/maven-linux-build/" data-title="Maven 在Centos7中离线构建 | 一粒白沙" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2024/07/02/vue-linux-build/"  title="Vue 在Centos7中离线构建">
+ <strong>下一篇：</strong><br/> 
+ <span>Vue 在Centos7中离线构建
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">总体思路：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9C%A8%E6%9C%AC%E5%9C%B0%E7%94%B5%E8%84%91%E9%87%8D%E6%96%B0%E7%94%9F%E6%88%90%E4%BE%9D%E8%B5%96%E5%BA%93"><span class="toc-number">2.</span> <span class="toc-text">一、在本地电脑重新生成依赖库</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%A4%8D%E5%88%B6%E4%BE%9D%E8%B5%96%E5%BA%93%E5%88%B0%E7%A6%BB%E7%BA%BF%E6%9C%BA"><span class="toc-number">3.</span> <span class="toc-text">二、复制依赖库到离线机</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BF%AE%E6%94%B9%E7%A6%BB%E7%BA%BF%E6%9C%BA%E7%9A%84maven%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">三、修改离线机的maven配置文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%89%A7%E8%A1%8C%E6%9E%84%E5%BB%BA%E6%89%93%E5%8C%85%E5%91%BD%E4%BB%A4"><span class="toc-number">5.</span> <span class="toc-text">四、执行构建打包命令</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">五、遇到的问题</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/linux/" title="linux">linux<sup>10</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/centos7/" title="centos7">centos7<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mysql/" title="mysql">mysql<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/springboot/" title="springboot">springboot<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cluster/" title="cluster">cluster<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/es/" title="es">es<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch/" title="elasticsearch">elasticsearch<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/k8s/" title="k8s">k8s<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/kubernetes/" title="kubernetes">kubernetes<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mongodb/" title="mongodb">mongodb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/zookeeper/" title="zookeeper">zookeeper<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cmd/" title="cmd">cmd<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fastdfs/" title="fastdfs">fastdfs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nginx/" title="nginx">nginx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/aqs/" title="aqs">aqs<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p>  <br/>
+			人生如逆旅，我亦是行人</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2024 
+		
+		<a href="/about" target="_blank" title="不合时宜的人">不合时宜的人</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+ // '<a class="overlay" id="qrcode"></a>',
+  //'<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  //'<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  //'<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  //'<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  //'<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

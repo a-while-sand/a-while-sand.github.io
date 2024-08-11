@@ -80,6 +80,58 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
+    <a href="/2024/08/11/maven-linux-build/" title="Maven 在Centos7中离线构建" itemprop="url">
+  
+    <h1 itemprop="name">Maven 在Centos7中离线构建</h1>
+    
+     
+           <p itemprop="description" >总体思路：
+1、在本地电脑重新生成依赖库
+2、将本地电脑中依赖库复制到离线机中
+3、再将离线机的maven的配置文件指定依赖库
+4、最后在离线机中执行构建命令
+
+一、在本地电脑重新生成依赖库1、为了得到一个纯净的依赖库，本地重新生成依赖库，将maven的setting.xml的l</p>
+        
+    
+    <time datetime="2024-08-11T01:01:33.000Z" itemprop="datePublished">2024-08-11</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2024/07/02/vue-linux-build/" title="Vue 在Centos7中离线构建" itemprop="url">
+  
+    <h1 itemprop="name">Vue 在Centos7中离线构建</h1>
+    
+     
+           <p itemprop="description" >总体思路：
+1、安装nodejs
+2、将本地的依赖库复制到离线机上
+3、执行构建命令
+
+一、安装nodejs1、由于centos7，默认不支持nodejs 18或以上的版本（需要安装其它组件），离线机安装组件比较麻烦，只能找16版本，这里安装了16.14.2版本。
+2、下载nod</p>
+        
+    
+    <time datetime="2024-07-02T12:33:14.000Z" itemprop="datePublished">2024-07-02</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
     <a href="/2024/03/22/springboot-redis-lua/" title="springboot redis lua 限流方案" itemprop="url">
   
     <h1 itemprop="name">springboot redis lua 限流方案</h1>
@@ -281,55 +333,6 @@ wget https://downloads.apache.org/kafka/3.1.2/kafka_2.13-3.1.2.tgz
 
 
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2021/10/19/java-collection-aqs/" title="AQS 总结" itemprop="url">
-  
-    <h1 itemprop="name">AQS 总结</h1>
-    
-     
-           <p itemprop="description" >1.什么是AQS
-AQS的全称为（AbstractQueuedSynchronizer），这个类在java.util.concurrent.locks包下面。AQS是一个用来构建锁和同步器的框架，比如ReentrantLock，Semaphore，ReentrantReadWri</p>
-        
-    
-    <time datetime="2021-10-19T06:33:12.000Z" itemprop="datePublished">2021-10-19</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2021/07/23/java-collection-summary/" title="Java 容器总结" itemprop="url">
-  
-    <h1 itemprop="name">Java 容器总结</h1>
-    
-     
-           <p itemprop="description" >一. 并发容器总结
-java.util.concurrent包提供的容器，分为3类：
-Concurrent*：大部分通过CAS来实现
-CopyOnWrite*：通过复制一份原数据来实现
-Blocking*：通过AQS实现
-
-
-
-2. 分析在Java中是如何利用CAS实现原子操作的</p>
-        
-    
-    <time datetime="2021-07-23T11:25:33.000Z" itemprop="datePublished">2021-07-23</time>
-  </a>
-</section>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix unexpand">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -350,11 +353,11 @@ Blocking*：通过AQS实现
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>10</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>11</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/linux/" title="linux">linux<sup>8</sup></a></li>
+				<li><a href="/tags/linux/" title="linux">linux<sup>10</sup></a></li>
 			
 		
 			
