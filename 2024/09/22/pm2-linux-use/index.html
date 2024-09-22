@@ -11,25 +11,25 @@
     
 
     
-    <meta name="description" content="一、安装全局安装 npm install -g pm2 # 或者 yarn global add pm2  二、启动参数说明：  --watch：监听应用目录的变化，一旦发生变化，自动重启。如果要精确监听、不见听的目录，最好通过配置文件。 -i --instances：启用多少个实例，可用于负载均衡。如果-i 0或者-i max，则根据当前机器核数确定实例数目。 --ignore-watch：排除">
+    <meta name="description" content="安装全局安装 npm install -g pm2 # 或者 yarn global add pm2  启动参数说明：  --watch：监听应用目录的变化，一旦发生变化，自动重启。如果要精确监听、不见听的目录，最好通过配置文件。 -i --instances：启用多少个实例，可用于负载均衡。如果-i 0或者-i max，则根据当前机器核数确定实例数目。 --ignore-watch：排除监听的目">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PM2常用操作">
 <meta property="og:url" content="http://example.com/2024/09/22/pm2-linux-use/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="一、安装全局安装 npm install -g pm2 # 或者 yarn global add pm2  二、启动参数说明：  --watch：监听应用目录的变化，一旦发生变化，自动重启。如果要精确监听、不见听的目录，最好通过配置文件。 -i --instances：启用多少个实例，可用于负载均衡。如果-i 0或者-i max，则根据当前机器核数确定实例数目。 --ignore-watch：排除">
+<meta property="og:description" content="安装全局安装 npm install -g pm2 # 或者 yarn global add pm2  启动参数说明：  --watch：监听应用目录的变化，一旦发生变化，自动重启。如果要精确监听、不见听的目录，最好通过配置文件。 -i --instances：启用多少个实例，可用于负载均衡。如果-i 0或者-i max，则根据当前机器核数确定实例数目。 --ignore-watch：排除监听的目">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/source/image/pm2-linux-use-1.PNG">
-<meta property="og:image" content="http://example.com/source/image/pm2-linux-use-2.PNG">
-<meta property="og:image" content="http://example.com/source/image/pm2-linux-use-3.png">
-<meta property="og:image" content="http://example.com/source/image/pm2-linux-use-4.png">
+<meta property="og:image" content="http://example.com/image/pm2-linux-use-1.PNG">
+<meta property="og:image" content="http://example.com/image/pm2-linux-use-2.PNG">
+<meta property="og:image" content="http://example.com/image/pm2-linux-use-3.png">
+<meta property="og:image" content="http://example.com/image/pm2-linux-use-4.png">
 <meta property="article:published_time" content="2024-09-22T02:14:33.000Z">
-<meta property="article:modified_time" content="2024-09-22T02:27:43.306Z">
+<meta property="article:modified_time" content="2024-09-22T02:35:40.274Z">
 <meta property="article:author" content="不合时宜的人">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="pm2">
 <meta property="article:tag" content="nacos">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/source/image/pm2-linux-use-1.PNG">
+<meta name="twitter:image" content="http://example.com/image/pm2-linux-use-1.PNG">
 
     
     <link rel="alternative" href="/atom.xml" title="一粒白沙" type="application/atom+xml">
@@ -106,16 +106,16 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">一、安装</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%90%AF%E5%8A%A8"><span class="toc-number">3.</span> <span class="toc-text">二、启动</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%E5%88%97%E8%A1%A8"><span class="toc-number">4.</span> <span class="toc-text">三、查看进程列表</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">5.</span> <span class="toc-text">四、查看进程信息</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%87%8D%E5%90%AF"><span class="toc-number">6.</span> <span class="toc-text">五、重启</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%81%9C%E6%AD%A2"><span class="toc-number">7.</span> <span class="toc-text">六、停止</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B"><span class="toc-number">8.</span> <span class="toc-text">七、日志查看</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E4%B8%8Enacos%E7%9B%B8%E5%85%B3"><span class="toc-number">9.</span> <span class="toc-text">八、与nacos相关</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8"><span class="toc-number">2.</span> <span class="toc-text">启动</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%E5%88%97%E8%A1%A8"><span class="toc-number">3.</span> <span class="toc-text">查看进程列表</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">4.</span> <span class="toc-text">查看进程信息</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%87%8D%E5%90%AF"><span class="toc-number">5.</span> <span class="toc-text">重启</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%81%9C%E6%AD%A2"><span class="toc-number">6.</span> <span class="toc-text">停止</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B"><span class="toc-number">7.</span> <span class="toc-text">日志查看</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%8Enacos%E7%9B%B8%E5%85%B3"><span class="toc-number">8.</span> <span class="toc-text">与nacos相关</span></a></li></ol>
 		
 		</div>
 		
-		<h6 id=""><a href="#" class="headerlink" title=""></a></h6><h6 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h6><p>全局安装</p>
+		<h6 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h6><p>全局安装</p>
 <pre><code class="highlight sh">npm install -g pm2
 <span class="comment"># 或者</span>
 yarn global add pm2</code></pre>
 
-<h6 id="二、启动"><a href="#二、启动" class="headerlink" title="二、启动"></a>二、启动</h6><p>参数说明：</p>
+<h6 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h6><p>参数说明：</p>
 <ul>
 <li><code>--watch</code>：监听应用目录的变化，一旦发生变化，自动重启。如果要精确监听、不见听的目录，最好通过配置文件。</li>
 <li><code>-i --instances</code>：启用多少个实例，可用于负载均衡。如果<code>-i 0</code>或者<code>-i max</code>，则根据当前机器核数确定实例数目。</li>
@@ -130,17 +130,17 @@ yarn global add pm2</code></pre>
 
 pm2 <span class="keyword">start</span> ecosystem.config.js</code></pre>
 
-<h6 id="三、查看进程列表"><a href="#三、查看进程列表" class="headerlink" title="三、查看进程列表"></a>三、查看进程列表</h6><pre><code class="highlight SQL">pm2 list</code></pre>
+<h6 id="查看进程列表"><a href="#查看进程列表" class="headerlink" title="查看进程列表"></a>查看进程列表</h6><pre><code class="highlight SQL">pm2 list</code></pre>
 
-<p><img src="/../../source/image/pm2-linux-use-1.PNG"></p>
-<h6 id="四、查看进程信息"><a href="#四、查看进程信息" class="headerlink" title="四、查看进程信息"></a>四、查看进程信息</h6><pre><code class="highlight SQL"># pm2 <span class="keyword">describe</span> id [id 通过pm2 list]
+<p><img src="/../image/pm2-linux-use-1.PNG"></p>
+<h6 id="查看进程信息"><a href="#查看进程信息" class="headerlink" title="查看进程信息"></a>查看进程信息</h6><pre><code class="highlight SQL"># pm2 <span class="keyword">describe</span> id [id 通过pm2 list]
 pm2 <span class="keyword">describe</span> <span class="number">1</span></code></pre>
 
-<p><img src="/../../source/image/pm2-linux-use-2.PNG"></p>
-<h6 id="五、重启"><a href="#五、重启" class="headerlink" title="五、重启"></a>五、重启</h6><pre><code class="highlight SQL">pm2 restart ecosystem.config.js</code></pre>
+<p><img src="/../image/pm2-linux-use-2.PNG"></p>
+<h6 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h6><pre><code class="highlight SQL">pm2 restart ecosystem.config.js</code></pre>
 
-<p><img src="/../../source/image/pm2-linux-use-3.png"></p>
-<h6 id="六、停止"><a href="#六、停止" class="headerlink" title="六、停止"></a>六、停止</h6><p>可以先通过<code>pm2 list</code>获取应用的名字（–name指定的）或者进程id。</p>
+<p><img src="/../image/pm2-linux-use-3.png"></p>
+<h6 id="停止"><a href="#停止" class="headerlink" title="停止"></a>停止</h6><p>可以先通过<code>pm2 list</code>获取应用的名字（–name指定的）或者进程id。</p>
 <pre><code class="highlight SQL"># 停止特定的应用
 
 pm2 stop app_name <span class="operator">|</span> app_id
@@ -149,10 +149,10 @@ pm2 stop app_name <span class="operator">|</span> app_id
 
 pm2 stop <span class="keyword">all</span></code></pre>
 
-<h6 id="七、日志查看"><a href="#七、日志查看" class="headerlink" title="七、日志查看"></a>七、日志查看</h6><pre><code class="highlight SQL">pm2 logs</code></pre>
+<h6 id="日志查看"><a href="#日志查看" class="headerlink" title="日志查看"></a>日志查看</h6><pre><code class="highlight SQL">pm2 logs</code></pre>
 
-<p><img src="/../../source/image/pm2-linux-use-4.png"></p>
-<h6 id="八、与nacos相关"><a href="#八、与nacos相关" class="headerlink" title="八、与nacos相关"></a>八、与nacos相关</h6><ol>
+<p><img src="/../image/pm2-linux-use-4.png"></p>
+<h6 id="与nacos相关"><a href="#与nacos相关" class="headerlink" title="与nacos相关"></a>与nacos相关</h6><ol>
 <li>以下以公司环境为例</li>
 <li>先增加相关依赖，安装依赖时，需要增加以下配置</li>
 </ol>
@@ -306,7 +306,7 @@ pm2.connect(<span class="keyword">function</span> (err) &#123;
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">一、安装</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%90%AF%E5%8A%A8"><span class="toc-number">3.</span> <span class="toc-text">二、启动</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%E5%88%97%E8%A1%A8"><span class="toc-number">4.</span> <span class="toc-text">三、查看进程列表</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">5.</span> <span class="toc-text">四、查看进程信息</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%87%8D%E5%90%AF"><span class="toc-number">6.</span> <span class="toc-text">五、重启</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%81%9C%E6%AD%A2"><span class="toc-number">7.</span> <span class="toc-text">六、停止</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B"><span class="toc-number">8.</span> <span class="toc-text">七、日志查看</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E4%B8%8Enacos%E7%9B%B8%E5%85%B3"><span class="toc-number">9.</span> <span class="toc-text">八、与nacos相关</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8"><span class="toc-number">2.</span> <span class="toc-text">启动</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%E5%88%97%E8%A1%A8"><span class="toc-number">3.</span> <span class="toc-text">查看进程列表</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">4.</span> <span class="toc-text">查看进程信息</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%87%8D%E5%90%AF"><span class="toc-number">5.</span> <span class="toc-text">重启</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%81%9C%E6%AD%A2"><span class="toc-number">6.</span> <span class="toc-text">停止</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B"><span class="toc-number">7.</span> <span class="toc-text">日志查看</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%8Enacos%E7%9B%B8%E5%85%B3"><span class="toc-number">8.</span> <span class="toc-text">与nacos相关</span></a></li></ol>
  
   </div>
 
@@ -398,7 +398,7 @@ pm2.connect(<span class="keyword">function</span> (err) &#123;
 			
 		
 			
-				<li><a href="/tags/aqs/" title="aqs">aqs<sup>1</sup></a></li>
+				<li><a href="/tags/thread-pool/" title="thread-pool">thread-pool<sup>1</sup></a></li>
 			
 		
 		</ul>
