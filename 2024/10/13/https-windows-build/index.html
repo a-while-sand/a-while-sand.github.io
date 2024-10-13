@@ -1,0 +1,544 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>在Windows中生成https自签名证书 | 一粒白沙</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="不合时宜的人">
+    
+
+    
+    <meta name="description" content="总体思路： 1、安装OpenSSL工具 2、创建根 CA 证书 3、创建服务器证书  安装OpenSSL工具https:&#x2F;&#x2F;slproweb.com&#x2F;products&#x2F;Win32OpenSSL.html 使用的版本是 OpenSSL 3.0  创建根 CA 证书生成根RSA 私钥openssl genpkey -algorithm RSA -out ca.pem -pkeyopt rsa_keyg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Windows中生成https自签名证书">
+<meta property="og:url" content="http://example.com/2024/10/13/https-windows-build/index.html">
+<meta property="og:site_name" content="一粒白沙">
+<meta property="og:description" content="总体思路： 1、安装OpenSSL工具 2、创建根 CA 证书 3、创建服务器证书  安装OpenSSL工具https:&#x2F;&#x2F;slproweb.com&#x2F;products&#x2F;Win32OpenSSL.html 使用的版本是 OpenSSL 3.0  创建根 CA 证书生成根RSA 私钥openssl genpkey -algorithm RSA -out ca.pem -pkeyopt rsa_keyg">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-13T13:55:33.000Z">
+<meta property="article:modified_time" content="2024-10-13T14:17:47.163Z">
+<meta property="article:author" content="不合时宜的人">
+<meta property="article:tag" content="https">
+<meta property="article:tag" content="cert">
+<meta property="article:tag" content="windows">
+<meta property="article:tag" content="‘CA’">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="一粒白沙" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="一粒白沙" title="一粒白沙"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="一粒白沙">一粒白沙</a></h1>
+				<h2 class="blog-motto">白沙洲中的一粒</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2024/10/13/https-windows-build/" title="在Windows中生成https自签名证书" itemprop="url">在Windows中生成https自签名证书</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
+		
+  <p class="article-time">
+    <time datetime="2024-10-13T13:55:33.000Z" itemprop="datePublished"> 发表于 2024-10-13</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">总体思路：</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85OpenSSL%E5%B7%A5%E5%85%B7"><span class="toc-number"></span> <span class="toc-text">安装OpenSSL工具</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%A0%B9-CA-%E8%AF%81%E4%B9%A6"><span class="toc-number"></span> <span class="toc-text">创建根 CA 证书</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A0%B9RSA-%E7%A7%81%E9%92%A5"><span class="toc-number">1.</span> <span class="toc-text">生成根RSA 私钥</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A0%B9%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%90%8D%E8%AF%B7%E6%B1%82%EF%BC%88CSR%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">生成根证书签名请求（CSR）</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E8%87%AA%E7%AD%BE%E6%A0%B9%E8%AF%81%E4%B9%A6"><span class="toc-number">3.</span> <span class="toc-text">生成自签根证书</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%81%E4%B9%A6"><span class="toc-number"></span> <span class="toc-text">创建服务器证书</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8-RSA-%E7%A7%81%E9%92%A5"><span class="toc-number">1.</span> <span class="toc-text">创建服务器 RSA 私钥</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-CSR%EF%BC%88%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%90%8D%E8%AF%B7%E6%B1%82%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">创建 CSR（证书签名请求）</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-CSR-%E5%92%8C%E7%A7%81%E9%92%A5%E7%94%9F%E6%88%90%E8%AF%81%E4%B9%A6"><span class="toc-number">3.</span> <span class="toc-text">使用 CSR 和私钥生成证书</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%81%E4%B9%A6"><span class="toc-number">4.</span> <span class="toc-text">查看服务器证书</span></a></li></ol>
+		
+		</div>
+		
+		<h6 id="总体思路："><a href="#总体思路：" class="headerlink" title="总体思路："></a><strong>总体思路</strong>：</h6><blockquote>
+<p>1、安装OpenSSL工具</p>
+<p>2、创建根 CA 证书</p>
+<p>3、创建服务器证书</p>
+</blockquote>
+<h5 id="安装OpenSSL工具"><a href="#安装OpenSSL工具" class="headerlink" title="安装OpenSSL工具"></a>安装OpenSSL工具</h5><pre><code class="highlight sh">https://slproweb.com/products/Win32OpenSSL.html
+使用的版本是 OpenSSL 3.0</code></pre>
+
+<h5 id="创建根-CA-证书"><a href="#创建根-CA-证书" class="headerlink" title="创建根 CA 证书"></a>创建根 CA 证书</h5><h6 id="生成根RSA-私钥"><a href="#生成根RSA-私钥" class="headerlink" title="生成根RSA 私钥"></a>生成根RSA 私钥</h6><pre><code class="highlight stata">openssl genpkey -algorithm RSA -<span class="keyword">out</span> <span class="keyword">ca</span>.pem -pkeyopt rsa_keygen_bits:2048</code></pre>
+
+<h6 id="生成根证书签名请求（CSR）"><a href="#生成根证书签名请求（CSR）" class="headerlink" title="生成根证书签名请求（CSR）"></a>生成根证书签名请求（CSR）</h6><pre><code class="highlight shell">openssl req -new -key ca.pem -out ca.csr -subj &quot;/OU=Self Sign CA/O=Self Sign/CN=Self Sign&quot; 
+-addext &quot;keyUsage=critical,keyCertSign,cRLSign&quot; -addext &quot;basicConstraints=critical,CA:TRUE&quot;
+</code></pre>
+
+<h6 id="生成自签根证书"><a href="#生成自签根证书" class="headerlink" title="生成自签根证书"></a>生成自签根证书</h6><pre><code class="highlight sh">openssl x509 -req -days 365 -<span class="keyword">in</span> ca.csr -signkey ca.pem -out ca.crt -copy_extensions copy</code></pre>
+
+<h5 id="创建服务器证书"><a href="#创建服务器证书" class="headerlink" title="创建服务器证书"></a>创建服务器证书</h5><h6 id="创建服务器-RSA-私钥"><a href="#创建服务器-RSA-私钥" class="headerlink" title="创建服务器 RSA 私钥"></a>创建服务器 RSA 私钥</h6><pre><code class="highlight sh">openssl genpkey -algorithm RSA -out server.pem -pkeyopt rsa_keygen_bits:2048</code></pre>
+
+<h6 id="创建-CSR（证书签名请求）"><a href="#创建-CSR（证书签名请求）" class="headerlink" title="创建 CSR（证书签名请求）"></a>创建 CSR（证书签名请求）</h6><pre><code class="highlight shell">openssl req -new -key server.pem -out server.csr -subj &quot;/C=CN/ST=Beijing/L=Beijing/O=local/OU=local/CN=localhost&quot; 
+-addext &quot;subjectAltName = DNS:localhost,IP:127.0.0.1,IP:172.16.20.248&quot;
+<span class="meta prompt_"></span>
+<span class="meta prompt_">#</span><span class="language-bash">说明：一般只需要个性以下两个参数。</span>
+<span class="meta prompt_">#</span><span class="language-bash">1、若域名为localhost，则配置DNS: localhost</span>
+<span class="meta prompt_">#</span><span class="language-bash">2、若域名为jfan.163.com，则配置DNS: jfan.163.com</span>
+<span class="meta prompt_">#</span><span class="language-bash">3、若域名localhost和jfan.163.com都可以访问，则配置两个DNS: localhost，DNS: jfan.163.com，以逗号分隔</span>
+<span class="meta prompt_">#</span><span class="language-bash">4、若为ip显示，则配置IP:127.0.0.1，或内网IP或外网IP，多个则以逗号分隔</span></code></pre>
+
+<h6 id="使用-CSR-和私钥生成证书"><a href="#使用-CSR-和私钥生成证书" class="headerlink" title="使用 CSR 和私钥生成证书"></a>使用 CSR 和私钥生成证书</h6><pre><code class="highlight sh">openssl x509 -req -<span class="keyword">in</span> server.csr -CA ca.crt -CAkey ca.pem -CAcreateserial -out server.crt -days 365 -copy_extensions copy</code></pre>
+
+<h6 id="查看服务器证书"><a href="#查看服务器证书" class="headerlink" title="查看服务器证书"></a>查看服务器证书</h6><pre><code class="highlight pgsql">openssl x509 -<span class="type">text</span> -<span class="keyword">in</span> <span class="keyword">server</span>.crt -noout</code></pre>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/https/">https</a><a href="/tags/cert/">cert</a><a href="/tags/windows/">windows</a><a href="/tags/‘CA’/">‘CA’</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://example.com/2024/10/13/https-windows-build/" data-title="在Windows中生成https自签名证书 | 一粒白沙" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2024/09/22/pm2-linux-use/"  title="PM2常用操作">
+ <strong>下一篇：</strong><br/> 
+ <span>PM2常用操作
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">总体思路：</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85OpenSSL%E5%B7%A5%E5%85%B7"><span class="toc-number"></span> <span class="toc-text">安装OpenSSL工具</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%A0%B9-CA-%E8%AF%81%E4%B9%A6"><span class="toc-number"></span> <span class="toc-text">创建根 CA 证书</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A0%B9RSA-%E7%A7%81%E9%92%A5"><span class="toc-number">1.</span> <span class="toc-text">生成根RSA 私钥</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A0%B9%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%90%8D%E8%AF%B7%E6%B1%82%EF%BC%88CSR%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">生成根证书签名请求（CSR）</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E8%87%AA%E7%AD%BE%E6%A0%B9%E8%AF%81%E4%B9%A6"><span class="toc-number">3.</span> <span class="toc-text">生成自签根证书</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%81%E4%B9%A6"><span class="toc-number"></span> <span class="toc-text">创建服务器证书</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8-RSA-%E7%A7%81%E9%92%A5"><span class="toc-number">1.</span> <span class="toc-text">创建服务器 RSA 私钥</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-CSR%EF%BC%88%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%90%8D%E8%AF%B7%E6%B1%82%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">创建 CSR（证书签名请求）</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-CSR-%E5%92%8C%E7%A7%81%E9%92%A5%E7%94%9F%E6%88%90%E8%AF%81%E4%B9%A6"><span class="toc-number">3.</span> <span class="toc-text">使用 CSR 和私钥生成证书</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%81%E4%B9%A6"><span class="toc-number">4.</span> <span class="toc-text">查看服务器证书</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/linux/" title="linux">linux<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/centos7/" title="centos7">centos7<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mysql/" title="mysql">mysql<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/springboot/" title="springboot">springboot<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cluster/" title="cluster">cluster<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/es/" title="es">es<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch/" title="elasticsearch">elasticsearch<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/k8s/" title="k8s">k8s<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/kubernetes/" title="kubernetes">kubernetes<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mongodb/" title="mongodb">mongodb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/zookeeper/" title="zookeeper">zookeeper<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cmd/" title="cmd">cmd<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fastdfs/" title="fastdfs">fastdfs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nginx/" title="nginx">nginx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/thread-pool/" title="thread-pool">thread-pool<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p>  <br/>
+			人生如逆旅，我亦是行人</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2024 
+		
+		<a href="/about" target="_blank" title="不合时宜的人">不合时宜的人</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+ // '<a class="overlay" id="qrcode"></a>',
+  //'<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  //'<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  //'<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  //'<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  //'<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
