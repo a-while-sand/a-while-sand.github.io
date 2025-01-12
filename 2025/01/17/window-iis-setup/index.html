@@ -1,0 +1,545 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Visual Studio的IISExpress配置通过IP访问程序 | 一粒白沙</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="不合时宜的人">
+    
+
+    
+    <meta name="description" content="默认IISExpress只能通过localhost访问程序，若通过IP访问，即使是127.0.01访问也报错 400. The request hostname is invalid.   在操作系统任务栏的状态栏中,选择IISPress站点,右键选择显示所有应用程序 单击站点名称,在下面提示的路径中选择配置路径,打开applicationhost.config文件  找到IISExpress的配">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Visual Studio的IISExpress配置通过IP访问程序">
+<meta property="og:url" content="http://example.com/2025/01/17/window-iis-setup/index.html">
+<meta property="og:site_name" content="一粒白沙">
+<meta property="og:description" content="默认IISExpress只能通过localhost访问程序，若通过IP访问，即使是127.0.01访问也报错 400. The request hostname is invalid.   在操作系统任务栏的状态栏中,选择IISPress站点,右键选择显示所有应用程序 单击站点名称,在下面提示的路径中选择配置路径,打开applicationhost.config文件  找到IISExpress的配">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/image/window-iis-setup-1.png">
+<meta property="og:image" content="http://example.com/image/window-iis-setup-2.png">
+<meta property="og:image" content="http://example.com/image/window-iis-setup-3.png">
+<meta property="og:image" content="http://example.com/image/window-iis-setup-4.png">
+<meta property="article:published_time" content="2025-01-17T08:23:55.000Z">
+<meta property="article:modified_time" content="2025-01-12T10:12:34.481Z">
+<meta property="article:author" content="不合时宜的人">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="IIS">
+<meta property="article:tag" content="C#">
+<meta property="article:tag" content="VS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image/window-iis-setup-1.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="一粒白沙" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="一粒白沙" title="一粒白沙"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="一粒白沙">一粒白沙</a></h1>
+				<h2 class="blog-motto">白沙洲中的一粒</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2025/01/17/window-iis-setup/" title="Visual Studio的IISExpress配置通过IP访问程序" itemprop="url">Visual Studio的IISExpress配置通过IP访问程序</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
+		
+  <p class="article-time">
+    <time datetime="2025-01-17T08:23:55.000Z" itemprop="datePublished"> 发表于 2025-01-17</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4IISExpress"><span class="toc-number">1.</span> <span class="toc-text">默认IISExpress</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9C%A8%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%BB%BB%E5%8A%A1%E6%A0%8F%E7%9A%84%E7%8A%B6%E6%80%81%E6%A0%8F%E4%B8%AD-%E9%80%89%E6%8B%A9IISPress%E7%AB%99%E7%82%B9-%E5%8F%B3%E9%94%AE%E9%80%89%E6%8B%A9%E6%98%BE%E7%A4%BA%E6%89%80%E6%9C%89%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="toc-number">2.</span> <span class="toc-text">在操作系统任务栏的状态栏中,选择IISPress站点,右键选择显示所有应用程序</span></a></li><li class="toc-item toc-level-6"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AE%8C%E6%88%90%E4%B9%8B%E5%90%8E%E9%87%8D%E5%90%AFIISExpress%EF%BC%8C%E6%AD%A4%E6%97%B6%E5%BA%94%E8%AF%A5%E5%B0%B1%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8IP%E5%9C%B0%E5%9D%80%E8%AE%BF%E9%97%AE%E4%BA%86%E3%80%82"><span class="toc-number">4.</span> <span class="toc-text">完成之后重启IISExpress，此时应该就可以使用IP地址访问了。</span></a></li></ol>
+		
+		</div>
+		
+		<h6 id="默认IISExpress"><a href="#默认IISExpress" class="headerlink" title="默认IISExpress"></a>默认IISExpress</h6><p>只能通过localhost访问程序，若通过IP访问，即使是127.0.01访问也报错</p>
+<pre><code class="highlight mercury"><span class="number">400</span>. The request hostname <span class="keyword">is</span> invalid.
+</code></pre>
+
+<h6 id="在操作系统任务栏的状态栏中-选择IISPress站点-右键选择显示所有应用程序"><a href="#在操作系统任务栏的状态栏中-选择IISPress站点-右键选择显示所有应用程序" class="headerlink" title="在操作系统任务栏的状态栏中,选择IISPress站点,右键选择显示所有应用程序"></a><strong>在操作系统任务栏的状态栏中,选择IISPress站点,右键选择显示所有应用程序</strong></h6><p><img src="/../image/window-iis-setup-1.png" alt="image-20250112162854992"></p>
+<p><strong>单击站点名称,在下面提示的路径中选择配置路径,打开applicationhost.config文件</strong></p>
+<p><img src="/../image/window-iis-setup-2.png" alt="image-20250112180036399"></p>
+<p><strong>找到IISExpress的配置文件并打开applicationhost.config，找到如下代码</strong></p>
+<h6 id=""><a href="#" class="headerlink" title=""></a><img src="/../image/window-iis-setup-3.png" alt="image-20250112180412302"></h6><pre><code class="highlight shell">找到site的name为【Shou.EDAS.Portal】,在localhost后复制一行，修改成IP,如下
+&lt;binding protocol=&quot;http&quot; bindingInformation=&quot;*:30000:localhost&quot; /&gt;
+&lt;binding protocol=&quot;http&quot; bindingInformation=&quot;*:30000:172.16.20.248&quot; /&gt;</code></pre>
+
+<p><strong>按上面改为后，当你通过IP地址访问时还是可能会出现400错误，如果出现，就采用下面的方法：</strong></p>
+<p>（1）以管理员身份打开CMD命令窗口</p>
+<p>（2）输入如下命令：</p>
+<pre><code class="highlight shell">netsh http add urlacl url=http://172.16.20.248:31173/ user=everyone</code></pre>
+
+<p>上面改的IP和端口号对应，如果报错请确认是否是以管理员身份运行的CMD。 </p>
+<p>通过命令，可以查看到已经添加进去的URL了</p>
+<pre><code class="highlight shell">netsh http show urlacl</code></pre>
+
+<p><img src="/../image/window-iis-setup-4.png" alt="image-20250112180955550"></p>
+<h6 id="完成之后重启IISExpress，此时应该就可以使用IP地址访问了。"><a href="#完成之后重启IISExpress，此时应该就可以使用IP地址访问了。" class="headerlink" title="完成之后重启IISExpress，此时应该就可以使用IP地址访问了。"></a>完成之后重启IISExpress，此时应该就可以使用IP地址访问了。</h6><p><strong>完成上面两部之后，由于防火墙的原因，其他的电脑可能还无法访问你的服务器，如果出现这种情况，关闭防火墙</strong></p>
+<p> （1）控制面板（查看方式选择类别）-&gt;系统和安全-&gt;Windows防火墙，在左侧选择高级设置<br> （2）右击入站规则-&gt;新建规则-&gt;端口-&gt;特定本地端口处输入31171-&gt;允许连接-&gt;3个选项全选-&gt;输入新规则名称-&gt;完成 </p>
+<p><strong>用完了也可以将其删除：</strong></p>
+<pre><code class="highlight shell">netsh http delete urlacl url=http://172.16.20.248:31173/</code></pre>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Windows/">Windows</a><a href="/tags/IIS/">IIS</a><a href="/tags/C/">C#</a><a href="/tags/VS/">VS</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://example.com/2025/01/17/window-iis-setup/" data-title="Visual Studio的IISExpress配置通过IP访问程序 | 一粒白沙" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2024/12/07/mac-wireguard-setup/"  title="Mac中配置WireGuard">
+ <strong>下一篇：</strong><br/> 
+ <span>Mac中配置WireGuard
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4IISExpress"><span class="toc-number">1.</span> <span class="toc-text">默认IISExpress</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9C%A8%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%BB%BB%E5%8A%A1%E6%A0%8F%E7%9A%84%E7%8A%B6%E6%80%81%E6%A0%8F%E4%B8%AD-%E9%80%89%E6%8B%A9IISPress%E7%AB%99%E7%82%B9-%E5%8F%B3%E9%94%AE%E9%80%89%E6%8B%A9%E6%98%BE%E7%A4%BA%E6%89%80%E6%9C%89%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F"><span class="toc-number">2.</span> <span class="toc-text">在操作系统任务栏的状态栏中,选择IISPress站点,右键选择显示所有应用程序</span></a></li><li class="toc-item toc-level-6"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text"></span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AE%8C%E6%88%90%E4%B9%8B%E5%90%8E%E9%87%8D%E5%90%AFIISExpress%EF%BC%8C%E6%AD%A4%E6%97%B6%E5%BA%94%E8%AF%A5%E5%B0%B1%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8IP%E5%9C%B0%E5%9D%80%E8%AE%BF%E9%97%AE%E4%BA%86%E3%80%82"><span class="toc-number">4.</span> <span class="toc-text">完成之后重启IISExpress，此时应该就可以使用IP地址访问了。</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/linux/" title="linux">linux<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/centos7/" title="centos7">centos7<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mysql/" title="mysql">mysql<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/springboot/" title="springboot">springboot<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cluster/" title="cluster">cluster<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/es/" title="es">es<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch/" title="elasticsearch">elasticsearch<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/k8s/" title="k8s">k8s<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/kubernetes/" title="kubernetes">kubernetes<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mongodb/" title="mongodb">mongodb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/zookeeper/" title="zookeeper">zookeeper<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cmd/" title="cmd">cmd<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fastdfs/" title="fastdfs">fastdfs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nginx/" title="nginx">nginx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/thread-pool/" title="thread-pool">thread-pool<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p>  <br/>
+			人生如逆旅，我亦是行人</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2025 
+		
+		<a href="/about" target="_blank" title="不合时宜的人">不合时宜的人</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+ // '<a class="overlay" id="qrcode"></a>',
+  //'<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  //'<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  //'<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  //'<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  //'<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
