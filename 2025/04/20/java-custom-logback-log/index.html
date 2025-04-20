@@ -1,0 +1,764 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Java 自定义Logback日志 | 一粒白沙</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="不合时宜的人">
+    
+
+    
+    <meta name="description" content="自定义生成日志类，利用logback日志框架 一. 定义StaticFileAppenderpackage vip.xiaonuo.biz.modular.user.log4; import ch.qos.logback.classic.spi.ILoggingEvent; import ch.qos.logback.core.FileAppender; import java.io.IOExce">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 自定义Logback日志">
+<meta property="og:url" content="http://example.com/2025/04/20/java-custom-logback-log/index.html">
+<meta property="og:site_name" content="一粒白沙">
+<meta property="og:description" content="自定义生成日志类，利用logback日志框架 一. 定义StaticFileAppenderpackage vip.xiaonuo.biz.modular.user.log4; import ch.qos.logback.classic.spi.ILoggingEvent; import ch.qos.logback.core.FileAppender; import java.io.IOExce">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-04-20T09:25:33.000Z">
+<meta property="article:modified_time" content="2025-04-20T09:41:46.326Z">
+<meta property="article:author" content="不合时宜的人">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="logback">
+<meta property="article:tag" content="log">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="一粒白沙" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="一粒白沙" title="一粒白沙"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="一粒白沙">一粒白沙</a></h1>
+				<h2 class="blog-motto">白沙洲中的一粒</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2025/04/20/java-custom-logback-log/" title="Java 自定义Logback日志" itemprop="url">Java 自定义Logback日志</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
+		
+  <p class="article-time">
+    <time datetime="2025-04-20T09:25:33.000Z" itemprop="datePublished"> 发表于 2025-04-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%80-%E5%AE%9A%E4%B9%89StaticFileAppender"><span class="toc-number">1.</span> <span class="toc-text">一. 定义StaticFileAppender</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%8C-%E5%AE%9A%E4%B9%89LoggerFactory"><span class="toc-number">2.</span> <span class="toc-text">二. 定义LoggerFactory</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%89-%E5%AE%9A%E4%B9%89%E6%B5%8B%E8%AF%95%E7%B1%BB"><span class="toc-number">3.</span> <span class="toc-text">三. 定义测试类</span></a></li></ol>
+		
+		</div>
+		
+		<p>自定义生成日志类，利用logback日志框架</p>
+<h6 id="一-定义StaticFileAppender"><a href="#一-定义StaticFileAppender" class="headerlink" title="一. 定义StaticFileAppender"></a><strong>一. 定义StaticFileAppender</strong></h6><pre><code class="highlight java"><span class="keyword">package</span> vip.xiaonuo.biz.modular.user.log4;
+<span class="keyword">import</span> ch.qos.logback.classic.spi.ILoggingEvent;
+<span class="keyword">import</span> ch.qos.logback.core.FileAppender;
+<span class="keyword">import</span> java.io.IOException;
+<span class="keyword">import</span> java.nio.file.Files;
+<span class="keyword">import</span> java.nio.file.Path;
+<span class="keyword">import</span> java.nio.file.Paths;
+<span class="keyword">import</span> java.nio.file.StandardOpenOption;
+<span class="keyword">import</span> java.time.LocalDateTime;
+<span class="keyword">import</span> java.time.format.DateTimeFormatter;
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticFileAppender</span> <span class="keyword">extends</span> <span class="title class_">FileAppender</span>&lt;ILoggingEvent&gt; &#123;
+    <span class="keyword">private</span> String filePath;
+    <span class="keyword">private</span> <span class="type">long</span> <span class="variable">maxFileSize</span> <span class="operator">=</span> Long.MAX_VALUE; <span class="comment">// 默认不限制大小</span>
+    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">immediateFlush</span> <span class="operator">=</span> <span class="literal">true</span>;
+    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">DateTimeFormatter</span> <span class="variable">dtf</span> <span class="operator">=</span> DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd HH:mm:ss.SSS&quot;</span>);
+
+    <span class="meta">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span> &#123;
+        <span class="keyword">if</span> (filePath == <span class="literal">null</span> || filePath.isEmpty()) &#123;
+            addError(<span class="string">&quot;未设置文件路径&quot;</span>);
+            <span class="keyword">return</span>;
+        &#125;
+
+        <span class="keyword">try</span> &#123;
+            <span class="comment">// 确保目录存在</span>
+            <span class="type">Path</span> <span class="variable">path</span> <span class="operator">=</span> Paths.get(filePath);
+            Files.createDirectories(path.getParent());
+
+            <span class="comment">// 设置文件并启动</span>
+            setFile(filePath);
+            setAppend(<span class="literal">true</span>);
+            <span class="built_in">super</span>.start();
+
+        &#125; <span class="keyword">catch</span> (IOException e) &#123;
+            addError(<span class="string">&quot;初始化日志文件失败: &quot;</span> + filePath, e);
+        &#125;
+    &#125;
+
+    <span class="meta">@Override</span>
+    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">append</span><span class="params">(ILoggingEvent event)</span> &#123;
+        <span class="comment">// 检查文件大小</span>
+        <span class="keyword">if</span> (getFileSize() &gt;= maxFileSize) &#123;
+            addWarn(<span class="string">&quot;日志文件已达到最大大小限制: &quot;</span> + filePath);
+            <span class="keyword">return</span>;
+        &#125;
+
+        <span class="comment">// 添加时间戳前缀</span>
+        <span class="type">String</span> <span class="variable">formattedMsg</span> <span class="operator">=</span> String.format(<span class="string">&quot;[%s] %s\n&quot;</span>,
+                LocalDateTime.now().format(dtf),
+                event.getFormattedMessage());
+
+        <span class="comment">// 写入文件</span>
+        <span class="keyword">try</span> &#123;
+            Files.write(Paths.get(filePath),
+                    formattedMsg.getBytes(),
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.APPEND);
+
+            <span class="keyword">if</span> (immediateFlush) &#123;
+                getOutputStream().flush();
+            &#125;
+
+        &#125; <span class="keyword">catch</span> (IOException e) &#123;
+            addError(<span class="string">&quot;写入日志文件失败&quot;</span>, e);
+        &#125;
+    &#125;
+
+    <span class="keyword">private</span> <span class="type">long</span> <span class="title function_">getFileSize</span><span class="params">()</span> &#123;
+        <span class="keyword">try</span> &#123;
+            <span class="keyword">return</span> Files.size(Paths.get(filePath));
+        &#125; <span class="keyword">catch</span> (IOException e) &#123;
+            <span class="keyword">return</span> <span class="number">0</span>;
+        &#125;
+    &#125;
+
+    <span class="comment">// ===== 配置方法 =====</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setFilePath</span><span class="params">(String filePath)</span> &#123;
+        <span class="built_in">this</span>.filePath = filePath;
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMaxFileSize</span><span class="params">(String size)</span> &#123;
+        <span class="built_in">this</span>.maxFileSize = parseSize(size);
+    &#125;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setImmediateFlush</span><span class="params">(<span class="type">boolean</span> immediateFlush)</span> &#123;
+        <span class="built_in">this</span>.immediateFlush = immediateFlush;
+    &#125;
+
+    <span class="keyword">private</span> <span class="type">long</span> <span class="title function_">parseSize</span><span class="params">(String size)</span> &#123;
+        size = size.trim().toUpperCase();
+        <span class="keyword">try</span> &#123;
+            <span class="keyword">if</span> (size.endsWith(<span class="string">&quot;KB&quot;</span>)) &#123;
+                <span class="keyword">return</span> Long.parseLong(size.substring(<span class="number">0</span>, size.length()-<span class="number">2</span>)) * <span class="number">1024</span>;
+            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (size.endsWith(<span class="string">&quot;MB&quot;</span>)) &#123;
+                <span class="keyword">return</span> Long.parseLong(size.substring(<span class="number">0</span>, size.length()-<span class="number">2</span>)) * <span class="number">1024</span> * <span class="number">1024</span>;
+            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (size.endsWith(<span class="string">&quot;GB&quot;</span>)) &#123;
+                <span class="keyword">return</span> Long.parseLong(size.substring(<span class="number">0</span>, size.length()-<span class="number">2</span>)) * <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">1024</span>;
+            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (size.endsWith(<span class="string">&quot;TB&quot;</span>)) &#123;
+                <span class="keyword">return</span> Long.parseLong(size.substring(<span class="number">0</span>, size.length()-<span class="number">2</span>)) * <span class="number">1024L</span> * <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">1024</span>;
+            &#125;
+            <span class="keyword">return</span> Long.parseLong(size);
+        &#125; <span class="keyword">catch</span> (NumberFormatException e) &#123;
+            addError(<span class="string">&quot;无效的文件大小格式: &quot;</span> + size);
+            <span class="keyword">return</span> Long.MAX_VALUE;
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<h6 id="二-定义LoggerFactory"><a href="#二-定义LoggerFactory" class="headerlink" title="二. 定义LoggerFactory"></a><strong>二. 定义LoggerFactory</strong></h6><pre><code class="highlight java"><span class="keyword">package</span> vip.xiaonuo.biz.modular.user.log4;
+<span class="keyword">import</span> ch.qos.logback.classic.Level;
+<span class="keyword">import</span> ch.qos.logback.classic.Logger;
+<span class="keyword">import</span> ch.qos.logback.classic.LoggerContext;
+<span class="keyword">import</span> ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+<span class="keyword">import</span> ch.qos.logback.classic.spi.ILoggingEvent;
+<span class="keyword">import</span> org.slf4j.LoggerFactory;
+
+<span class="keyword">import</span> java.util.HashMap;
+<span class="keyword">import</span> java.util.Map;
+<span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticLoggerFactory</span> &#123;
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">ReentrantLock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, Logger&gt; loggerCache = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();
+
+    <span class="keyword">private</span> <span class="title function_">StaticLoggerFactory</span><span class="params">()</span> &#123;&#125;
+
+    <span class="comment">/**</span>
+<span class="comment">     * 获取静态文件日志记录器</span>
+<span class="comment">     * <span class="doctag">@param</span> name 日志记录器名称</span>
+<span class="comment">     * <span class="doctag">@param</span> filePath 完整的日志文件路径</span>
+<span class="comment">     * <span class="doctag">@param</span> maxSize 最大文件大小（如&quot;100MB&quot;、&quot;1GB&quot;）</span>
+<span class="comment">     * <span class="doctag">@return</span> 配置好的Logger实例</span>
+<span class="comment">     */</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> Logger <span class="title function_">getLogger</span><span class="params">(String name, String filePath, String maxSize)</span> &#123;
+        lock.lock();
+        <span class="keyword">try</span> &#123;
+            <span class="type">String</span> <span class="variable">cacheKey</span> <span class="operator">=</span> name + <span class="string">&quot;|&quot;</span> + filePath;
+            <span class="keyword">if</span> (loggerCache.containsKey(cacheKey)) &#123;
+                <span class="keyword">return</span> loggerCache.get(cacheKey);
+            &#125;
+
+            <span class="type">LoggerContext</span> <span class="variable">context</span> <span class="operator">=</span> (LoggerContext) LoggerFactory.getILoggerFactory();
+            <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> context.getLogger(name);
+            logger.setAdditive(<span class="literal">false</span>); <span class="comment">// 不继承父Logger的Appender</span>
+
+            <span class="comment">// 创建并配置静态文件Appender</span>
+            <span class="type">StaticFileAppender</span> <span class="variable">appender</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StaticFileAppender</span>();
+            appender.setContext(context);
+            appender.setName(<span class="string">&quot;STATIC_FILE_&quot;</span> + name.toUpperCase());
+            appender.setFilePath(filePath);
+            appender.setMaxFileSize(maxSize);
+            <span class="comment">//appender.setMaxFileSize();</span>
+            appender.setImmediateFlush(<span class="literal">true</span>);
+
+            <span class="comment">// 重要修复：设置编码器</span>
+            <span class="type">PatternLayoutEncoder</span> <span class="variable">encoder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PatternLayoutEncoder</span>();
+            encoder.setPattern(<span class="string">&quot;%msg%n&quot;</span>); <span class="comment">// 简化模式，因为时间戳已在append中添加</span>
+            encoder.setContext(context);
+            encoder.start();
+            appender.setEncoder(encoder);
+
+            appender.start();
+
+            logger.addAppender(appender);
+            loggerCache.put(cacheKey, logger);
+            <span class="keyword">return</span> logger;
+        &#125; <span class="keyword">finally</span> &#123;
+            lock.unlock();
+        &#125;
+    &#125;
+
+    <span class="comment">/**</span>
+<span class="comment">     * 动态修改日志级别</span>
+<span class="comment">     */</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">setLevel</span><span class="params">(String loggerName, Level level)</span> &#123;
+        <span class="type">LoggerContext</span> <span class="variable">context</span> <span class="operator">=</span> (LoggerContext) LoggerFactory.getILoggerFactory();
+        context.getLogger(loggerName).setLevel(level);
+    &#125;
+
+    <span class="comment">/**</span>
+<span class="comment">     * 添加控制台输出</span>
+<span class="comment">     */</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">addConsoleOutput</span><span class="params">(String loggerName)</span> &#123;
+        <span class="type">LoggerContext</span> <span class="variable">context</span> <span class="operator">=</span> (LoggerContext) LoggerFactory.getILoggerFactory();
+        <span class="type">Logger</span> <span class="variable">logger</span> <span class="operator">=</span> context.getLogger(loggerName);
+
+        ch.qos.logback.classic.encoder.<span class="type">PatternLayoutEncoder</span> <span class="variable">encoder</span> <span class="operator">=</span>
+                <span class="keyword">new</span> <span class="title class_">ch</span>.qos.logback.classic.encoder.PatternLayoutEncoder();
+        encoder.setPattern(<span class="string">&quot;%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125; [%thread] %-5level %logger&#123;36&#125; - %msg%n&quot;</span>);
+        encoder.setContext(context);
+        encoder.start();
+
+        ch.qos.logback.core.ConsoleAppender&lt;ILoggingEvent&gt; consoleAppender =
+                <span class="keyword">new</span> <span class="title class_">ch</span>.qos.logback.core.ConsoleAppender&lt;&gt;();
+        consoleAppender.setContext(context);
+        consoleAppender.setName(<span class="string">&quot;CONSOLE_&quot;</span> + loggerName);
+        consoleAppender.setEncoder(encoder);
+        consoleAppender.start();
+
+        logger.addAppender(consoleAppender);
+    &#125;
+&#125;
+</code></pre>
+
+<h6 id="三-定义测试类"><a href="#三-定义测试类" class="headerlink" title="三. 定义测试类"></a><strong>三. 定义测试类</strong></h6><pre><code class="highlight java"><span class="keyword">package</span> vip.xiaonuo.biz.modular.user.log4;
+
+<span class="keyword">import</span> ch.qos.logback.classic.Level;
+<span class="keyword">import</span> org.slf4j.Logger;
+
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StaticLoggerDemo</span> &#123;
+    <span class="comment">// 主业务日志（永久保存在单个文件中）</span>
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">mainLogger</span> <span class="operator">=</span>
+            StaticLoggerFactory.getLogger(<span class="string">&quot;MAIN&quot;</span>, <span class="string">&quot;/Users/jackfan/log/test5/business.log&quot;</span>, <span class="string">&quot;2GB&quot;</span>);
+
+    <span class="comment">// 审计日志（单独文件）</span>
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">auditLogger</span> <span class="operator">=</span>
+            StaticLoggerFactory.getLogger(<span class="string">&quot;AUDIT&quot;</span>, <span class="string">&quot;/Users/jackfan/log/test5/audit.log&quot;</span>, <span class="string">&quot;1GB&quot;</span>);
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;
+        <span class="comment">// 添加控制台输出（可选）</span>
+        StaticLoggerFactory.addConsoleOutput(<span class="string">&quot;AUDIT&quot;</span>);
+
+        <span class="comment">// 记录日志</span>
+        mainLogger.info(<span class="string">&quot;应用程序启动&quot;</span>);
+        auditLogger.info(<span class="string">&quot;用户 admin 登录系统&quot;</span>);
+
+        <span class="comment">// 模拟长期运行</span>
+        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;
+            mainLogger.info(<span class="string">&quot;处理业务 &#123;&#125;&quot;</span>, i);
+            auditLogger.info(<span class="string">&quot;操作记录 &#123;&#125;&quot;</span>, i);
+
+            <span class="keyword">if</span> (i % <span class="number">100</span> == <span class="number">0</span>) &#123;
+                <span class="keyword">try</span> &#123;
+                    Thread.sleep(<span class="number">100</span>);
+                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;
+                    mainLogger.error(<span class="string">&quot;线程被中断&quot;</span>, e);
+                &#125;
+            &#125;
+        &#125;
+
+        <span class="comment">// 动态修改日志级别</span>
+        <span class="comment">//StaticLoggerFactory.setLevel(&quot;MAIN&quot;, Level.DEBUG);</span>
+        <span class="comment">//mainLogger.debug(&quot;调试信息可见&quot;);</span>
+
+        Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;
+            mainLogger.info(<span class="string">&quot;应用程序正常退出&quot;</span>);
+            auditLogger.info(<span class="string">&quot;系统关闭时间: &#123;&#125;&quot;</span>, System.currentTimeMillis());
+        &#125;));
+    &#125;
+&#125;
+</code></pre>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/logback/">logback</a><a href="/tags/log/">log</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://example.com/2025/04/20/java-custom-logback-log/" data-title="Java 自定义Logback日志 | 一粒白沙" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2025/01/17/window-iis-setup/"  title="Visual Studio的IISExpress配置通过IP访问程序">
+ <strong>下一篇：</strong><br/> 
+ <span>Visual Studio的IISExpress配置通过IP访问程序
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%80-%E5%AE%9A%E4%B9%89StaticFileAppender"><span class="toc-number">1.</span> <span class="toc-text">一. 定义StaticFileAppender</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BA%8C-%E5%AE%9A%E4%B9%89LoggerFactory"><span class="toc-number">2.</span> <span class="toc-text">二. 定义LoggerFactory</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%B8%89-%E5%AE%9A%E4%B9%89%E6%B5%8B%E8%AF%95%E7%B1%BB"><span class="toc-number">3.</span> <span class="toc-text">三. 定义测试类</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>12</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/linux/" title="linux">linux<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/centos7/" title="centos7">centos7<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mysql/" title="mysql">mysql<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/springboot/" title="springboot">springboot<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cluster/" title="cluster">cluster<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/es/" title="es">es<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch/" title="elasticsearch">elasticsearch<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/k8s/" title="k8s">k8s<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/kubernetes/" title="kubernetes">kubernetes<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mongodb/" title="mongodb">mongodb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/zookeeper/" title="zookeeper">zookeeper<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cmd/" title="cmd">cmd<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fastdfs/" title="fastdfs">fastdfs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nginx/" title="nginx">nginx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/thread-pool/" title="thread-pool">thread-pool<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p>  <br/>
+			人生如逆旅，我亦是行人</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2025 
+		
+		<a href="/about" target="_blank" title="不合时宜的人">不合时宜的人</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+ // '<a class="overlay" id="qrcode"></a>',
+  //'<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  //'<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  //'<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  //'<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  //'<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
