@@ -80,6 +80,53 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
+    <a href="/2024/07/02/vue-linux-build/" title="Vue 在Centos7中离线构建" itemprop="url">
+  
+    <h1 itemprop="name">Vue 在Centos7中离线构建</h1>
+    
+     
+           <p itemprop="description" >总体思路：
+1、安装nodejs
+2、将本地的依赖库复制到离线机上
+3、执行构建命令
+
+一、安装nodejs1、由于centos7，默认不支持nodejs 18或以上的版本（需要安装其它组件），离线机安装组件比较麻烦，只能找16版本，这里安装了16.14.2版本。
+2、下载nod</p>
+        
+    
+    <time datetime="2024-07-02T12:33:14.000Z" itemprop="datePublished">2024-07-02</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2024/03/22/springboot-redis-lua/" title="springboot redis lua 限流方案" itemprop="url">
+  
+    <h1 itemprop="name">springboot redis lua 限流方案</h1>
+    
+     
+           <p itemprop="description" >首先就让我们来看看为什么需要对接口进行限流？
+为什么要进行限流？因为互联网系统通常都要面对大并发大流量的请求，在突发情况下（最常见的场景就是秒杀、抢购），瞬时大流量会直接将系统打垮，无法对外提供服务。那为了防止出现这种情况最常见的解决方案之一就是限流，当请求达到一定的并发数或速率</p>
+        
+    
+    <time datetime="2024-03-22T13:21:44.000Z" itemprop="datePublished">2024-03-22</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
     <a href="/2024/02/18/k8s-dashboard-setup/" title="K8S的dashboard 安装部署" itemprop="url">
   
     <h1 itemprop="name">K8S的dashboard 安装部署</h1>
@@ -281,59 +328,6 @@ AQS的全称为（AbstractQueuedSynchronizer），这个类在java.util.concurre
 
 
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2021/07/23/java-collection-summary/" title="Java 容器总结" itemprop="url">
-  
-    <h1 itemprop="name">Java 容器总结</h1>
-    
-     
-           <p itemprop="description" >一. 并发容器总结
-java.util.concurrent包提供的容器，分为3类：
-Concurrent*：大部分通过CAS来实现
-CopyOnWrite*：通过复制一份原数据来实现
-Blocking*：通过AQS实现
-
-
-
-2. 分析在Java中是如何利用CAS实现原子操作的</p>
-        
-    
-    <time datetime="2021-07-23T11:25:33.000Z" itemprop="datePublished">2021-07-23</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2021/04/22/redis-join-springboot/" title="Redis 整合到Springboot" itemprop="url">
-  
-    <h1 itemprop="name">Redis 整合到Springboot</h1>
-    
-     
-           <p itemprop="description" >前提条件：
-
-本文档用基于centos7.6，不适用于ubuntu，有些命令不一样
-本安装都基于root用户直接安装，没有涉及权限配置问题
-本安装基于tar.gz包安装；若不上网，通过局域网或u盘方式复制
-Reids官方不提供二进制包，需要用户自己编译，编译时，需要系统安装gcc</p>
-        
-    
-    <time datetime="2021-04-22T12:45:22.000Z" itemprop="datePublished">2021-04-22</time>
-  </a>
-</section>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix unexpand">
     <a class="extend prev" rel="prev" href="/"><span></span>Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next<span></span></a>
@@ -354,7 +348,7 @@ Reids官方不提供二进制包，需要用户自己编译，编译时，需要
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>13</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>15</sup></a></li>
 			
 		
 			

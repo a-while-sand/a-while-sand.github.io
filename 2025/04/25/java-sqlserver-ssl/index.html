@@ -1,0 +1,539 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Java 驱动程序无法通过SSL加密与SQLServer建立连接 | 一粒白沙</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="不合时宜的人">
+    
+
+    
+    <meta name="description" content="JAVA低版本的驱动连接SQLServer时，有可能是英文的报错，   The driver could not establish a secure connection to SQL Server by using Secure Sockets Layer (SSL) encryption. Error: “The server selected protocol version TLS10">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 驱动程序无法通过SSL加密与SQLServer建立连接">
+<meta property="og:url" content="http://example.com/2025/04/25/java-sqlserver-ssl/index.html">
+<meta property="og:site_name" content="一粒白沙">
+<meta property="og:description" content="JAVA低版本的驱动连接SQLServer时，有可能是英文的报错，   The driver could not establish a secure connection to SQL Server by using Secure Sockets Layer (SSL) encryption. Error: “The server selected protocol version TLS10">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/image/java-sqlserver-ssl-1.png">
+<meta property="og:image" content="http://example.com/image/java-sqlserver-ssl-2.png">
+<meta property="article:published_time" content="2025-04-25T01:45:22.000Z">
+<meta property="article:modified_time" content="2025-06-07T02:08:57.225Z">
+<meta property="article:author" content="不合时宜的人">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="SSL">
+<meta property="article:tag" content="SQLServer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image/java-sqlserver-ssl-1.png">
+
+    
+    <link rel="alternative" href="/atom.xml" title="一粒白沙" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="一粒白沙" title="一粒白沙"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="一粒白沙">一粒白沙</a></h1>
+				<h2 class="blog-motto">白沙洲中的一粒</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2025/04/25/java-sqlserver-ssl/" title="Java 驱动程序无法通过SSL加密与SQLServer建立连接" itemprop="url">Java 驱动程序无法通过SSL加密与SQLServer建立连接</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
+		
+  <p class="article-time">
+    <time datetime="2025-04-25T01:45:22.000Z" itemprop="datePublished"> 发表于 2025-04-25</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<p>JAVA低版本的驱动连接SQLServer时，有可能是英文的报错， </p>
+<blockquote>
+<p>The driver could not establish a secure connection to SQL Server by using Secure Sockets Layer (SSL) encryption. Error: “The server selected protocol version TLS10 is not accepted by client preferences [TLS12]”. ClientConnectionId:d5fd8d69-ae88-4055-9f6d-6e8515224ce2</p>
+</blockquote>
+<p>这个问题其实最主要还得看后面那一句话</p>
+<pre><code class="highlight axapta">The <span class="keyword">server</span> selected protocol version TLS10 <span class="keyword">is</span> not accepted <span class="keyword">by</span> <span class="keyword">client</span> preferences [TLS12]】，意思是数据库服务端的协议版本是TLS10，而客户端协议版本是TLS12。</code></pre>
+
+<p> 只需要在你的设备上找到jdk的安装目录【JAVA_HOME\jre\lib\security】下的java.security改改安全协议的配置即可。删掉这两个：TLSv1、TLSv1.1。特别要注意的是，如果你是选择了jre的运行环境来运行，那就是这个目录【\JAVA_HOME\lib】。</p>
+<p>修改前：</p>
+<p><img src="/../image/java-sqlserver-ssl-1.png" alt="image-20250607092303595"></p>
+<p>修改后：</p>
+<p><img src="/../image/java-sqlserver-ssl-2.png" alt="image-20250607094835394">ry**</p>
+<p>若直接修改java.security，可能会影响其它环境，一般我们复制一份，单独修改，再将项目启动参数配置就可。</p>
+<pre><code class="highlight sh"><span class="string">&quot;-Djava.security.properties=../my.java.security&quot;</span></code></pre>
+
+<p>此问题目前都是在unbutu系统而且jdk1.8中遇到过</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/SSL/">SSL</a><a href="/tags/SQLServer/">SQLServer</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://example.com/2025/04/25/java-sqlserver-ssl/" data-title="Java 驱动程序无法通过SSL加密与SQLServer建立连接 | 一粒白沙" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2025/05/12/java-security-aes256/" title="解决因jdk版本问题不支持aes256加密问题">
+  <strong>上一篇：</strong><br/>
+  <span>
+  解决因jdk版本问题不支持aes256加密问题</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2025/03/12/solr-custom-import-export/"  title="Solr 使用第三方jar导入和导出">
+ <strong>下一篇：</strong><br/> 
+ <span>Solr 使用第三方jar导入和导出
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>15</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/linux/" title="linux">linux<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/centos7/" title="centos7">centos7<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mysql/" title="mysql">mysql<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/springboot/" title="springboot">springboot<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cluster/" title="cluster">cluster<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/es/" title="es">es<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch/" title="elasticsearch">elasticsearch<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/k8s/" title="k8s">k8s<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/kubernetes/" title="kubernetes">kubernetes<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mongodb/" title="mongodb">mongodb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/zookeeper/" title="zookeeper">zookeeper<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cmd/" title="cmd">cmd<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fastdfs/" title="fastdfs">fastdfs<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nginx/" title="nginx">nginx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/thread-pool/" title="thread-pool">thread-pool<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p>  <br/>
+			人生如逆旅，我亦是行人</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2025 
+		
+		<a href="/about" target="_blank" title="不合时宜的人">不合时宜的人</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+ // '<a class="overlay" id="qrcode"></a>',
+  //'<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  //'<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  //'<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  //'<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  //'<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

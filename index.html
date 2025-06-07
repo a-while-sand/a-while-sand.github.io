@@ -80,18 +80,41 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2025/04/20/java-custom-logback-log/" title="Java 自定义Logback日志" itemprop="url">
+    <a href="/2025/05/12/java-security-aes256/" title="解决因jdk版本问题不支持aes256加密问题" itemprop="url">
   
-    <h1 itemprop="name">Java 自定义Logback日志</h1>
+    <h1 itemprop="name">解决因jdk版本问题不支持aes256加密问题</h1>
     
      
-           <p itemprop="description" >自定义生成日志类，利用logback日志框架
-一. 定义StaticFileAppenderpackage vip.xiaonuo.biz.modular.user.log4;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-im</p>
+           <p itemprop="description" >aes256加密报如下异常：
+
+java.security.InvalidKeyException: Illegal key size
+
+在网上搜到最多的解决方案是在oracle官网下载补丁jar包（local_policy.jar、US_export_policy.jar），进</p>
         
     
-    <time datetime="2025-04-20T09:25:33.000Z" itemprop="datePublished">2025-04-20</time>
+    <time datetime="2025-05-12T11:50:11.000Z" itemprop="datePublished">2025-05-12</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2025/04/25/java-sqlserver-ssl/" title="Java 驱动程序无法通过SSL加密与SQLServer建立连接" itemprop="url">
+  
+    <h1 itemprop="name">Java 驱动程序无法通过SSL加密与SQLServer建立连接</h1>
+    
+     
+           <p itemprop="description" >JAVA低版本的驱动连接SQLServer时，有可能是英文的报错， 
+
+The driver could not establish a secure connection to SQL Server by using Secure Sockets Layer (SSL) enc</p>
+        
+    
+    <time datetime="2025-04-25T01:45:22.000Z" itemprop="datePublished">2025-04-25</time>
   </a>
 </section>
 
@@ -113,6 +136,29 @@ im</p>
         
     
     <time datetime="2025-03-12T09:25:33.000Z" itemprop="datePublished">2025-03-12</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
+    <a href="/2025/02/20/java-custom-logback-log/" title="Java 自定义Logback日志" itemprop="url">
+  
+    <h1 itemprop="name">Java 自定义Logback日志</h1>
+    
+     
+           <p itemprop="description" >自定义生成日志类，利用logback日志框架
+一. 定义StaticFileAppenderpackage vip.xiaonuo.biz.modular.user.log4;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+im</p>
+        
+    
+    <time datetime="2025-02-20T09:25:33.000Z" itemprop="datePublished">2025-02-20</time>
   </a>
 </section>
 
@@ -283,53 +329,6 @@ yarn global add pm2
 
 
 
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2024/07/02/vue-linux-build/" title="Vue 在Centos7中离线构建" itemprop="url">
-  
-    <h1 itemprop="name">Vue 在Centos7中离线构建</h1>
-    
-     
-           <p itemprop="description" >总体思路：
-1、安装nodejs
-2、将本地的依赖库复制到离线机上
-3、执行构建命令
-
-一、安装nodejs1、由于centos7，默认不支持nodejs 18或以上的版本（需要安装其它组件），离线机安装组件比较麻烦，只能找16版本，这里安装了16.14.2版本。
-2、下载nod</p>
-        
-    
-    <time datetime="2024-07-02T12:33:14.000Z" itemprop="datePublished">2024-07-02</time>
-  </a>
-</section>
-
-
-
-
-
-
-  
-<section class="post" itemscope itemprop="blogitem">
-  
-    <a href="/2024/03/22/springboot-redis-lua/" title="springboot redis lua 限流方案" itemprop="url">
-  
-    <h1 itemprop="name">springboot redis lua 限流方案</h1>
-    
-     
-           <p itemprop="description" >首先就让我们来看看为什么需要对接口进行限流？
-为什么要进行限流？因为互联网系统通常都要面对大并发大流量的请求，在突发情况下（最常见的场景就是秒杀、抢购），瞬时大流量会直接将系统打垮，无法对外提供服务。那为了防止出现这种情况最常见的解决方案之一就是限流，当请求达到一定的并发数或速率</p>
-        
-    
-    <time datetime="2024-03-22T13:21:44.000Z" itemprop="datePublished">2024-03-22</time>
-  </a>
-</section>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix unexpand">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next<span></span></a>
@@ -350,7 +349,7 @@ yarn global add pm2
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>13</sup></a></li>
+				<li><a href="/tags/java/" title="java">java<sup>15</sup></a></li>
 			
 		
 			
