@@ -4,27 +4,25 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>在Windows中生成https自签名证书 | 一粒白沙</title>
+    <title>mysql5.7 一次查询优化 | 一粒白沙</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="不合时宜的人">
     
 
     
-    <meta name="description" content="总体思路： 1、安装OpenSSL工具 2、创建根 CA 证书 3、创建服务器证书  安装OpenSSL工具https:&#x2F;&#x2F;slproweb.com&#x2F;products&#x2F;Win32OpenSSL.html 使用的版本是 OpenSSL 3.0  创建根 CA 证书生成根RSA 私钥openssl genpkey -algorithm RSA -out ca.pem -pkeyopt rsa_keyg">
+    <meta name="description" content="在本机部署mysql5.7 + springboot，一切正常，一般查询也小于1秒；而部署到客户环境几个查询就超过3、4秒。先用同样的数据、同样的jar，本地测试一切正常。 最终在客户环境本地用测试，本地请求也超过3秒，基本确定是mysql方面的问题，不巧的事，本地环境也是mysql5.7，给我带来许多干扰。而在不断修改mysql的配置文件时，最终锁定query_cache_type，将其开启，查">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在Windows中生成https自签名证书">
-<meta property="og:url" content="http://example.com/2024/10/13/https-windows-build/index.html">
+<meta property="og:title" content="mysql5.7 一次查询优化">
+<meta property="og:url" content="http://example.com/2025/06/07/mysql-query-optimize/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="总体思路： 1、安装OpenSSL工具 2、创建根 CA 证书 3、创建服务器证书  安装OpenSSL工具https:&#x2F;&#x2F;slproweb.com&#x2F;products&#x2F;Win32OpenSSL.html 使用的版本是 OpenSSL 3.0  创建根 CA 证书生成根RSA 私钥openssl genpkey -algorithm RSA -out ca.pem -pkeyopt rsa_keyg">
+<meta property="og:description" content="在本机部署mysql5.7 + springboot，一切正常，一般查询也小于1秒；而部署到客户环境几个查询就超过3、4秒。先用同样的数据、同样的jar，本地测试一切正常。 最终在客户环境本地用测试，本地请求也超过3秒，基本确定是mysql方面的问题，不巧的事，本地环境也是mysql5.7，给我带来许多干扰。而在不断修改mysql的配置文件时，最终锁定query_cache_type，将其开启，查">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-10-13T13:55:33.000Z">
-<meta property="article:modified_time" content="2024-10-13T14:17:47.163Z">
+<meta property="article:published_time" content="2025-06-07T06:57:11.000Z">
+<meta property="article:modified_time" content="2025-06-07T07:13:17.515Z">
 <meta property="article:author" content="不合时宜的人">
-<meta property="article:tag" content="https">
-<meta property="article:tag" content="cert">
-<meta property="article:tag" content="windows">
-<meta property="article:tag" content="‘CA’">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="optimize">
 <meta name="twitter:card" content="summary">
 
     
@@ -86,14 +84,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2024/10/13/https-windows-build/" title="在Windows中生成https自签名证书" itemprop="url">在Windows中生成https自签名证书</a>
+      <a href="/2025/06/07/mysql-query-optimize/" title="mysql5.7 一次查询优化" itemprop="url">mysql5.7 一次查询优化</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
 		
   <p class="article-time">
-    <time datetime="2024-10-13T13:55:33.000Z" itemprop="datePublished"> 发表于 2024-10-13</time>
+    <time datetime="2025-06-07T06:57:11.000Z" itemprop="datePublished"> 发表于 2025-06-07</time>
     
   </p>
 </header>
@@ -102,41 +100,37 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">总体思路：</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85OpenSSL%E5%B7%A5%E5%85%B7"><span class="toc-number"></span> <span class="toc-text">安装OpenSSL工具</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%A0%B9-CA-%E8%AF%81%E4%B9%A6"><span class="toc-number"></span> <span class="toc-text">创建根 CA 证书</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A0%B9RSA-%E7%A7%81%E9%92%A5"><span class="toc-number">1.</span> <span class="toc-text">生成根RSA 私钥</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A0%B9%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%90%8D%E8%AF%B7%E6%B1%82%EF%BC%88CSR%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">生成根证书签名请求（CSR）</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E8%87%AA%E7%AD%BE%E6%A0%B9%E8%AF%81%E4%B9%A6"><span class="toc-number">3.</span> <span class="toc-text">生成自签根证书</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%81%E4%B9%A6"><span class="toc-number"></span> <span class="toc-text">创建服务器证书</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8-RSA-%E7%A7%81%E9%92%A5"><span class="toc-number">1.</span> <span class="toc-text">创建服务器 RSA 私钥</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-CSR%EF%BC%88%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%90%8D%E8%AF%B7%E6%B1%82%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">创建 CSR（证书签名请求）</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-CSR-%E5%92%8C%E7%A7%81%E9%92%A5%E7%94%9F%E6%88%90%E8%AF%81%E4%B9%A6"><span class="toc-number">3.</span> <span class="toc-text">使用 CSR 和私钥生成证书</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%81%E4%B9%A6"><span class="toc-number">4.</span> <span class="toc-text">查看服务器证书</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">修改配置文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%8D%E5%90%AF-MySQL-%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.</span> <span class="toc-text">重启 MySQL 服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF"><span class="toc-number">3.</span> <span class="toc-text">验证查询缓存是否开启</span></a></li></ol>
 		
 		</div>
 		
-		<h6 id="总体思路："><a href="#总体思路：" class="headerlink" title="总体思路："></a><strong>总体思路</strong>：</h6><blockquote>
-<p>1、安装OpenSSL工具</p>
-<p>2、创建根 CA 证书</p>
-<p>3、创建服务器证书</p>
-</blockquote>
-<h5 id="安装OpenSSL工具"><a href="#安装OpenSSL工具" class="headerlink" title="安装OpenSSL工具"></a>安装OpenSSL工具</h5><pre><code class="highlight sh">https://slproweb.com/products/Win32OpenSSL.html
-使用的版本是 OpenSSL 3.0</code></pre>
+		<p>在本机部署mysql5.7 + springboot，一切正常，一般查询也小于1秒；而部署到客户环境几个查询就超过3、4秒。先用同样的数据、同样的jar，本地测试一切正常。</p>
+<p>最终在客户环境本地用测试，本地请求也超过3秒，基本确定是mysql方面的问题，不巧的事，本地环境也是mysql5.7，给我带来许多干扰。而在不断修改mysql的配置文件时，最终锁定query_cache_type，将其开启，查询如飞。</p>
+<pre><code class="highlight ini"><span class="attr">query_cache_type</span>=<span class="number">1</span></code></pre>
 
-<h5 id="创建根-CA-证书"><a href="#创建根-CA-证书" class="headerlink" title="创建根 CA 证书"></a>创建根 CA 证书</h5><h6 id="生成根RSA-私钥"><a href="#生成根RSA-私钥" class="headerlink" title="生成根RSA 私钥"></a>生成根RSA 私钥</h6><pre><code class="highlight stata">openssl genpkey -algorithm RSA -<span class="keyword">out</span> <span class="keyword">ca</span>.pem -pkeyopt rsa_keygen_bits:2048</code></pre>
-
-<h6 id="生成根证书签名请求（CSR）"><a href="#生成根证书签名请求（CSR）" class="headerlink" title="生成根证书签名请求（CSR）"></a>生成根证书签名请求（CSR）</h6><pre><code class="highlight shell">openssl req -new -key ca.pem -out ca.csr -subj &quot;/OU=Self Sign CA/O=Self Sign/CN=Self Sign&quot; 
--addext &quot;keyUsage=critical,keyCertSign,cRLSign&quot; -addext &quot;basicConstraints=critical,CA:TRUE&quot;
+<p> MySQL 的查询缓存（Query Cache）是一个可以加速SELECT查询的功能，它会将SELECT查询的结果缓存起来，当相同的查询再次执行时，如果结果没有改变，则直接从缓存中读取数据，从而提高查询效率。不过需要注意的是，从 MySQL 8.0 开始，官方已经移除了查询缓存功能，因为对于高并发写入的应用场景来说，查询缓存可能会导致性能下降。<br> 如果你使用的是 MySQL 5.7 或更早版本，并且想要开启查询缓存，可以按照以下步骤操作：</p>
+<h5 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a><strong>修改配置文件</strong></h5><p>找到 [MySQL 配置文件](<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=MySQL">https://so.csdn.net/so/search?q=MySQL</a> 配置文件&amp;spm&#x3D;1001.2101.3001.7020) <code>my.cnf</code> 或 <code>my.ini</code>（根据你的操作系统和安装方式，位置可能不同），然后在 <code>[mysqld]</code> 段下添加或修改如下参数：</p>
+<pre><code class="highlight java">[mysqld]
+query_cache_type = <span class="number">1</span>  # <span class="number">0</span>=OFF, <span class="number">1</span>=ON, <span class="number">2</span>=DEMAND (默认为 OFF)
+query_cache_size = 16M  # 设置查询缓存大小，例如 16<span class="type">MB</span>
+<span class="variable">query_cache_limit</span> <span class="operator">=</span> 2M  # 缓存单个查询的最大结果集大小
 </code></pre>
 
-<h6 id="生成自签根证书"><a href="#生成自签根证书" class="headerlink" title="生成自签根证书"></a>生成自签根证书</h6><pre><code class="highlight sh">openssl x509 -req -days 365 -<span class="keyword">in</span> ca.csr -signkey ca.pem -out ca.crt -copy_extensions copy</code></pre>
+<ul>
+<li>query_cache_type 控制查询缓存的行为。设置为 1 表示自动开启查询缓存，2 表示只有带有 SQL_NO_CACHE 提示的查询才不会被缓存。</li>
+<li>query_cache_size 定义了用于存储查询结果的内存大小。</li>
+<li>query_cache_limit 是一个限制，定义了超过这个大小的查询结果不会被缓存。</li>
+</ul>
+<h5 id="重启-MySQL-服务"><a href="#重启-MySQL-服务" class="headerlink" title="重启 MySQL 服务"></a><strong>重启 MySQL 服务</strong></h5><p>修改完配置文件后，需要重启 MySQL 服务使更改生效。这通常可以通过命令行来完成，如使用 <code>service mysql restart</code> 或者 <code>/etc/init.d/mysql restart</code> 等命令，具体取决于你的操作系统和服务管理器。</p>
+<h5 id="验证查询缓存是否开启"><a href="#验证查询缓存是否开启" class="headerlink" title="验证查询缓存是否开启"></a><strong>验证查询缓存是否开启</strong></h5><p>可以通过登录到 MySQL 命令行客户端并运行下面的命令来检查查询缓存的状态</p>
+<pre><code class="highlight sh">SHOW VARIABLES LIKE <span class="string">&#x27;have_query_cache&#x27;</span>;
+SHOW VARIABLES LIKE <span class="string">&#x27;query_cache%&#x27;</span>;</code></pre>
 
-<h5 id="创建服务器证书"><a href="#创建服务器证书" class="headerlink" title="创建服务器证书"></a>创建服务器证书</h5><h6 id="创建服务器-RSA-私钥"><a href="#创建服务器-RSA-私钥" class="headerlink" title="创建服务器 RSA 私钥"></a>创建服务器 RSA 私钥</h6><pre><code class="highlight sh">openssl genpkey -algorithm RSA -out server.pem -pkeyopt rsa_keygen_bits:2048</code></pre>
-
-<h6 id="创建-CSR（证书签名请求）"><a href="#创建-CSR（证书签名请求）" class="headerlink" title="创建 CSR（证书签名请求）"></a>创建 CSR（证书签名请求）</h6><pre><code class="highlight shell">openssl req -new -key server.pem -out server.csr -subj &quot;/C=CN/ST=Beijing/L=Beijing/O=local/OU=local/CN=localhost&quot; 
--addext &quot;subjectAltName = DNS:localhost,IP:127.0.0.1,IP:172.16.20.248&quot;
-<span class="meta prompt_"></span>
-<span class="meta prompt_">#</span><span class="language-bash">说明：一般只需要个性以下两个参数。</span>
-<span class="meta prompt_">#</span><span class="language-bash">1、若域名为localhost，则配置DNS: localhost</span>
-<span class="meta prompt_">#</span><span class="language-bash">2、若域名为jfan.163.com，则配置DNS: jfan.163.com</span>
-<span class="meta prompt_">#</span><span class="language-bash">3、若域名localhost和jfan.163.com都可以访问，则配置两个DNS: localhost，DNS: jfan.163.com，以逗号分隔</span>
-<span class="meta prompt_">#</span><span class="language-bash">4、若为ip显示，则配置IP:127.0.0.1，或内网IP或外网IP，多个则以逗号分隔</span></code></pre>
-
-<h6 id="使用-CSR-和私钥生成证书"><a href="#使用-CSR-和私钥生成证书" class="headerlink" title="使用 CSR 和私钥生成证书"></a>使用 CSR 和私钥生成证书</h6><pre><code class="highlight sh">openssl x509 -req -<span class="keyword">in</span> server.csr -CA ca.crt -CAkey ca.pem -CAcreateserial -out server.crt -days 365 -copy_extensions copy</code></pre>
-
-<h6 id="查看服务器证书"><a href="#查看服务器证书" class="headerlink" title="查看服务器证书"></a>查看服务器证书</h6><pre><code class="highlight pgsql">openssl x509 -<span class="type">text</span> -<span class="keyword">in</span> <span class="keyword">server</span>.crt -noout</code></pre>
-
+<p>如果 <code>have_query_cache</code> 返回 <code>YES</code>，则说明支持查询缓存；而其他变量则显示当前的配置状态。</p>
+<p>参考：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/a772304419/article/details/142826554">https://blog.csdn.net/a772304419/article/details/142826554</a></p>
+</blockquote>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -145,7 +139,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/https/">https</a><a href="/tags/cert/">cert</a><a href="/tags/windows/">windows</a><a href="/tags/‘CA’/">‘CA’</a>
+  <span></span> <a href="/tags/mysql/">mysql</a><a href="/tags/optimize/">optimize</a>
   </div>
 
 </div>
@@ -154,7 +148,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://example.com/2024/10/13/https-windows-build/" data-title="在Windows中生成https自签名证书 | 一粒白沙" data-tsina="" class="share clearfix">
+	  <div data-url="http://example.com/2025/06/07/mysql-query-optimize/" data-title="mysql5.7 一次查询优化 | 一粒白沙" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -167,19 +161,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2024/11/17/gateway-filter-config/" title="gateway中filter自定义三种参数配置">
-  <strong>上一篇：</strong><br/>
-  <span>
-  gateway中filter自定义三种参数配置</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2024/09/22/pm2-linux-use/"  title="PM2常用操作">
+<a href="/2025/05/12/java-security-aes256/"  title="解决因jdk版本问题不支持aes256加密问题">
  <strong>下一篇：</strong><br/> 
- <span>PM2常用操作
+ <span>解决因jdk版本问题不支持aes256加密问题
 </span>
 </a>
 </div>
@@ -196,7 +182,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%80%BB%E4%BD%93%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">总体思路：</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%89%E8%A3%85OpenSSL%E5%B7%A5%E5%85%B7"><span class="toc-number"></span> <span class="toc-text">安装OpenSSL工具</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%A0%B9-CA-%E8%AF%81%E4%B9%A6"><span class="toc-number"></span> <span class="toc-text">创建根 CA 证书</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A0%B9RSA-%E7%A7%81%E9%92%A5"><span class="toc-number">1.</span> <span class="toc-text">生成根RSA 私钥</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E6%A0%B9%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%90%8D%E8%AF%B7%E6%B1%82%EF%BC%88CSR%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">生成根证书签名请求（CSR）</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E8%87%AA%E7%AD%BE%E6%A0%B9%E8%AF%81%E4%B9%A6"><span class="toc-number">3.</span> <span class="toc-text">生成自签根证书</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%81%E4%B9%A6"><span class="toc-number"></span> <span class="toc-text">创建服务器证书</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%99%A8-RSA-%E7%A7%81%E9%92%A5"><span class="toc-number">1.</span> <span class="toc-text">创建服务器 RSA 私钥</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-CSR%EF%BC%88%E8%AF%81%E4%B9%A6%E7%AD%BE%E5%90%8D%E8%AF%B7%E6%B1%82%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">创建 CSR（证书签名请求）</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-CSR-%E5%92%8C%E7%A7%81%E9%92%A5%E7%94%9F%E6%88%90%E8%AF%81%E4%B9%A6"><span class="toc-number">3.</span> <span class="toc-text">使用 CSR 和私钥生成证书</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%81%E4%B9%A6"><span class="toc-number">4.</span> <span class="toc-text">查看服务器证书</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">修改配置文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%8D%E5%90%AF-MySQL-%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.</span> <span class="toc-text">重启 MySQL 服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF"><span class="toc-number">3.</span> <span class="toc-text">验证查询缓存是否开启</span></a></li></ol>
  
   </div>
 
