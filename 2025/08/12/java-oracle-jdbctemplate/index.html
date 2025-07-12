@@ -4,30 +4,27 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Java 驱动程序无法通过SSL加密与SQLServer建立连接 | 一粒白沙</title>
+    <title>java同步oracle的序列 | 一粒白沙</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="不合时宜的人">
     
 
     
-    <meta name="description" content="JAVA低版本的驱动连接SQLServer时，有可能是英文的报错，   The driver could not establish a secure connection to SQL Server by using Secure Sockets Layer (SSL) encryption. Error: “The server selected protocol version TLS10">
+    <meta name="description" content="在 Java 中使用 JdbcTemplate 执行 原生 SQL 插入数据到 A 表，并且该表中包含一个 TIMESTAMP 类型字段（如 create_time TIMESTAMP），你可以通过以下方式完成操作。 场景说明数据库表结构（Oracle 示例）：CREATE TABLE a_table (     id          NUMBER PRIMARY KEY,     name">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java 驱动程序无法通过SSL加密与SQLServer建立连接">
-<meta property="og:url" content="http://example.com/2025/04/25/java-sqlserver-ssl/index.html">
+<meta property="og:title" content="java同步oracle的序列">
+<meta property="og:url" content="http://example.com/2025/08/12/java-oracle-jdbctemplate/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="JAVA低版本的驱动连接SQLServer时，有可能是英文的报错，   The driver could not establish a secure connection to SQL Server by using Secure Sockets Layer (SSL) encryption. Error: “The server selected protocol version TLS10">
+<meta property="og:description" content="在 Java 中使用 JdbcTemplate 执行 原生 SQL 插入数据到 A 表，并且该表中包含一个 TIMESTAMP 类型字段（如 create_time TIMESTAMP），你可以通过以下方式完成操作。 场景说明数据库表结构（Oracle 示例）：CREATE TABLE a_table (     id          NUMBER PRIMARY KEY,     name">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/image/java-sqlserver-ssl-1.png">
-<meta property="og:image" content="http://example.com/image/java-sqlserver-ssl-2.png">
-<meta property="article:published_time" content="2025-04-25T01:45:22.000Z">
-<meta property="article:modified_time" content="2025-06-07T02:30:12.498Z">
+<meta property="article:published_time" content="2025-08-12T02:57:11.000Z">
+<meta property="article:modified_time" content="2025-07-12T07:44:10.138Z">
 <meta property="article:author" content="不合时宜的人">
 <meta property="article:tag" content="java">
-<meta property="article:tag" content="SSL">
-<meta property="article:tag" content="SQLServer">
+<meta property="article:tag" content="oracle">
+<meta property="article:tag" content="jdbcTemplate">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/image/java-sqlserver-ssl-1.png">
 
     
     <link rel="alternative" href="/atom.xml" title="一粒白沙" type="application/atom+xml">
@@ -88,14 +85,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2025/04/25/java-sqlserver-ssl/" title="Java 驱动程序无法通过SSL加密与SQLServer建立连接" itemprop="url">Java 驱动程序无法通过SSL加密与SQLServer建立连接</a>
+      <a href="/2025/08/12/java-oracle-jdbctemplate/" title="java同步oracle的序列" itemprop="url">java同步oracle的序列</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
 		
   <p class="article-time">
-    <time datetime="2025-04-25T01:45:22.000Z" itemprop="datePublished"> 发表于 2025-04-25</time>
+    <time datetime="2025-08-12T02:57:11.000Z" itemprop="datePublished"> 发表于 2025-08-12</time>
     
   </p>
 </header>
@@ -104,26 +101,69 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">场景说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%BB%93%E6%9E%84%EF%BC%88Oracle-%E7%A4%BA%E4%BE%8B%EF%BC%89%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">数据库表结构（Oracle 示例）：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-JdbcTemplate-%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">使用 JdbcTemplate 插入数据示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Controller-%E7%A4%BA%E4%BE%8B%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">Controller 示例（可选）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9%E8%AF%B4%E6%98%8E"><span class="toc-number">4.</span> <span class="toc-text">关键点说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E8%BD%AC%E6%8D%A2%E4%B8%BA-Timestamp%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">为什么需要转换为 Timestamp？</span></a></li></ol></li></ol>
 		
 		</div>
 		
-		<p>JAVA低版本的驱动连接SQLServer时，有可能是英文的报错， </p>
-<blockquote>
-<p>The driver could not establish a secure connection to SQL Server by using Secure Sockets Layer (SSL) encryption. Error: “The server selected protocol version TLS10 is not accepted by client preferences [TLS12]”. ClientConnectionId:d5fd8d69-ae88-4055-9f6d-6e8515224ce2</p>
-</blockquote>
-<p>这个问题其实最主要还得看后面那一句话</p>
-<pre><code class="highlight axapta">The <span class="keyword">server</span> selected protocol version TLS10 <span class="keyword">is</span> not accepted <span class="keyword">by</span> <span class="keyword">client</span> preferences [TLS12]】，意思是数据库服务端的协议版本是TLS10，而客户端协议版本是TLS12。</code></pre>
+		<p>在 Java 中使用 <strong><code>JdbcTemplate</code></strong> 执行 <strong>原生 SQL 插入数据到 A 表</strong>，并且该表中包含一个 <code>TIMESTAMP</code> 类型字段（如 <code>create_time TIMESTAMP</code>），你可以通过以下方式完成操作。</p>
+<h2 id="场景说明"><a href="#场景说明" class="headerlink" title="场景说明"></a>场景说明</h2><h3 id="数据库表结构（Oracle-示例）："><a href="#数据库表结构（Oracle-示例）：" class="headerlink" title="数据库表结构（Oracle 示例）："></a>数据库表结构（Oracle 示例）：</h3><pre><code class="highlight sql"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> a_table (
+    id          NUMBER <span class="keyword">PRIMARY</span> KEY,
+    name        VARCHAR2(<span class="number">100</span>),
+    create_time <span class="type">TIMESTAMP</span>
+);</code></pre>
 
-<p> 只需要在你的设备上找到jdk的安装目录【JAVA_HOME\jre\lib\security】下的java.security改改安全协议的配置即可。删掉这两个：TLSv1、TLSv1.1。特别要注意的是，如果你是选择了jre的运行环境来运行，那就是这个目录【\JAVA_HOME\lib】。</p>
-<p>修改前：</p>
-<p><img src="/../image/java-sqlserver-ssl-1.png"></p>
-<p>修改后：</p>
-<p><img src="/../image/java-sqlserver-ssl-2.png">ry**</p>
-<p>若直接修改java.security，可能会影响其它环境，一般我们复制一份，单独修改，再将项目启动参数配置就可。</p>
-<pre><code class="highlight sh"><span class="string">&quot;-Djava.security.properties=../my.java.security&quot;</span></code></pre>
+<h2 id="使用-JdbcTemplate-插入数据示例"><a href="#使用-JdbcTemplate-插入数据示例" class="headerlink" title="使用 JdbcTemplate 插入数据示例"></a>使用 JdbcTemplate 插入数据示例</h2><p>可以使用 JPA 或者 <code>JdbcTemplate</code> 来执行这个查询。下面是一个使用 JPA 的例子：</p>
+<pre><code class="highlight java"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;
+<span class="keyword">import</span> org.springframework.jdbc.core.JdbcTemplate;
+<span class="keyword">import</span> org.springframework.stereotype.Service;
 
-<p>此问题目前都是在unbutu系统而且jdk1.8中遇到过</p>
+<span class="keyword">import</span> java.time.LocalDateTime;
+<span class="keyword">import</span> java.sql.Timestamp;
+
+<span class="meta">@Service</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ATableService</span> &#123;
+
+    <span class="meta">@Autowired</span>
+    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insertRecord</span><span class="params">(Long id, String name, LocalDateTime createTime)</span> &#123;
+        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;INSERT INTO a_table (id, name, create_time) VALUES (?, ?, ?)&quot;</span>;
+
+        <span class="comment">// 将 LocalDateTime 转换为 Timestamp，因为 JdbcTemplate 的 setObject() 对 Oracle 需要 Timestamp</span>
+        <span class="type">Timestamp</span> <span class="variable">timestamp</span> <span class="operator">=</span> Timestamp.valueOf(createTime);
+
+        jdbcTemplate.update(sql, id, name, timestamp);
+
+        System.out.println(<span class="string">&quot;插入成功&quot;</span>);
+    &#125;
+&#125;</code></pre>
+
+<h2 id="Controller-示例（可选）"><a href="#Controller-示例（可选）" class="headerlink" title="Controller 示例（可选）"></a>Controller 示例（可选）</h2><pre><code class="highlight java">
+<span class="meta">@RestController</span>
+<span class="meta">@RequestMapping(&quot;/api&quot;)</span>
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ATableController</span> &#123;
+
+    <span class="meta">@Autowired</span>
+    <span class="keyword">private</span> ATableService aTableService;
+
+    <span class="meta">@PostMapping(&quot;/insert&quot;)</span>
+    <span class="keyword">public</span> ResponseEntity&lt;String&gt; <span class="title function_">insertARecord</span><span class="params">()</span> &#123;
+        <span class="type">Long</span> <span class="variable">id</span> <span class="operator">=</span> <span class="number">1L</span>;
+        <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> <span class="string">&quot;测试用户&quot;</span>;
+        <span class="type">LocalDateTime</span> <span class="variable">now</span> <span class="operator">=</span> LocalDateTime.now();
+
+        aTableService.insertRecord(id, name, now);
+
+        <span class="keyword">return</span> ResponseEntity.ok(<span class="string">&quot;插入成功&quot;</span>);
+    &#125;
+&#125;
+</code></pre>
+
+<h2 id="关键点说明"><a href="#关键点说明" class="headerlink" title="关键点说明"></a>关键点说明</h2><h3 id="为什么需要转换为-Timestamp？"><a href="#为什么需要转换为-Timestamp？" class="headerlink" title="为什么需要转换为 Timestamp？"></a>为什么需要转换为 <code>Timestamp</code>？</h3><ul>
+<li>Oracle 的 JDBC 驱动在早期版本中对 <code>LocalDateTime</code> 支持不够完善；</li>
+<li>使用 <code>Timestamp.valueOf(LocalDateTime)</code> 是一种兼容性较好的做法；</li>
+<li>如果你使用较新版本的 Spring Boot + Oracle JDBC 驱动（ojdbc8.jar），也可以直接传 <code>LocalDateTime</code>，但为了兼容性，推荐统一转成 <code>Timestamp</code>。</li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -132,7 +172,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a><a href="/tags/SSL/">SSL</a><a href="/tags/SQLServer/">SQLServer</a>
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/oracle/">oracle</a><a href="/tags/jdbcTemplate/">jdbcTemplate</a>
   </div>
 
 </div>
@@ -141,7 +181,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://example.com/2025/04/25/java-sqlserver-ssl/" data-title="Java 驱动程序无法通过SSL加密与SQLServer建立连接 | 一粒白沙" data-tsina="" class="share clearfix">
+	  <div data-url="http://example.com/2025/08/12/java-oracle-jdbctemplate/" data-title="java同步oracle的序列 | 一粒白沙" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -154,19 +194,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2025/05/12/java-security-aes256/" title="解决因jdk版本问题不支持aes256加密问题">
-  <strong>上一篇：</strong><br/>
-  <span>
-  解决因jdk版本问题不支持aes256加密问题</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2025/03/12/solr-custom-import-export/"  title="Solr 使用第三方jar导入和导出">
+<a href="/2025/07/12/java-oracle-seq/"  title="java同步oracle的序列">
  <strong>下一篇：</strong><br/> 
- <span>Solr 使用第三方jar导入和导出
+ <span>java同步oracle的序列
 </span>
 </a>
 </div>
@@ -183,7 +215,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">场景说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%BB%93%E6%9E%84%EF%BC%88Oracle-%E7%A4%BA%E4%BE%8B%EF%BC%89%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">数据库表结构（Oracle 示例）：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-JdbcTemplate-%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">使用 JdbcTemplate 插入数据示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Controller-%E7%A4%BA%E4%BE%8B%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">Controller 示例（可选）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9%E8%AF%B4%E6%98%8E"><span class="toc-number">4.</span> <span class="toc-text">关键点说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E8%BD%AC%E6%8D%A2%E4%B8%BA-Timestamp%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">为什么需要转换为 Timestamp？</span></a></li></ol></li></ol>
  
   </div>
 
