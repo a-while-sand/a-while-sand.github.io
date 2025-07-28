@@ -4,26 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>java使用原生SQL插入记录 | 一粒白沙</title>
+    <title>上海玛雅水上乐园全家四口超详细游玩攻略 | 一粒白沙</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="不合时宜的人">
     
 
     
-    <meta name="description" content="在 Java 中使用 JdbcTemplate 执行 原生 SQL 插入数据到 A 表，并且该表中包含一个 TIMESTAMP 类型字段（如 create_time TIMESTAMP），你可以通过以下方式完成操作。 场景说明数据库表结构（Oracle 示例）：CREATE TABLE a_table (     id          NUMBER PRIMARY KEY,     name">
+    <meta name="description" content="路线总结： 09:30 入园 → 超级大喇叭 → 飓风眼 → 大黄蜂 → 四驱迷城    12:00 午餐   13:00 合家欢滑道 → 章鱼滑道 → 加勒比海滩（泳圈）→ 懒人河（泳圈） 17:00 离园     上海玛雅水上乐园 · 全家四口超详细游玩攻略 时间：9:00-17:00 | 特点：高效打卡+亲子友好+防晒避坑👗 穿衣推荐 成人&#x2F;大童：     泳衣：建议穿 连体&#x2F;分体速干泳衣">
 <meta property="og:type" content="article">
-<meta property="og:title" content="java使用原生SQL插入记录">
-<meta property="og:url" content="http://example.com/2025/08/12/java-oracle-jdbctemplate/index.html">
+<meta property="og:title" content="上海玛雅水上乐园全家四口超详细游玩攻略">
+<meta property="og:url" content="http://example.com/2025/07/28/trip-maya-shuishang/index.html">
 <meta property="og:site_name" content="一粒白沙">
-<meta property="og:description" content="在 Java 中使用 JdbcTemplate 执行 原生 SQL 插入数据到 A 表，并且该表中包含一个 TIMESTAMP 类型字段（如 create_time TIMESTAMP），你可以通过以下方式完成操作。 场景说明数据库表结构（Oracle 示例）：CREATE TABLE a_table (     id          NUMBER PRIMARY KEY,     name">
+<meta property="og:description" content="路线总结： 09:30 入园 → 超级大喇叭 → 飓风眼 → 大黄蜂 → 四驱迷城    12:00 午餐   13:00 合家欢滑道 → 章鱼滑道 → 加勒比海滩（泳圈）→ 懒人河（泳圈） 17:00 离园     上海玛雅水上乐园 · 全家四口超详细游玩攻略 时间：9:00-17:00 | 特点：高效打卡+亲子友好+防晒避坑👗 穿衣推荐 成人&#x2F;大童：     泳衣：建议穿 连体&#x2F;分体速干泳衣">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-08-12T02:57:11.000Z">
-<meta property="article:modified_time" content="2025-07-12T07:50:02.915Z">
+<meta property="article:published_time" content="2025-07-28T06:57:11.000Z">
+<meta property="article:modified_time" content="2025-07-28T07:26:40.513Z">
 <meta property="article:author" content="不合时宜的人">
-<meta property="article:tag" content="java">
-<meta property="article:tag" content="oracle">
-<meta property="article:tag" content="jdbcTemplate">
+<meta property="article:tag" content="上海玛雅">
+<meta property="article:tag" content="一家四口">
+<meta property="article:tag" content="游玩攻略">
 <meta name="twitter:card" content="summary">
 
     
@@ -85,14 +85,14 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2025/08/12/java-oracle-jdbctemplate/" title="java使用原生SQL插入记录" itemprop="url">java使用原生SQL插入记录</a>
+      <a href="/2025/07/28/trip-maya-shuishang/" title="上海玛雅水上乐园全家四口超详细游玩攻略" itemprop="url">上海玛雅水上乐园全家四口超详细游玩攻略</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
 		
   <p class="article-time">
-    <time datetime="2025-08-12T02:57:11.000Z" itemprop="datePublished"> 发表于 2025-08-12</time>
+    <time datetime="2025-07-28T06:57:11.000Z" itemprop="datePublished"> 发表于 2025-07-28</time>
     
   </p>
 </header>
@@ -101,69 +101,102 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">场景说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%BB%93%E6%9E%84%EF%BC%88Oracle-%E7%A4%BA%E4%BE%8B%EF%BC%89%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">数据库表结构（Oracle 示例）：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-JdbcTemplate-%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">使用 JdbcTemplate 插入数据示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Controller-%E7%A4%BA%E4%BE%8B%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">Controller 示例（可选）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9%E8%AF%B4%E6%98%8E"><span class="toc-number">4.</span> <span class="toc-text">关键点说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E8%BD%AC%E6%8D%A2%E4%B8%BA-Timestamp%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">为什么需要转换为 Timestamp？</span></a></li></ol></li></ol>
+			
 		
 		</div>
 		
-		<p>在 Java 中使用 <strong><code>JdbcTemplate</code></strong> 执行 <strong>原生 SQL 插入数据到 A 表</strong>，并且该表中包含一个 <code>TIMESTAMP</code> 类型字段（如 <code>create_time TIMESTAMP</code>），你可以通过以下方式完成操作。</p>
-<h2 id="场景说明"><a href="#场景说明" class="headerlink" title="场景说明"></a>场景说明</h2><h3 id="数据库表结构（Oracle-示例）："><a href="#数据库表结构（Oracle-示例）：" class="headerlink" title="数据库表结构（Oracle 示例）："></a>数据库表结构（Oracle 示例）：</h3><pre><code class="highlight sql"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> a_table (
-    id          NUMBER <span class="keyword">PRIMARY</span> KEY,
-    name        VARCHAR2(<span class="number">100</span>),
-    create_time <span class="type">TIMESTAMP</span>
-);</code></pre>
+		<p>路线总结：</p>
+<pre><code class="highlight apache"><span class="attribute">09</span>:<span class="number">30</span> 入园 → 超级大喇叭 → 飓风眼 → 大黄蜂 → 四驱迷城   
+<span class="attribute">12</span>:<span class="number">00</span> 午餐  
+<span class="attribute">13</span>:<span class="number">00</span> 合家欢滑道 → 章鱼滑道 → 加勒比海滩（泳圈）→ 懒人河（泳圈）
+<span class="attribute">17</span>:<span class="number">00</span> 离园</code></pre>
 
-<h2 id="使用-JdbcTemplate-插入数据示例"><a href="#使用-JdbcTemplate-插入数据示例" class="headerlink" title="使用 JdbcTemplate 插入数据示例"></a>使用 JdbcTemplate 插入数据示例</h2><p>可以使用 JPA 或者 <code>JdbcTemplate</code> 来执行这个查询。下面是一个使用 JPA 的例子：</p>
-<pre><code class="highlight java"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;
-<span class="keyword">import</span> org.springframework.jdbc.core.JdbcTemplate;
-<span class="keyword">import</span> org.springframework.stereotype.Service;
 
-<span class="keyword">import</span> java.time.LocalDateTime;
-<span class="keyword">import</span> java.sql.Timestamp;
 
-<span class="meta">@Service</span>
-<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ATableService</span> &#123;
-
-    <span class="meta">@Autowired</span>
-    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;
-
-    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insertRecord</span><span class="params">(Long id, String name, LocalDateTime createTime)</span> &#123;
-        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;INSERT INTO a_table (id, name, create_time) VALUES (?, ?, ?)&quot;</span>;
-
-        <span class="comment">// 将 LocalDateTime 转换为 Timestamp，因为 JdbcTemplate 的 setObject() 对 Oracle 需要 Timestamp</span>
-        <span class="type">Timestamp</span> <span class="variable">timestamp</span> <span class="operator">=</span> Timestamp.valueOf(createTime);
-
-        jdbcTemplate.update(sql, id, name, timestamp);
-
-        System.out.println(<span class="string">&quot;插入成功&quot;</span>);
-    &#125;
-&#125;</code></pre>
-
-<h2 id="Controller-示例（可选）"><a href="#Controller-示例（可选）" class="headerlink" title="Controller 示例（可选）"></a>Controller 示例（可选）</h2><pre><code class="highlight java">
-<span class="meta">@RestController</span>
-<span class="meta">@RequestMapping(&quot;/api&quot;)</span>
-<span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ATableController</span> &#123;
-
-    <span class="meta">@Autowired</span>
-    <span class="keyword">private</span> ATableService aTableService;
-
-    <span class="meta">@PostMapping(&quot;/insert&quot;)</span>
-    <span class="keyword">public</span> ResponseEntity&lt;String&gt; <span class="title function_">insertARecord</span><span class="params">()</span> &#123;
-        <span class="type">Long</span> <span class="variable">id</span> <span class="operator">=</span> <span class="number">1L</span>;
-        <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> <span class="string">&quot;测试用户&quot;</span>;
-        <span class="type">LocalDateTime</span> <span class="variable">now</span> <span class="operator">=</span> LocalDateTime.now();
-
-        aTableService.insertRecord(id, name, now);
-
-        <span class="keyword">return</span> ResponseEntity.ok(<span class="string">&quot;插入成功&quot;</span>);
-    &#125;
-&#125;
+<p> 上海玛雅水上乐园 · 全家四口超详细游玩攻略</p>
+<p>时间：9:00-17:00 | 特点：高效打卡+亲子友好+防晒避坑<br>👗 穿衣推荐</p>
+<pre><code>成人/大童：
+    泳衣：建议穿 连体/分体速干泳衣（避免玩项目时移位）。
+    防晒：
+        必穿 长袖防晒泳衣/防晒衣（物理防晒最有效，男人最好穿上衣，防风、防晒、防走光、毕竟在水里时间比较少）。
+        搭配 防晒帽+墨镜（造浪池可用，可选）。
+    鞋子：
+        涉水鞋（强烈推荐！防烫脚+防滑，部分项目可穿）。
+        普通拖鞋易丢，不建议。
+小童：
+    泳衣：连体泳衣+泳裤（防走光），男孩也穿上衣（防风、防晒）
+    防晒：儿童防晒衣+防水防晒霜（SPF50+）。
 </code></pre>
+<p>🗺️ 分时段游玩路线 &amp; 项目注意事项<br>⏰ 9:30-11:30 | 黄金时段：直冲热门项目</p>
+<p>（刚开园人最少！优先玩需排队的刺激项目）</p>
+<pre><code>超级大喇叭（4人一组）
+    身高：≥1.3米
+    体重：单人体重≤90kg，4人总重≤300kg
+    注意：
+        需4人同组，孩子身高不足可跳过。
+        脱鞋！入口有临时存放架（穿涉水鞋可免光脚烫伤）。
 
-<h2 id="关键点说明"><a href="#关键点说明" class="headerlink" title="关键点说明"></a>关键点说明</h2><h3 id="为什么需要转换为-Timestamp？"><a href="#为什么需要转换为-Timestamp？" class="headerlink" title="为什么需要转换为 Timestamp？"></a>为什么需要转换为 <code>Timestamp</code>？</h3><ul>
-<li>Oracle 的 JDBC 驱动在早期版本中对 <code>LocalDateTime</code> 支持不够完善；</li>
-<li>使用 <code>Timestamp.valueOf(LocalDateTime)</code> 是一种兼容性较好的做法；</li>
-<li>如果你使用较新版本的 Spring Boot + Oracle JDBC 驱动（ojdbc8.jar），也可以直接传 <code>LocalDateTime</code>，但为了兼容性，推荐统一转成 <code>Timestamp</code>。</li>
-</ul>
+飓风眼/巨兽碗（4人项目）
+    身高：≥1.3米
+    注意：和大喇叭类似，滑道更长，排队人稍少。
+    
+大黄蜂（2人一组）
+    身高：≥1.3米
+    注意：
+        需分两组玩（如爸妈一组，孩子一组）。
+        禁止戴眼镜/首饰，提前存放。
+    
+</code></pre>
+<p>⏰ 12:00-13:00 | 午餐+休息</p>
+<pre><code>推荐餐厅：玛雅餐厅（中式套餐）、亚马逊小吃（西式快餐）。
+自带食物：允许带密封包装零食（如面包、饼干、牛肉），也可以带水果。
+注意：
+    避开12:30高峰，提前占遮阳座位。
+    
+</code></pre>
+<p>⏰ 13:00-16:00 | 下午亲子时光</p>
+<pre><code>童话水世界（儿童区）
+    身高：适合1.2米以下小童
+    水深：0.3-0.6米，无需泳圈。
+    注意：有小型滑梯、喷水设施，家长需陪同。
+
+合家欢滑道（3-4人）
+    身高：≥1.2米
+    注意：较温和，适合全家一起玩。
+    
+懒人河（漂流）
+    泳圈：必须使用！可租4人圈（50元/天）或自带（需通过安检）。
+    身高：无限制，但儿童需家长陪同。
+    注意：
+        拖鞋易被冲走，建议光脚或穿涉水鞋。
+        全程约15分钟，可多次玩。
+
+加勒比海滩（造浪池）
+    泳圈：非必须，但用泳圈更好玩（租单人圈30元）。
+    注意：
+        造浪时间（如11:00、12:00等），水深0.9-1.5米。
+        儿童必穿救生衣（免费提供）。    
+</code></pre>
+<p>⏰ 16:00-17:00 | 自由活动&#x2F;二刷</p>
+<pre><code>玛雅水寨（综合水寨）
+    身高：部分滑梯≥1.3米
+    注意：顶部大桶定时倒水，小心被“瀑布”冲击！
+
+二刷推荐：
+    懒人河（傍晚人少）
+    加勒比海滩（17:00最后一波造浪）
+</code></pre>
+<p>⚠️ 关键注意事项汇总</p>
+<pre><code class="highlight apache"><span class="attribute">1</span>、停车费每小时<span class="number">10</span>元，不足一小时以一小时计费，一天上限<span class="number">80</span>元。
+<span class="attribute">2</span>、食物比较贵，连景区外面的小店也比较贵，地下停车场出口小店，连关东煮<span class="number">5</span>元一串。
+<span class="attribute">3</span>、泳衣，男士和男孩最好选择有上衣的，毕竟许多项目都不下水玩。
+<span class="attribute">4</span>、最好穿沙滩鞋，可以一直穿着，不会丢失。
+<span class="attribute">5</span>、章鱼大滑道是比较危险的项目，许多人都受伤了。护腕是均码，小孩根本带不住；滑道太多，工作人员根本指导不过来。
+<span class="attribute">6</span>、泳圈可以不带，最后几个项目放在一起，去租一个一起玩，懒人河和加勒比海滩用起来比较好。
+<span class="attribute">7</span>、入门检查时需要身份证，没有带需要报号码。
+<span class="attribute">8</span>、储物柜一般大，放个双肩包，再放两双鞋就满了。一家四口需要两个
+<span class="attribute">9</span>、沐浴室有吹风机、洗发水</code></pre>
+
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -172,7 +205,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a><a href="/tags/oracle/">oracle</a><a href="/tags/jdbcTemplate/">jdbcTemplate</a>
+  <span></span> <a href="/tags/上海玛雅/">上海玛雅</a><a href="/tags/一家四口/">一家四口</a><a href="/tags/游玩攻略/">游玩攻略</a>
   </div>
 
 </div>
@@ -181,7 +214,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://example.com/2025/08/12/java-oracle-jdbctemplate/" data-title="java使用原生SQL插入记录 | 一粒白沙" data-tsina="" class="share clearfix">
+	  <div data-url="http://example.com/2025/07/28/trip-maya-shuishang/" data-title="上海玛雅水上乐园全家四口超详细游玩攻略 | 一粒白沙" data-tsina="" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -194,11 +227,19 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2025/08/12/java-oracle-jdbctemplate/" title="java使用原生SQL插入记录">
+  <strong>上一篇：</strong><br/>
+  <span>
+  java使用原生SQL插入记录</span>
+</a>
+</div>
+
 
 <div class="next">
-<a href="/2025/07/28/trip-maya-shuishang/"  title="上海玛雅水上乐园全家四口超详细游玩攻略">
+<a href="/2025/07/12/java-oracle-seq/"  title="java同步oracle的序列">
  <strong>下一篇：</strong><br/> 
- <span>上海玛雅水上乐园全家四口超详细游玩攻略
+ <span>java同步oracle的序列
 </span>
 </a>
 </div>
@@ -215,7 +256,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E"><span class="toc-number">1.</span> <span class="toc-text">场景说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E7%BB%93%E6%9E%84%EF%BC%88Oracle-%E7%A4%BA%E4%BE%8B%EF%BC%89%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">数据库表结构（Oracle 示例）：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-JdbcTemplate-%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">使用 JdbcTemplate 插入数据示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Controller-%E7%A4%BA%E4%BE%8B%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">Controller 示例（可选）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9%E8%AF%B4%E6%98%8E"><span class="toc-number">4.</span> <span class="toc-text">关键点说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E8%BD%AC%E6%8D%A2%E4%B8%BA-Timestamp%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">为什么需要转换为 Timestamp？</span></a></li></ol></li></ol>
+ 
  
   </div>
 
