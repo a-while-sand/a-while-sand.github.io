@@ -1,0 +1,619 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Centos7.9设置java应用自启动 | 一粒白沙</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="不合时宜的人">
+    
+
+    
+    <meta name="description" content="Ceonos7.9中设置java应用自启动使用 systemd 创建自定义服务假设您的 Java 应用部署目录为 &#x2F;opt&#x2F;myapp，其中包含一个名为 myapp.jar 的可执行 JAR 包。 第1步：创建服务单元文件 使用 root 用户或拥有 sudo 权限的用户登录。 在 &#x2F;etc&#x2F;systemd&#x2F;system&#x2F; 目录下创建一个新的服务文件，例如 myapp.service  vi &#x2F;e">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Centos7.9设置java应用自启动">
+<meta property="og:url" content="http://example.com/2025/10/18/linux-java-setup/index.html">
+<meta property="og:site_name" content="一粒白沙">
+<meta property="og:description" content="Ceonos7.9中设置java应用自启动使用 systemd 创建自定义服务假设您的 Java 应用部署目录为 &#x2F;opt&#x2F;myapp，其中包含一个名为 myapp.jar 的可执行 JAR 包。 第1步：创建服务单元文件 使用 root 用户或拥有 sudo 权限的用户登录。 在 &#x2F;etc&#x2F;systemd&#x2F;system&#x2F; 目录下创建一个新的服务文件，例如 myapp.service  vi &#x2F;e">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-10-18T11:57:22.000Z">
+<meta property="article:modified_time" content="2025-11-01T08:40:49.760Z">
+<meta property="article:author" content="不合时宜的人">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="springboot">
+<meta property="article:tag" content="自启动">
+<meta property="article:tag" content="Centos">
+<meta name="twitter:card" content="summary">
+
+    
+    <link rel="alternative" href="/atom.xml" title="一粒白沙" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="一粒白沙" title="一粒白沙"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="一粒白沙">一粒白沙</a></h1>
+				<h2 class="blog-motto">白沙洲中的一粒</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="/search/index.html" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" autocomplete="off" name="q" maxlength="20" placeholder="搜索" />
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2025/10/18/linux-java-setup/" title="Centos7.9设置java应用自启动" itemprop="url">Centos7.9设置java应用自启动</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="不合时宜的人" target="_blank" itemprop="author">不合时宜的人</a>
+		
+  <p class="article-time">
+    <time datetime="2025-10-18T11:57:22.000Z" itemprop="datePublished"> 发表于 2025-10-18</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Ceonos7-9%E4%B8%AD%E8%AE%BE%E7%BD%AEjava%E5%BA%94%E7%94%A8%E8%87%AA%E5%90%AF%E5%8A%A8"><span class="toc-number">1.</span> <span class="toc-text">Ceonos7.9中设置java应用自启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-systemd-%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.</span> <span class="toc-text">使用 systemd 创建自定义服务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC1%E6%AD%A5%EF%BC%9A%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%8D%95%E5%85%83%E6%96%87%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">第1步：创建服务单元文件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#start-sh"><span class="toc-number">2.1.1.</span> <span class="toc-text">start.sh</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#stop-sh"><span class="toc-number">2.1.2.</span> <span class="toc-text">stop.sh</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC2%E6%AD%A5%EF%BC%9A%E8%AE%BE%E7%BD%AE%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%B9%B6%E9%87%8D%E8%BD%BD-systemd"><span class="toc-number">2.2.</span> <span class="toc-text">第2步：设置文件权限并重载 systemd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC3%E6%AD%A5%EF%BC%9A%E6%B5%8B%E8%AF%95%E5%92%8C%E5%90%AF%E7%94%A8%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.3.</span> <span class="toc-text">第3步：测试和启用服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC4%E6%AD%A5%EF%BC%9A%E5%B8%B8%E7%94%A8%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="toc-number">2.4.</span> <span class="toc-text">第4步：常用管理命令</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h3 id="Ceonos7-9中设置java应用自启动"><a href="#Ceonos7-9中设置java应用自启动" class="headerlink" title="Ceonos7.9中设置java应用自启动"></a>Ceonos7.9中设置java应用自启动</h3><h3 id="使用-systemd-创建自定义服务"><a href="#使用-systemd-创建自定义服务" class="headerlink" title="使用 systemd 创建自定义服务"></a>使用 systemd 创建自定义服务</h3><p>假设您的 Java 应用部署目录为 <code>/opt/myapp</code>，其中包含一个名为 <code>myapp.jar</code> 的可执行 JAR 包。</p>
+<h4 id="第1步：创建服务单元文件"><a href="#第1步：创建服务单元文件" class="headerlink" title="第1步：创建服务单元文件"></a>第1步：创建服务单元文件</h4><ol>
+<li>使用 <code>root</code> 用户或拥有 <code>sudo</code> 权限的用户登录。</li>
+<li>在 <code>/etc/systemd/system/</code> 目录下创建一个新的服务文件，例如 <code>myapp.service</code></li>
+</ol>
+<pre><code class="highlight shell">vi /etc/systemd/system/myapp.service 
+
+[Unit]
+Description=myapp Boot Application
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/opt/myapp/server/start.sh
+ExecStop=/opt/myapp/server/stop.sh
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+
+<h5 id="start-sh"><a href="#start-sh" class="headerlink" title="start.sh"></a>start.sh</h5><pre><code class="highlight shell"><span class="meta prompt_">#</span><span class="language-bash">!/bin/sh</span>
+
+nohup java $&#123;JAVA_OPT&#125; -jar /opt/myapp/server/myapp.jar --spring.config.location=/opt/myapp/server/config/application.properties &gt;&gt;/opt/myapp/server/logs/$&#123;APPLICATION&#125;.log&amp;</code></pre>
+
+<h5 id="stop-sh"><a href="#stop-sh" class="headerlink" title="stop.sh"></a>stop.sh</h5><pre><code class="highlight shell"><span class="meta prompt_">#</span><span class="language-bash">!/bin/sh</span>
+
+APPLICATION=myap
+PID=$(cat $&#123;APPLICATION&#125;.pid)
+JAVA_OPT=&quot;-server&quot;
+
+if [ -z &quot;$PID&quot; ]
+then
+    echo $&#123;APPLICATION&#125; is already stopped
+else
+    echo kill  $&#123;PID&#125;
+    kill -9 $&#123;PID&#125;
+    echo $&#123;APPLICATION&#125; stopped successfully
+fi
+</code></pre>
+
+<h4 id="第2步：设置文件权限并重载-systemd"><a href="#第2步：设置文件权限并重载-systemd" class="headerlink" title="第2步：设置文件权限并重载 systemd"></a>第2步：设置文件权限并重载 systemd</h4><ol>
+<li><p>给服务文件设置正确的权限。</p>
+<pre><code class="highlight awk">chmod <span class="number">644</span> <span class="regexp">/etc/</span>systemd<span class="regexp">/system/my</span>app.service</code></pre>
+
+
+</li>
+<li><p>重新加载 systemd 配置，使其识别新的服务。</p>
+<pre><code class="highlight ebnf"><span class="attribute">systemctl daemon-reload</span></code></pre></li>
+</ol>
+<h4 id="第3步：测试和启用服务"><a href="#第3步：测试和启用服务" class="headerlink" title="第3步：测试和启用服务"></a>第3步：测试和启用服务</h4><ol>
+<li><p><strong>启动服务</strong>，进行测试。</p>
+<pre><code class="highlight shell">systemctl start myapp</code></pre>
+
+
+</li>
+<li><p><strong>检查服务状态</strong>，查看是否启动成功以及是否有错误日志。</p>
+<pre><code class="highlight shell">systemctl status myapp</code></pre>
+
+
+
+<p>如果状态不正常，可以使用 <code>journalctl</code> 查看详细日志：</p>
+<pre><code class="highlight shell">journalctl -u myapp -f</code></pre>
+
+
+</li>
+<li><p><strong>测试停止服务</strong>。</p>
+<pre><code class="highlight shell">systemctl stop myapp</code></pre>
+
+
+
+<p>再次检查状态，确认已停止。</p>
+</li>
+<li><p><strong>设置开机自启</strong>。如果以上测试都成功了，就可以启用开机自动启动。</p>
+<pre><code class="highlight shell">systemctl enable myapp</code></pre>
+
+
+
+<p>您会看到类似 <code>Created symlink from ... to ...</code> 的提示，表示成功。</p>
+</li>
+</ol>
+<h4 id="第4步：常用管理命令"><a href="#第4步：常用管理命令" class="headerlink" title="第4步：常用管理命令"></a>第4步：常用管理命令</h4><pre><code class="highlight shell"><span class="meta prompt_"># </span><span class="language-bash">启动服务</span>
+ systemctl start myapp
+<span class="meta prompt_"></span>
+<span class="meta prompt_"># </span><span class="language-bash">停止服务</span>
+ systemctl stop myapp
+<span class="meta prompt_"></span>
+<span class="meta prompt_"># </span><span class="language-bash">重启服务</span>
+ systemctl restart myapp
+<span class="meta prompt_"></span>
+<span class="meta prompt_"># </span><span class="language-bash">查看服务状态</span>
+ systemctl status myapp
+<span class="meta prompt_"></span>
+<span class="meta prompt_"># </span><span class="language-bash">查看服务日志</span>
+ journalctl -u myapp
+<span class="meta prompt_"></span>
+<span class="meta prompt_"># </span><span class="language-bash">实时跟踪日志</span>
+ journalctl -u myapp -f
+<span class="meta prompt_"></span>
+<span class="meta prompt_"># </span><span class="language-bash">禁用开机自启（如果需要）</span>
+ systemctl disable myapp</code></pre>
+
+<p>常用的问题</p>
+<pre><code class="highlight dockerfile"><span class="number">1</span>、<span class="keyword">shell</span><span class="language-bash">脚本，需要 <span class="comment">#!/bin/sh 开头</span></span>
+<span class="number">2</span>、以上<span class="keyword">shell</span><span class="language-bash">都用root用户执行</span></code></pre>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/springboot/">springboot</a><a href="/tags/自启动/">自启动</a><a href="/tags/Centos/">Centos</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://example.com/2025/10/18/linux-java-setup/" data-title="Centos7.9设置java应用自启动 | 一粒白沙" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2025/09/28/trip-maya-shuishang/"  title="上海玛雅水上乐园全家四口超详细游玩攻略">
+ <strong>下一篇：</strong><br/> 
+ <span>上海玛雅水上乐园全家四口超详细游玩攻略
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Ceonos7-9%E4%B8%AD%E8%AE%BE%E7%BD%AEjava%E5%BA%94%E7%94%A8%E8%87%AA%E5%90%AF%E5%8A%A8"><span class="toc-number">1.</span> <span class="toc-text">Ceonos7.9中设置java应用自启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-systemd-%E5%88%9B%E5%BB%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.</span> <span class="toc-text">使用 systemd 创建自定义服务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC1%E6%AD%A5%EF%BC%9A%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1%E5%8D%95%E5%85%83%E6%96%87%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">第1步：创建服务单元文件</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#start-sh"><span class="toc-number">2.1.1.</span> <span class="toc-text">start.sh</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#stop-sh"><span class="toc-number">2.1.2.</span> <span class="toc-text">stop.sh</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC2%E6%AD%A5%EF%BC%9A%E8%AE%BE%E7%BD%AE%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E5%B9%B6%E9%87%8D%E8%BD%BD-systemd"><span class="toc-number">2.2.</span> <span class="toc-text">第2步：设置文件权限并重载 systemd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC3%E6%AD%A5%EF%BC%9A%E6%B5%8B%E8%AF%95%E5%92%8C%E5%90%AF%E7%94%A8%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.3.</span> <span class="toc-text">第3步：测试和启用服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC4%E6%AD%A5%EF%BC%9A%E5%B8%B8%E7%94%A8%E7%AE%A1%E7%90%86%E5%91%BD%E4%BB%A4"><span class="toc-number">2.4.</span> <span class="toc-text">第4步：常用管理命令</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>18</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/linux/" title="linux">linux<sup>11</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/centos7/" title="centos7">centos7<sup>6</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mysql/" title="mysql">mysql<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/springboot/" title="springboot">springboot<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/redis/" title="redis">redis<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cluster/" title="cluster">cluster<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/es/" title="es">es<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch/" title="elasticsearch">elasticsearch<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/k8s/" title="k8s">k8s<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/kubernetes/" title="kubernetes">kubernetes<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mongodb/" title="mongodb">mongodb<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/zookeeper/" title="zookeeper">zookeeper<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jdbcTemplate/" title="jdbcTemplate">jdbcTemplate<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cmd/" title="cmd">cmd<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/entrypoint/" title="entrypoint">entrypoint<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/elasticsearch-head/" title="elasticsearch-head">elasticsearch-head<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fastdfs/" title="fastdfs">fastdfs<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p>  <br/>
+			人生如逆旅，我亦是行人</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:13917836009@139.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2025 
+		
+		<a href="/about" target="_blank" title="不合时宜的人">不合时宜的人</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+ // '<a class="overlay" id="qrcode"></a>',
+  //'<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  //'<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  //'<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  //'<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  //'<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
